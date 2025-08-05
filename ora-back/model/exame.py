@@ -1,8 +1,5 @@
 from sqlalchemy import Column, Integer, String, Float, Boolean
-from sqlalchemy.orm import declarative_base
-
-
-Base = declarative_base()
+from db.db import Base
 
 
 class Exame(Base):

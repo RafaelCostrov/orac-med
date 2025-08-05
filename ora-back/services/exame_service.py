@@ -13,12 +13,12 @@ class ExameService():
         exames = self.repositorio.listar_todos_exames()
         lista = []
         for exame in exames:
-            json_exame = json.dumps({
+            json_exame = {
                 "id_exame": exame.id_exame,
                 "nome_exame": exame.nome_exame,
                 "valor_exame": exame.valor_exame,
                 "is_interno": exame.is_interno
-            })
+            }
             lista.append(json_exame)
         return lista
 
@@ -32,12 +32,12 @@ class ExameService():
         )
         lista_filtrada = []
         for exame in exames_filtrados:
-            json_exame = json.dumps({
+            json_exame = {
                 "id_exame": exame.id_exame,
                 "nome_exame": exame.nome_exame,
                 "valor_exame": exame.valor_exame,
                 "is_interno": exame.is_interno
-            })
+            }
             lista_filtrada.append(json_exame)
         return lista_filtrada
 

@@ -1,10 +1,8 @@
 from sqlalchemy import Column, Integer, String, Enum, Table, ForeignKey
 from sqlalchemy.orm import relationship
-from sqlalchemy.orm import declarative_base
 from enums.tipos_cliente import TiposCliente
+from db.db import Base
 
-
-Base = declarative_base()
 
 cliente_exame = Table(
     'cliente_exame',
@@ -20,6 +18,7 @@ class Cliente(Base):
 
     id_cliente = Column(Integer, primary_key=True, autoincrement=True)
     nome_cliente = Column(String(100))
+    cnpj_cliente = Column(String(14))
     tipo_cliente = Column(Enum(TiposCliente))
     exames_incluidos = relationship(
-        "Exame", secondary=cliente_exame, backref="clientes")
+        "Exame", secondary=cliente_exame, backref="cliente")
