@@ -1,0 +1,153 @@
+<!DOCTYPE html>
+<html lang="pt-br">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Ficha de Atendimento - ORAC</title>
+
+  <!-- CSS -->
+  <link rel="stylesheet" href="css/atendimento.css" />
+</head>
+<body>
+  <!-- Cabeçalho -->
+  <header>
+    <img src="img/Logo.png" alt="Logo ORAC" class="logo" />
+
+    <nav>
+      <a href="#">Atendimento</a>
+      <a href="#">Cadastro</a>
+      <a href="#">Relatório</a>
+    </nav>
+
+    <!-- Perfil com nome -->
+    <div class="perfil-wrap">
+      <span class="nome-usuario">Eduardo</span>
+      <button id="avatarBtn" class="avatar-btn" aria-haspopup="true" aria-expanded="false" aria-controls="profileMenu">
+        <img src="img/perfil1.png" alt="Abrir menu do usuário" />
+      </button>
+
+      <div id="profileMenu" class="profile-menu" role="menu" aria-hidden="true">
+        <div class="profile-header">
+          <img src="img/perfil1.png" alt="" class="thumb" />
+          <div class="who">
+            <strong>Eduardo</strong>
+            <small>@usuario</small>
+          </div>
+        </div>
+
+        <hr />
+
+        <a href="#" class="menu-item" role="menuitem" id="btnMinhaConta">
+          <svg viewBox="0 0 24 24" class="mi"><path d="M12 12c2.761 0 5-2.463 5-5.5S14.761 1 12 1 7 3.463 7 6.5 9.239 12 12 12zm0 2c-4.418 0-8 2.91-8 6.5V22h16v-1.5c0-3.59-3.582-6.5-8-6.5z" fill="currentColor"/></svg>
+          Minha conta
+        </a>
+
+        <a href="#" class="menu-item danger" role="menuitem" id="btnSair">
+          <svg viewBox="0 0 24 24" class="mi"><path d="M10 17l-1.41-1.41L12.17 12 8.59 8.41 10 7l5 5-5 5zM4 4h7v2H6v12h5v2H4V4z" fill="currentColor"/></svg>
+          Sair
+        </a>
+      </div>
+    </div>
+  </header>
+
+  <!-- Conteúdo principal -->
+  <main>
+    <h1>Ficha de Atendimento</h1>
+
+    <form id="form-atendimento" autocomplete="off">
+      <div class="form-grid">
+        <!-- Tipo de Atendimento -->
+        <div class="form-group">
+          <label for="tipo-atendimento">Tipo de Atendimento</label>
+          <select id="tipo-atendimento" required>
+            <option value="" disabled selected hidden>Selecione</option>
+            <option>Cliente</option>
+            <option>Credenciado</option>
+            <option>Serviço Prestado</option>
+            <option>Particular</option>
+          </select>
+        </div>
+
+        <!-- Empresa -->
+        <div class="form-group">
+          <label for="empresa">Empresa</label>
+          <select id="empresa" required>
+            <option value="" disabled selected hidden>Selecione</option>
+            <option value="105">105 - Oraculus</option>
+            <option value="106">106 - Controller</option>
+            <option value="449">449 - Azul Serviços</option>
+            <option value="2808">2808 - Orac</option>
+          </select>
+        </div>
+
+        <!-- Colaborador -->
+        <div class="form-group">
+          <label for="colaborador">Colaborador</label>
+          <input type="text" id="colaborador" placeholder="Nome" />
+        </div>
+
+        <!-- Tipo de Exame -->
+        <div class="form-group">
+          <label for="tipo-exame">Tipo de Exame</label>
+          <select id="tipo-exame" required>
+            <option value="" disabled selected hidden>Selecione</option>
+            <option>Admissional</option>
+            <option>Demissional</option>
+            <option>Periódico</option>
+            <option>Mudança de Função</option>
+            <option>Retorno ao Trabalho</option>
+            <option>Outros</option>
+          </select>
+        </div>
+
+        <!-- Exames (Dropdown com checkboxes) -->
+        <div class="form-group">
+          <label for="exames">Exames</label>
+          <div class="dropdown-checkbox">
+            <div class="dropdown-selected">Selecione os exames</div>
+            <div class="dropdown-list">
+              <label><input type="checkbox" value="Clínico"> Clínico</label>
+              <label><input type="checkbox" value="Audiometria"> Audiometria</label>
+              <label><input type="checkbox" value="Espirometria"> Espirometria</label>
+              <label><input type="checkbox" value="Teste Ishira"> Teste Ishira</label>
+              <label><input type="checkbox" value="TGO"> TGO</label>
+              <label><input type="checkbox" value="Aval. Psicossocial"> Aval. Psicossocial</label>
+              <label><input type="checkbox" value="ECG"> ECG</label>
+              <label><input type="checkbox" value="EEC"> EEC</label>
+              <label><input type="checkbox" value="Teste ROMBERG"> Teste ROMBERG</label>
+            </div>
+          </div>
+        </div>
+
+        <!-- Valor Total (somente leitura) -->
+        <div class="form-group">
+          <label for="valor-total">Valor Total</label>
+          <input id="valor-total" type="text" class="readonly" readonly placeholder="R$ 0,00" />
+        </div>
+      </div>
+
+      <!-- Lista de exames selecionados -->
+      <div class="exames-selecionados">
+        <div>
+          <label>Exames selecionados</label>
+          <ul id="lista-exames"></ul>
+        </div>
+
+        <div class="botoes">
+          <button type="button" class="remover">Remover Exames</button>
+          <button type="submit" class="enviar">Enviar</button>
+        </div>
+      </div>
+    </form>
+  </main>
+
+  <!-- Rodapé -->
+  <footer>
+    <img src="img/instagram.png" alt="Instagram" style="height: 45px;" />
+    <img src="img/medseg.png" alt="Logo ORAC" style="height: 45px;" />
+  </footer>
+
+  <!-- JS -->
+  <script src="../js/atendimento.js" defer></script>
+</body>
+</html>

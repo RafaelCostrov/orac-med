@@ -1,0 +1,33 @@
+<!DOCTYPE html>
+<html lang="pt-br">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Login ORAC</title>
+  <link rel="stylesheet" href="css/style.css" />
+  <script src="../js/login.js" defer></script>
+</head>
+<body>
+  <div class="container">
+    <div class="card">
+      <img src="img/Logo.png" alt="Logo" class="logo" />
+      <div class="input-group">
+        <input type="email" placeholder="E-mail" />
+        <span class="icon">
+          <img src="img/user-black.png" alt="Usuário" width="20" />
+        </span>
+      </div>
+      <div class="input-group">
+        <input type="password" placeholder="Senha" id="password" />
+        <span class="icon" onclick="togglePassword()">
+          <img src="img/eye-black.png" alt="Mostrar senha" id="eyeIcon" width="20" />
+        </span>
+      </div>
+      <button class="btn">ENTRAR</button>
+      <p class="forgot">
+        <a href="redefinir.html">Esqueceu a senha?</a>
+      </p>
+    </div>
+  </div>
+</body>
+</html>

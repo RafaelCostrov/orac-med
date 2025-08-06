@@ -1,0 +1,87 @@
+* {
+  box-sizing: border-box;
+}
+
+body {
+  margin: 0;
+  padding: 0;
+  font-family: Arial, sans-serif;
+  background: linear-gradient(to right, #3ca551, #de8d28);
+  min-height: 100vh;
+  overflow: hidden;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
+.container {
+  background: white;
+  padding: 40px 30px;
+  border-radius: 20px;
+  box-shadow: 0 0 10px #00000033;
+  width: 100%;
+  max-width: 360px;
+}
+
+.logo {
+  display: block;
+  margin: 0 auto 30px auto;
+  width: 150px;
+}
+
+.input-group {
+  position: relative;
+  margin-bottom: 20px;
+}
+
+.input-group input {
+  width: 100%;
+  padding: 12px 40px 12px 12px;
+  border: 1px solid #ccc;
+  border-radius: 8px;
+  font-size: 14px;
+}
+
+.input-group .icon {
+  position: absolute;
+  right: 12px;
+  top: 50%;
+  transform: translateY(-50%);
+  width: 20px;
+  height: 20px;
+  cursor: pointer;
+}
+
+.btn {
+  width: 100%;
+  padding: 12px;
+  background: #2e993f;
+  color: white;
+  font-weight: bold;
+  border: none;
+  border-radius: 20px;
+  cursor: pointer;
+  margin-bottom: 15px;
+  transition: background 0.3s;
+}
+
+.btn:hover {
+  background: #278a38;
+}
+
+.forgot {
+  text-align: center;
+  font-size: 14px;
+  margin: 0;
+  padding: 0;
+}
+
+.forgot a {
+  color: black;
+  text-decoration: none;
+  cursor: pointer;
+}
+
+.forgot a:hover {
+  text-decoration: underline;
+}
