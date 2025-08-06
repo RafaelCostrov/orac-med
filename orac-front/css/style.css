@@ -5,8 +5,8 @@
 body {
   margin: 0;
   padding: 0;
-  font-family: Arial, sans-serif;
-  background: linear-gradient(to right, #3ca551, #de8d28);
+  font-family: "Poppins", sans-serif;
+  background-image: url("../img/fundo-orac-med.png");
   min-height: 100vh;
   overflow: hidden;
   display: flex;
@@ -20,18 +20,33 @@ body {
   border-radius: 20px;
   box-shadow: 0 0 10px #00000033;
   width: 100%;
-  max-width: 360px;
+  max-width: 420px;
+}
+
+.card-text {  
+  text-align: center;
+  font-size: 16px;
+  margin-bottom: 20px;
+  color: #444;
 }
 
 .logo {
   display: block;
   margin: 0 auto 30px auto;
-  width: 150px;
+  width: 250px;
 }
 
 .input-group {
   position: relative;
   margin-bottom: 20px;
+}
+
+input {
+  font-family: "Poppins", sans-serif;
+}
+
+input::placeholder {
+  font-family: "Poppins", sans-serif; 
 }
 
 .input-group input {
@@ -40,6 +55,12 @@ body {
   border: 1px solid #ccc;
   border-radius: 8px;
   font-size: 14px;
+  color: green;
+}
+
+.input-group input:focus {
+  border: 1px solid orange;
+  outline: none;
 }
 
 .input-group .icon {
@@ -57,16 +78,19 @@ body {
   padding: 12px;
   background: #2e993f;
   color: white;
-  font-weight: bold;
   border: none;
   border-radius: 20px;
   cursor: pointer;
   margin-bottom: 15px;
-  transition: background 0.3s;
+  transition: background 0.3s,;
+  font-family: "Poppins", sans-serif;
+  font-size: 16px;
 }
 
 .btn:hover {
   background: #278a38;
+  color: orange;
+  transition-duration: 500ms;
 }
 
 .forgot {
@@ -77,11 +101,16 @@ body {
 }
 
 .forgot a {
-  color: black;
+  color: grey;
   text-decoration: none;
   cursor: pointer;
+  transition: transform 500ms;
+  display: inline-block;
 }
 
 .forgot a:hover {
-  text-decoration: underline;
+  color:#278a38;
+  transition-duration: 500ms;
+  transform: scale(1.05);
 }
+

@@ -5,16 +5,29 @@
   box-sizing: border-box;
 }
 
-html, body { height: 100%; }
+html {
+  max-height: 100vh;
+  -ms-overflow-style: none;
+  scrollbar-width: none;
+  overflow: auto;
+}
+
+html::-webkit-scrollbar {
+  display: none;
+}
+
+html, body { 
+  font-family: "Poppins", sans-serif;
+}
 
 body {
-  font-family: Arial, Helvetica, sans-serif;
   background: linear-gradient(120deg, #d3d3d3, #cfcfcf);
   display: flex;
   flex-direction: column;
-  min-height: 100vh;
-  color: #111;
+  max-height: 100vh;
 }
+
+
 
 img { max-width: 100%; height: auto; }
 
@@ -26,14 +39,14 @@ img { max-width: 100%; height: auto; }
   --green-400:#4caf50;
   --green-100:#eaf7ef;
   --orange:#f7931e;
-  --gray-900:#111;
-  --gray-800:#333;
-  --gray-700:#555;
-  --gray-600:#666;
-  --gray-500:#777;
-  --gray-400:#999;
-  --gray-300:#ccc;
-  --gray-200:#f1f1f1;
+  --grey-900:#111;
+  --grey-800:#333;
+  --grey-700:#555;
+  --grey-600:#666;
+  --grey-500:#777;
+  --grey-400:#999;
+  --grey-300:#ccc;
+  --grey-200:#f1f1f1;
   --white:#fff;
 }
 
@@ -44,33 +57,30 @@ header {
   display: flex;
   align-items: center;
   justify-content: space-between;
-  padding: 14px 32px;
+  padding: 12px 32px;
   border-radius: 0;
-  box-shadow: none;
   margin: 0;
-  flex-wrap: wrap;          /* permite quebrar */
-  gap: 12px 24px;
+  gap: 32px;
 }
 
-.logo { height: 44px; width: auto; }
+.logo { height: 36px; width: auto; }
 
 nav {
   display: flex;
-  flex-wrap: wrap;
-  gap: clamp(12px, 2vw, 30px);
+  gap: 24px;
+  padding-left: 200px;
 }
 
 nav a {
   text-decoration: none;
   font-weight: bold;
-  color: #000;
+  color: var(--green-700);
   font-size: 16px;
   transition: color 0.25s;
 }
 nav a:hover, nav a:focus { color: var(--orange); outline: none; }
 
-.perfil-wrap {
-  margin-left: auto;        /* empurra para a direita quando couber */
+.perfil-wrap {        
   position: relative;
   display: flex;
   align-items: center;
@@ -132,10 +142,10 @@ nav a:hover, nav a:focus { color: var(--orange); outline: none; }
   width: 36px; height: 36px; border-radius: 50%;
 }
 .profile-header .who strong {
-  display: block; font-size: 14px; color: var(--gray-900);
+  display: block; font-size: 14px; color: var(--grey-900);
 }
 .profile-header .who small {
-  display: block; font-size: 12px; color: var(--gray-600);
+  display: block; font-size: 12px; color: var(--grey-600);
 }
 .profile-menu hr {
   border: 0; height: 1px; background: #f0f0f0; margin: 4px 0;
@@ -153,9 +163,9 @@ nav a:hover, nav a:focus { color: var(--orange); outline: none; }
 /* ================== Conteúdo ================== */
 main {
   background: #fff;
-  width: min(92%, 1040px);
-  margin: 24px auto;
-  padding: clamp(20px, 3vw, 30px);
+  width: calc(100% - 224px);
+  margin: 16px 112px;
+  padding: 16px;
   border-radius: 12px;
   box-shadow: 0 0 12px rgba(0,0,0,0.1);
   flex: 1;
@@ -165,7 +175,7 @@ main h1 {
   text-align: center;
   margin-bottom: 25px;
   font-size: clamp(20px, 2.6vw, 24px);
-  color: var(--gray-800);
+  color: var(--grey-800);
 }
 
 /* Formulário */
@@ -176,29 +186,31 @@ main h1 {
   margin-bottom: 20px;
 }
 .form-group { display: flex; flex-direction: column; }
-label { font-weight: bold; margin-bottom: 6px; color: var(--gray-800); }
+label { font-weight: bold; margin-bottom: 6px; color: var(--grey-800); }
 
 input, select {
+  font-family: "Poppins", sans-serif;
   padding: 10px;
-  border: 1px solid var(--gray-300);
+  border: 1px solid var(--grey-300);
   border-radius: 8px;
   font-size: 16px; /* evita zoom em mobile iOS */
-  color: var(--gray-900);
+  color: var(--grey-900);
   background: #fff;
 }
-input::placeholder { color: var(--gray-500); }
-input.readonly { background: #fafafa; color: var(--gray-700); }
+input::placeholder { color: var(--grey-500); }
+input.readonly { background: #fafafa; color: var(--grey-700); }
 
 input:focus, select:focus, .dropdown-selected:focus {
   outline: 2px solid var(--orange);
   outline-offset: 1px;
 }
 
+
 /* ================== Dropdown Exames ================== */
 .dropdown-checkbox { position: relative; user-select: none; }
 
 .dropdown-selected {
-  border: 1px solid var(--gray-300);
+  border: 1px solid var(--grey-300);
   border-radius: 8px;
   padding: 10px;
   background: #fff;
@@ -212,7 +224,7 @@ input:focus, select:focus, .dropdown-selected:focus {
   top: 100%;
   left: 0; right: 0;
   background: #fff;
-  border: 1px solid var(--gray-300);
+  border: 1px solid var(--grey-300);
   border-radius: 8px;
   max-height: min(240px, 40vh);
   overflow-y: auto;
@@ -221,13 +233,13 @@ input:focus, select:focus, .dropdown-selected:focus {
 
 /* Scrollbar customizada só aqui */
 .dropdown-list::-webkit-scrollbar { width: 8px; }
-.dropdown-list::-webkit-scrollbar-track { background: var(--gray-200); }
-.dropdown-list::-webkit-scrollbar-thumb { background: var(--gray-300); border-radius: 4px; }
-.dropdown-list::-webkit-scrollbar-thumb:hover { background: var(--gray-400); }
+.dropdown-list::-webkit-scrollbar-track { background: var(--grey-200); }
+.dropdown-list::-webkit-scrollbar-thumb { background: var(--grey-300); border-radius: 4px; }
+.dropdown-list::-webkit-scrollbar-thumb:hover { background: var(--grey-400); }
 
 .dropdown-list label {
   display: flex; align-items: center; gap: 8px;
-  padding: 8px 12px; cursor: pointer; color: var(--gray-700);
+  padding: 8px 12px; cursor: pointer; color: var(--grey-700);
   transition: background 0.2s ease;
 }
 .dropdown-list label:hover { background: #f5f5f5; }
@@ -249,7 +261,7 @@ input:focus, select:focus, .dropdown-selected:focus {
 .exames-selecionados ul {
   list-style: disc;
   padding: 18px;
-  border: 1px solid var(--gray-300);
+  border: 1px solid var(--grey-300);
   border-radius: 12px;
   background: #fafafa;
   font-size: 15px;
@@ -261,8 +273,8 @@ input:focus, select:focus, .dropdown-selected:focus {
   overflow-y: auto;
 }
 .exames-selecionados ul::-webkit-scrollbar { width: 8px; }
-.exames-selecionados ul::-webkit-scrollbar-thumb { background: var(--gray-300); border-radius: 4px; }
-.exames-selecionados ul::-webkit-scrollbar-thumb:hover { background: var(--gray-400); }
+.exames-selecionados ul::-webkit-scrollbar-thumb { background: var(--grey-300); border-radius: 4px; }
+.exames-selecionados ul::-webkit-scrollbar-thumb:hover { background: var(--grey-400); }
 
 .botoes {
   display: flex;
@@ -290,14 +302,29 @@ footer {
   width: 100%;
   background: #fff;
   border-radius: 0;
-  padding: 20px 32px;
+  padding-top: 12px;
+  padding-bottom: 12px;
   display: flex;
   justify-content: center;
   align-items: center;
-  gap: 18px;
+  gap: 30px;
   box-shadow: none;
-  margin: 0;
 }
+
+.img-footer {
+  height: 45px;
+}
+
+.icon-footer {
+  height: 35px;
+  transition: transform 500ms;
+}
+
+.icon-footer:hover {
+  transform: scale(1.07);
+}
+
+
 footer img { height: 45px; }
 
 /* ================== Breakpoints ================== */

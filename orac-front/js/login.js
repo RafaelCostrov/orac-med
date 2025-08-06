@@ -4,11 +4,11 @@ function togglePassword() {
 
   if (passwordInput.type === 'password') {
     passwordInput.type = 'text';
-    eyeIcon.src = 'img/eye-black-open.png' ;
+    eyeIcon.src = '../img/icons/view.png' ;
     eyeIcon.alt = 'Ocultar senha';
   } else {
     passwordInput.type = 'password';
-    eyeIcon.src = 'img/eye-black.png'; // Ícone de "olho fechado"
+    eyeIcon.src = '../img/icons/hide.png'; 
     eyeIcon.alt = 'Mostrar senha';
   }
 }
