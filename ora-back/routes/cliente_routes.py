@@ -112,7 +112,7 @@ def atualizar_cliente():
         tipo_cliente = data.get('tipo_cliente')
         exames_incluidos = data.get('exames_incluidos')
 
-        exame_atualizado = service.atualizar_cliente(
+        atendimento_atualizado = service.atualizar_cliente(
             id_cliente=id_cliente,
             nome_cliente=nome_cliente,
             cnpj_cliente=cnpj_cliente,
@@ -121,8 +121,8 @@ def atualizar_cliente():
         )
         Session.remove()
         return ({
-            "mensagem": "Exame atualizado com sucesso!",
-            "cliente": exame_atualizado
+            "mensagem": "Atendimento atualizado com sucesso!",
+            "cliente": atendimento_atualizado
         }), 200
     except Exception as e:
         print(f"Erro: {e}")

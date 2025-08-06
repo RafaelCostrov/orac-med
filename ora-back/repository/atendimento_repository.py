@@ -1,0 +1,159 @@
+from sqlalchemy import func, and_, distinct
+from sqlalchemy.orm import joinedload
+from model.exame import Exame
+from model.cliente import Cliente
+from model.atendimento import Atendimento
+from db.db import Session
+from datetime import datetime
+
+
+class AtendimentoRepository:
+    def __init__(self):
+        self.session = Session()
+
+    def adicionar_atendimento(self, atendimento: Atendimento):
+        try:
+            self.session.add(atendimento)
+            self.session.commit()
+        except Exception as e:
+            self.session.rollback()
+            raise e
+        finally:
+            self.session.close()
+
+    def listar_todos_atendimentos(self):
+        try:
+            atendimentos = self.session.query(Atendimento).options(
+                joinedload(Atendimento.exames_atendimento),
+                joinedload(Atendimento.cliente_atendimento)).all()
+            return atendimentos
+        except Exception as e:
+            raise e
+        finally:
+            self.session.close()
+
+    def filtrar_atendimentos(self, id_atendimento=None, min_data=None, max_data=None, tipo_atendimento=None, usuario=None, min_valor=None, max_valor=None,
+                             colaborador_atendimento=None, is_ativo=None, ids_clientes=None, ids_exames=None):
+        try:
+            query = self.session.query(Atendimento)
+            filtros = []
+
+            if id_atendimento is not None:
+                filtros.append(Atendimento.id_atendimento == id_atendimento)
+
+            if min_data:
+                data_formatada = datetime.strptime(min_data, "%d/%m/%Y")
+                filtros.append(Atendimento.data_atendimento >= data_formatada)
+
+            if max_data:
+                data_formatada = datetime.strptime(max_data, "%d/%m/%Y")
+                data_formatada = data_formatada.replace(
+                    hour=23, minute=59, second=59)
+                filtros.append(Atendimento.data_atendimento <= data_formatada)
+
+            if tipo_atendimento:
+                filtros.append(func.lower(
+                    Atendimento.tipo_atendimento).like(f"%{tipo_atendimento}%"))
+
+            if usuario:
+                filtros.append(func.lower(
+                    Atendimento.usuario).like(f"%{usuario}%"))
+
+            if min_valor:
+                filtros.append(Atendimento.valor >= min_valor)
+
+            if max_valor:
+                filtros.append(Atendimento.valor <= max_valor)
+
+            if colaborador_atendimento:
+                filtros.append(func.lower(
+                    Atendimento.colaborador_atendimento).like(f"%{colaborador_atendimento}%"))
+
+            if is_ativo is not None:
+                filtros.append(Atendimento.is_ativo == is_ativo)
+            # Filtros com clienteX OR clienteY
+            if ids_clientes:
+                query = query.join(Atendimento.cliente_atendimento)\
+                    .filter(Cliente.id_cliente.in_(ids_clientes))
+            # Filtros com exameX AND exameY
+            if ids_exames:
+                query = query.join(Atendimento.exames_atendimento)\
+                    .filter(Exame.id_exame.in_(ids_exames))\
+                    .group_by(Atendimento.id_atendimento)\
+                    .having(func.count(distinct(Exame.id_exame)) == len(ids_exames))
+
+            return query.filter(and_(*filtros)).options(joinedload(Atendimento.cliente_atendimento), joinedload(Atendimento.exames_atendimento)).all()
+        except Exception as e:
+            raise e
+        finally:
+            self.session.close()
+
+    def filtrar_por_id(self, id_atendimento):
+        try:
+            atendimento = self.session.query(Atendimento)\
+                .options(joinedload(Atendimento.cliente_atendimento).joinedload(Cliente.exames_incluidos), joinedload(Atendimento.exames_atendimento))\
+                .filter(Atendimento.id_atendimento == id_atendimento).first()
+            return atendimento
+        except Exception as e:
+            raise e
+
+    def remover_atendimento(self, id_atendimento):
+        try:
+            atendimento_a_remover = self.filtrar_por_id(
+                id_atendimento=id_atendimento)
+            self.session.delete(atendimento_a_remover)
+            self.session.commit()
+        except Exception as e:
+            raise e
+        finally:
+            self.session.close()
+
+    def atualizar_atendimento(self, id_atendimento, data_atendimento, tipo_atendimento, usuario, valor,
+                              colaborador_atendimento, is_ativo, cliente_atendimento, exames_atendimento):
+        try:
+            atendimento_a_atualizar = self.filtrar_por_id(
+                id_atendimento=id_atendimento)
+
+            if data_atendimento is not None:
+                data_formatada = datetime.strptime(
+                    data_atendimento, "%d/%m/%Y")
+                atendimento_a_atualizar.data_atendimento = data_formatada
+
+            if tipo_atendimento is not None and tipo_atendimento != "":
+                atendimento_a_atualizar.tipo_atendimento = tipo_atendimento
+
+            if usuario is not None and usuario != "":
+                atendimento_a_atualizar.usuario = usuario
+
+            if valor is not None:
+                atendimento_a_atualizar.valor = valor
+
+            if colaborador_atendimento is not None and colaborador_atendimento != "":
+                atendimento_a_atualizar.colaborador_atendimento = colaborador_atendimento
+
+            if is_ativo is not None:
+                atendimento_a_atualizar.is_ativo = is_ativo
+
+            if cliente_atendimento is not None:
+                atendimento_a_atualizar.cliente_atendimento = cliente_atendimento
+
+            if exames_atendimento is not None:
+                atendimento_a_atualizar.exames_atendimento = exames_atendimento
+
+            self.session.commit()
+            return {
+                "id_atendimento": atendimento_a_atualizar.id_atendimento,
+                "data_atendimento": atendimento_a_atualizar.data_atendimento,
+                "tipo_atendimento": atendimento_a_atualizar.tipo_atendimento.__str__(),
+                "usuario": atendimento_a_atualizar.usuario,
+                "valor": atendimento_a_atualizar.valor,
+                "colaborador_atendimento": atendimento_a_atualizar.colaborador_atendimento,
+                "is_ativo": atendimento_a_atualizar.is_ativo,
+                "cliente_atendimento": atendimento_a_atualizar.cliente_atendimento,
+                "exames_atendimento": atendimento_a_atualizar.exames_atendimento
+            }
+        except Exception as e:
+            self.session.rollback()
+            raise e
+        finally:
+            self.session.close()

@@ -2,7 +2,6 @@ from model.cliente import Cliente
 from repository.cliente_repository import ClienteRepository
 from repository.exame_repository import ExameRepository
 from enums.tipos_cliente import TiposCliente
-import json
 
 
 class ClienteService():
@@ -77,7 +76,7 @@ class ClienteService():
     def remover_cliente(self, id_cliente):
         self.repositorio.remover_cliente(id_cliente=id_cliente)
 
-    def atualizar_cliente(self, id_cliente, nome_cliente, cnpj_cliente, tipo_cliente, exames_incluidos):
+    def atualizar_cliente(self, id_cliente: int, nome_cliente: str, cnpj_cliente: str, tipo_cliente: TiposCliente, exames_incluidos: list[int]):
         cliente = self.repositorio.filtrar_por_id(id_cliente=id_cliente)
         if exames_incluidos is not None:
             exames = []
@@ -94,7 +93,7 @@ class ClienteService():
             exames_incluidos=exames
         )
         exames_json = []
-        for exames_atualizado in cliente_atualizado['exames_incluidos']:
+        for exames_atualizado in cliente_atualizado.get('exames_incluidos'):
             json_exame = {
                 "id_exame": exames_atualizado.id_exame,
                 "nome_exame": exames_atualizado.nome_exame,
@@ -104,10 +103,10 @@ class ClienteService():
             exames_json.append(json_exame)
 
         json_cliente = {
-            "id_cliente": cliente_atualizado['id_cliente'],
-            "nome_cliente": cliente_atualizado['nome_cliente'],
-            "cnpj_cliente": cliente_atualizado['cnpj_cliente'],
-            "tipo_cliente": cliente_atualizado['tipo_cliente'],
+            "id_cliente": cliente_atualizado.get('id_cliente'),
+            "nome_cliente": cliente_atualizado.get('nome_cliente'),
+            "cnpj_cliente": cliente_atualizado.get('cnpj_cliente'),
+            "tipo_cliente": cliente_atualizado.get('tipo_cliente'),
             "exames_incluidos": exames_json
         }
         return json_cliente

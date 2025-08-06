@@ -49,7 +49,7 @@ class ClienteRepository:
                 filtros.append(func.lower(
                     Cliente.tipo_cliente).like(f"%{tipo_cliente}%"))
 
-            if exames_incluidos:
+            if exames_incluidos:  # filtro com OR
                 query = query.join(Cliente.exames_incluidos)\
                     .filter(Exame.id_exame.in_(exames_incluidos))\
                     .group_by(Cliente.id_cliente)\
