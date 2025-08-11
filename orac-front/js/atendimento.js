@@ -187,3 +187,11 @@ document.addEventListener('DOMContentLoaded', () => {
   updateTotal();
   updateDropdownText();
 });
+// Redirecionamento dos botões do menu do perfil
+document.getElementById('btnMinhaConta')?.addEventListener('click', () => {
+  window.location.href = 'conta.html';
+});
+
+document.getElementById('btnSair')?.addEventListener('click', () => {
+  window.location.href = 'login.html';
+});

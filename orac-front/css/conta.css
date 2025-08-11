@@ -1,3 +1,6 @@
+/* ================== Google Fonts (igual do atendimento) ================== */
+@import url('https://fonts.googleapis.com/css2?family=Poppins:ital,wght@0,100;0,200;0,300;0,400;0,500;0,600;0,700;0,800;0,900;1,100;1,200;1,300;1,400;1,500;1,600;1,700;1,800;1,900&display=swap');
+
 /* ================== Reset & Base ================== */
 * {
   margin: 0;
@@ -12,12 +15,12 @@ html {
   overflow: auto;
 }
 
-html::-webkit-scrollbar {
-  display: none;
-}
+html::-webkit-scrollbar { display: none; }
 
 html, body {
   font-family: "Poppins", sans-serif;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
 }
 
 body {
@@ -48,7 +51,7 @@ img { max-width: 100%; height: auto; }
   --white:#fff;
 }
 
-/* ================== Cabeçalho ================== */
+/* ================== Cabeçalho (espelhado do atendimento.css) ================== */
 header {
   width: 100%;
   background: var(--white);
@@ -105,18 +108,18 @@ nav a:hover, nav a:focus { color: var(--orange); outline: none; }
   border-radius: 50%;
 }
 .avatar-btn img {
-  width: 42px; height: 42px; border-radius: 50%;
+  width: 42px;
+  height: 42px;
+  border-radius: 50%;
   display: block;
-  transition: box-shadow 0.25s ease, transform 0.3s ease;
+  transition: box-shadow 0.25s ease; /* sem scale, igual atendimento */
 }
-.avatar-btn:hover img,
-.avatar-btn:focus img {
+.avatar-btn:hover img, .avatar-btn:focus img {
   box-shadow: 0 0 0 2px #fff, 0 0 0 3px var(--orange);
   outline: none;
-  transform: scale(1.06);
 }
 
-/* Menu do perfil */
+/* Menu do perfil (igual atendimento) */
 .profile-menu {
   position: absolute;
   top: calc(100% + 10px);
@@ -138,24 +141,19 @@ nav a:hover, nav a:focus { color: var(--orange); outline: none; }
   display: flex; align-items: center; gap: 10px;
   padding: 12px 14px;
 }
-.profile-header .thumb {
-  width: 36px; height: 36px; border-radius: 50%;
-}
-.profile-header .who strong {
-  display: block; font-size: 14px; color: var(--grey-900);
-}
-.profile-header .who small {
-  display: block; font-size: 12px; color: var(--grey-600);
-}
-.profile-menu hr {
-  border: 0; height: 1px; background: #f0f0f0; margin: 4px 0;
-}
+.profile-header .thumb { width: 36px; height: 36px; border-radius: 50%; }
+.profile-header .who strong { display: block; font-size: 14px; color: var(--grey-900); }
+.profile-header .who small { display: block; font-size: 12px; color: var(--grey-600); }
+.profile-menu hr { border: 0; height: 1px; background: #f0f0f0; margin: 4px 0; }
+
 .menu-item {
   display: flex; align-items: center; gap: 10px;
   padding: 10px 14px; text-decoration: none; color: #222;
   font-size: 14px; transition: background .15s ease;
 }
+.menu-item:hover, .menu-item:focus { background: #f6f6f6; outline: none; }
 .menu-item.danger { color: #d0342c; }
+.menu-item.danger:hover, .menu-item.danger:focus { background: #fdeeee; }
 .mi { width: 18px; height: 18px; color: currentColor; }
 
 /* ================== Conteúdo ================== */
@@ -163,7 +161,7 @@ main {
   background: #fff;
   width: calc(100% - 224px);
   margin: 16px 112px;
-  padding: 16px;
+  padding: clamp(16px, 2.2vw, 28px);
   border-radius: 12px;
   box-shadow: 0 0 12px rgba(0,0,0,0.1);
   flex: 1;
@@ -172,19 +170,24 @@ main {
 main h1 {
   text-align: center;
   margin-bottom: 25px;
-  font-size: clamp(20px, 2.6vw, 24px);
+  font-size: clamp(22px, 3vw, 28px); /* maior */
   color: var(--grey-800);
 }
 
-/* Formulário */
-label { font-weight: bold; margin-bottom: 6px; color: var(--grey-800); }
+/* Formulário (inputs maiores) */
+label {
+  font-weight: bold;
+  margin-bottom: 6px;
+  color: var(--grey-800);
+  font-size: clamp(14px, 1.6vw, 16px);
+}
 
 input, select {
   font-family: "Poppins", sans-serif;
-  padding: 10px;
+  padding: 14px 14px;                 /* ↑ padding */
   border: 1px solid var(--grey-300);
   border-radius: 8px;
-  font-size: 16px;
+  font-size: clamp(15px, 1.8vw, 17px); /* ↑ fonte */
   color: var(--grey-900);
   background: #fff;
 }
@@ -197,64 +200,62 @@ input:focus, select:focus {
   transition: border-color 0.25s, box-shadow 0.25s;
 }
 
-/* Avatar */
+/* Avatar (página Minha Conta) */
 .avatar-box {
   display: flex;
   flex-direction: column;
   align-items: center;
   gap: 12px;
-  margin-bottom: 24px;
+  margin-bottom: 28px; /* um pouquinho mais de respiro */
 }
 
 #avatar-preview {
-  width: 180px;
-  height: 180px;
+  width: 220px;      /* ↑ maior */
+  height: 220px;     /* ↑ maior */
   object-fit: cover;
   border-radius: 50%;
-  border: 4px solid transparent;
+  border: 4px solid transparent; /* sem argola fixa */
   transition: border 0.3s, transform 0.3s ease;
   cursor: pointer;
 }
-
 #avatar-preview:hover {
   border-color: var(--orange);
-  transform: scale(1.06);
+  transform: scale(1.06); /* leve zoom no hover */
 }
 
-/* Form */
+/* Form da conta (mais largo) */
 .conta-form {
-  max-width: 480px;
+  max-width: clamp(520px, 56vw, 720px); /* ↑ largura máxima */
   margin: 0 auto;
   display: flex;
   flex-direction: column;
-  gap: 18px;
+  gap: 22px; /* ↑ espaçamento entre grupos */
   align-items: center;
 }
 
 .form-group {
   width: 100%;
-  max-width: 420px;
+  max-width: 720px; /* acompanha a largura do form */
   display: flex;
   flex-direction: column;
   gap: 6px;
 }
 
-/* Botão Salvar */
+/* Botão Salvar — padronizado com o botão do login */
 .btn-salvar {
-  background-color: var(--green-700);
-  color: white;
+  background-color: var(--green-500);   /* normal: verde médio */
+  color: #fff;
   font-weight: 600;
-  padding: 12px 24px;
+  padding: 14px 24px;                   /* ↑ altura do botão */
   border: none;
-  border-radius: 8px;
+  border-radius: 8px;                    /* mantém formato */
   font-size: 16px;
   cursor: pointer;
-  transition: all 0.3s ease;
+  transition: background-color .25s ease, color .25s ease, box-shadow .25s ease;
 }
-
 .btn-salvar:hover {
-  background-color: #1e4723;
-  color: var(--orange);
+  background-color: var(--green-700);   /* hover: verde escuro */
+  color: var(--orange);                 /* texto laranja no hover */
 }
 
 /* ================== Rodapé ================== */
@@ -277,10 +278,7 @@ footer img { height: 45px; }
   height: 35px;
   transition: transform 500ms;
 }
-
-.icon-footer:hover {
-  transform: scale(1.07);
-}
+.icon-footer:hover { transform: scale(1.07); }
 
 /* ================== Breakpoints ================== */
 @media (max-width: 960px){
@@ -292,4 +290,10 @@ footer img { height: 45px; }
   header{ padding: 12px 16px; }
   .logo{ height: 38px; }
   nav a{ font-size: 14px; }
+
+  /* resposividade maissss ou menos */
+  #avatar-preview { width: 180px; height: 180px; }
+  .conta-form      { max-width: 92vw; gap: 18px; }
+  .form-group      { max-width: 92vw; }
+  input, select    { font-size: 16px; padding: 12px; }
 }

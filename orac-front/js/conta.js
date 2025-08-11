@@ -33,3 +33,22 @@ if (window.location.pathname.includes('conta.html')) {
     btnMinhaConta.remove();
   }
 }
+
+
+
+// ../js/conta.js
+document.addEventListener('DOMContentLoaded', () => {
+  // redirecionar "Sair" -> login.html
+  const sair = document.getElementById('btnSair');
+  if (sair) {
+    sair.addEventListener('click', (e) => {
+      e.preventDefault();
+      window.location.href = 'login.html';
+    });
+  }
+
+  // (opcional) esconder "Minha conta" nesta página
+  const minhaConta = document.getElementById('btnMinhaConta');
+  if (minhaConta) minhaConta.style.display = 'none';
+});
+

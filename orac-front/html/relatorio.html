@@ -1,0 +1,216 @@
+<!DOCTYPE html>
+<html lang="pt-br">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Relatório - ORAC</title>
+
+  <!-- Fonte padrão do projeto -->
+  <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;500;600;700&display=swap" rel="stylesheet">
+
+  <!-- CSS da página (vou enviar a versão nova no próximo passo) -->
+  <link rel="stylesheet" href="../css/relatorio.css" />
+</head>
+<body>
+  <!-- Cabeçalho -->
+  <header>
+    <img src="../img/Logo.png" alt="Logo ORAC" class="logo" />
+    <nav>
+      <a href="atendimento.html">Atendimento</a>
+      <a href="cadastro.html">Cadastro</a>
+      <a href="relatorio.html">Relatório</a>
+    </nav>
+    <div class="perfil-wrap">
+      <span class="nome-usuario">Eduardo</span>
+      <button id="avatarBtn" class="avatar-btn" aria-haspopup="true" aria-expanded="false" aria-controls="profileMenu">
+        <img src="../img/perfil1.png" alt="Abrir menu do usuário" />
+      </button>
+      <div id="profileMenu" class="profile-menu" role="menu" aria-hidden="true">
+        <div class="profile-header">
+          <img src="../img/perfil1.png" alt="" class="thumb" />
+          <div class="who">
+            <strong>Eduardo</strong>
+            <small>@usuario</small>
+          </div>
+        </div>
+        <hr />
+        <a href="conta.html" class="menu-item" role="menuitem" id="btnMinhaConta">
+          <svg viewBox="0 0 24 24" class="mi">
+            <path d="M12 12c2.761 0 5-2.463 5-5.5S14.761 1 12 1 7 3.463 7 6.5 9.239 12 12 12zm0 2c-4.418 0-8 2.91-8 6.5V22h16v-1.5c0-3.59-3.582-6.5-8-6.5z" fill="currentColor"/>
+          </svg>
+          Minha conta
+        </a>
+        <a href="login.html" class="menu-item danger" role="menuitem" id="btnSair">
+          <svg viewBox="0 0 24 24" class="mi">
+            <path d="M10 17l-1.41-1.41L12.17 12 8.59 8.41 10 7l5 5-5 5zM4 4h7v2H6v12h5v2H4V4z" fill="currentColor"/>
+          </svg>
+          Sair
+        </a>
+      </div>
+    </div>
+  </header>
+
+  <main>
+    <!-- Faixa verde com título e ícones -->
+    <div class="faixa">
+      <h1>Relatório</h1>
+      <div class="faixa-right">
+        <div class="itens-por-pagina">
+          <label for="ipp">Itens/página</label>
+          <select id="ipp">
+            <option>10</option>
+            <option>20</option>
+            <option>50</option>
+          </select>
+        </div>
+
+        <button id="btnFiltro" class="icon-btn" title="Filtros">
+          <img src="../img/icons/icon-filtro.png" alt="Filtros">
+        </button>
+        <button id="btnExportar" class="icon-btn" title="Exportar">
+          <img src="../img/icons/icon-exportar.png" alt="Exportar">
+        </button>
+        <button id="btnImprimir" class="icon-btn" title="Imprimir">
+          <img src="../img/icons/icon-impressora.png" alt="Imprimir">
+        </button>
+      </div>
+    </div>
+
+    <!-- Resumo -->
+    <section class="resumo">
+      <div class="card"><span id="count">0</span><small>registros</small></div>
+      <div class="card"><span id="total">R$ 0,00</span><small>valor total</small></div>
+    </section>
+
+    <!-- Tabela -->
+    <section class="tabela-wrap">
+      <table id="tbl">
+        <thead>
+          <tr>
+            <th data-sort="data">Data</th>
+            <th data-sort="empresa">Empresa</th>
+            <th data-sort="colaborador">Colaborador</th>
+            <th data-sort="tipoAt">Tipo Atend.</th>
+            <th data-sort="tipoEx">Tipo Exame</th>
+            <th>Exames</th>
+            <th data-sort="valor" class="num">Valor</th>
+            <th data-sort="status">Status</th>
+          </tr>
+        </thead>
+        <tbody></tbody>
+      </table>
+
+      <div class="paginacao">
+        <button id="prev" class="btn cinza">&laquo; Anterior</button>
+        <span id="pinfo">Página 1 de 1</span>
+        <button id="next" class="btn cinza">Próxima &raquo;</button>
+      </div>
+    </section>
+  </main>
+
+  <!-- MODAL: Filtros -->
+  <div id="modalFiltros" class="modal" aria-hidden="true" role="dialog" aria-modal="true" aria-labelledby="filtrosTitle">
+    <div class="modal__backdrop" data-close="modalFiltros"></div>
+    <div class="modal__dialog modal-lg">
+      <div class="modal__header">
+        <h2 id="filtrosTitle">Filtros</h2>
+        <button class="modal__close" data-close="modalFiltros" aria-label="Fechar">&times;</button>
+      </div>
+      <div class="modal__body">
+        <div class="grid filtros-grid">
+          <div class="fg">
+            <label for="ini">Início</label>
+            <input type="date" id="ini" />
+          </div>
+          <div class="fg">
+            <label for="fim">Fim</label>
+            <input type="date" id="fim" />
+          </div>
+          <div class="fg">
+            <label for="emp">Empresa</label>
+            <select id="emp"><option value="">Todas</option></select>
+          </div>
+          <div class="fg">
+            <label for="tipoAt">Tipo de Atendimento</label>
+            <select id="tipoAt">
+              <option value="">Todos</option>
+              <option>Cliente</option>
+              <option>Credenciado</option>
+              <option>Serviço Prestado</option>
+              <option>Particular</option>
+            </select>
+          </div>
+          <div class="fg">
+            <label for="tipoEx">Tipo de Exame</label>
+            <select id="tipoEx">
+              <option value="">Todos</option>
+              <option>Admissional</option>
+              <option>Demissional</option>
+              <option>Periódico</option>
+              <option>Mudança de Função</option>
+              <option>Retorno ao Trabalho</option>
+              <option>Outros</option>
+            </select>
+          </div>
+          <div class="fg">
+            <label for="status">Status</label>
+            <select id="status">
+              <option value="">Todos</option>
+              <option>Pago</option>
+              <option>Pendente</option>
+            </select>
+          </div>
+          <div class="fg fg-full">
+            <label for="q">Busca (nome, empresa, exame…)</label>
+            <input type="text" id="q" placeholder="Digite para filtrar…" />
+          </div>
+        </div>
+      </div>
+      <div class="modal__footer">
+        <button id="filtrosLimpar" class="btn cinza">Limpar</button>
+        <button id="filtrosAplicar" class="btn verde">Aplicar</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- MODAL: Exportar -->
+  <div id="modalExportar" class="modal" aria-hidden="true" role="dialog" aria-modal="true" aria-labelledby="expTitle">
+    <div class="modal__backdrop" data-close="modalExportar"></div>
+    <div class="modal__dialog">
+      <div class="modal__header">
+        <h2 id="expTitle">Exportar</h2>
+        <button class="modal__close" data-close="modalExportar" aria-label="Fechar">&times;</button>
+      </div>
+      <div class="modal__body">
+        <p class="export-meta">
+          <span id="expCount">0</span> registros filtrados • arquivo: <code id="expName">relatorio_YYYY-MM-DD</code>
+        </p>
+        <div class="export-grid">
+          <button id="exportCsv" class="export-tile" aria-label="Exportar CSV">
+            <img src="../img/icons/icon-csv.png" alt="">
+            <span>CSV</span>
+          </button>
+          <button id="exportTxt" class="export-tile" aria-label="Exportar TXT">
+            <img src="../img/icons/icon-txt.png" alt="">
+            <span>TXT</span>
+          </button>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Rodapé -->
+  <footer>
+    <a href="https://www.instagram.com/controllermedseg/" target="_blank">
+      <img src="../img/icons/instagram.png" alt="Instagram" class="icon-footer" />
+    </a>
+    <a href="https://www.instagram.com/controllermedseg/" target="_blank" class="img-footer">
+      <img src="../img/medseg.png" alt="Logo ORAC" />
+    </a>
+  </footer>
+
+  <!-- Scripts (o JS novo eu mando depois) -->
+  <script src="../js/core.js" defer></script>
+  <script src="../js/relatorio.js" defer></script>
+</body>
+</html>
