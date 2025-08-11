@@ -1,0 +1,95 @@
+<!DOCTYPE html>
+<html lang="pt-br">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Minha Conta - ORAC</title>
+
+  <!-- CSS -->
+  <link rel="stylesheet" href="../css/conta.css" />
+</head>
+<body>
+  <!-- Cabeçalho -->
+  <header>
+    <img src="../img/Logo.png" alt="Logo ORAC" class="logo" />
+    <nav>
+      <a href="atendimento.html">Atendimento</a>
+      <a href="#">Cadastro</a>
+      <a href="#">Relatório</a>
+    </nav>
+    <div class="perfil-wrap">
+      <span class="nome-usuario">Eduardo</span>
+      <button id="avatarBtn" class="avatar-btn" aria-haspopup="true" aria-expanded="false" aria-controls="profileMenu">
+        <img src="../img/perfil1.png" alt="Abrir menu do usuário" />
+      </button>
+      <div id="profileMenu" class="profile-menu" role="menu" aria-hidden="true">
+        <div class="profile-header">
+          <img src="../img/perfil1.png" alt="" class="thumb" />
+          <div class="who">
+            <strong>Eduardo</strong>
+            <small>@usuario</small>
+          </div>
+        </div>
+        <hr />
+        <a href="conta.html" class="menu-item" role="menuitem" id="btnMinhaConta">
+          <svg viewBox="0 0 24 24" class="mi">
+            <path d="M12 12c2.761 0 5-2.463 5-5.5S14.761 1 12 1 7 3.463 7 6.5 9.239 12 12 12zm0 2c-4.418 0-8 2.91-8 6.5V22h16v-1.5c0-3.59-3.582-6.5-8-6.5z" fill="currentColor"/>
+          </svg>
+          Minha conta
+        </a>
+        <a href="#" class="menu-item danger" role="menuitem" id="btnSair">
+          <svg viewBox="0 0 24 24" class="mi">
+            <path d="M10 17l-1.41-1.41L12.17 12 8.59 8.41 10 7l5 5-5 5zM4 4h7v2H6v12h5v2H4V4z" fill="currentColor"/>
+          </svg>
+          Sair
+        </a>
+      </div>
+    </div>
+  </header>
+
+  <!-- Conteúdo principal -->
+  <main>
+    <h1>Minha Conta</h1>
+    <form id="form-conta" autocomplete="off" class="conta-form">
+      <!-- Foto de Perfil -->
+      <div class="avatar-box">
+        <label for="avatar-upload">
+          <img id="avatar-preview" src="../img/perfil1.png" alt="Foto de perfil" />
+        </label>
+        <input type="file" id="avatar-upload" accept="image/*" hidden />
+      </div>
+
+      <!-- Nome -->
+      <div class="form-group">
+        <label for="nome">Nome completo</label>
+        <input type="text" id="nome" placeholder="Digite seu nome" required />
+      </div>
+
+      <!-- E-mail -->
+      <div class="form-group">
+        <label for="email">E-mail</label>
+        <input type="email" id="email" value="eduardo@email.com" readonly />
+      </div>
+
+      <!-- Data de nascimento -->
+      <div class="form-group">
+        <label for="data-nasc">Data de nascimento</label>
+        <input type="date" id="data-nasc" required />
+      </div>
+
+      <!-- Botão -->
+      <button type="submit" class="btn-salvar">Salvar alterações</button>
+    </form>
+  </main>
+
+  <!-- Rodapé -->
+  <footer>
+    <img src="../img/icons/instagram.png" alt="Instagram" />
+    <img src="../img/medseg.png" alt="Logo ORAC" />
+  </footer>
+
+  <!-- Scripts -->
+  <script src="../js/core.js" defer></script>
+  <script src="../js/conta.js" defer></script>
+</body>
+</html>
