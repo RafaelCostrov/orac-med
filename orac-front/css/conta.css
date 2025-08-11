@@ -2,35 +2,12 @@
 @import url('https://fonts.googleapis.com/css2?family=Poppins:ital,wght@0,100;0,200;0,300;0,400;0,500;0,600;0,700;0,800;0,900;1,100;1,200;1,300;1,400;1,500;1,600;1,700;1,800;1,900&display=swap');
 
 /* ================== Reset & Base ================== */
-* {
-  margin: 0;
-  padding: 0;
-  box-sizing: border-box;
-}
-
-html {
-  max-height: 100vh;
-  -ms-overflow-style: none;
-  scrollbar-width: none;
-  overflow: auto;
-}
-
-html::-webkit-scrollbar { display: none; }
-
-html, body {
-  font-family: "Poppins", sans-serif;
-  -webkit-font-smoothing: antialiased;
-  -moz-osx-font-smoothing: grayscale;
-}
-
-body {
-  background: linear-gradient(120deg, #d3d3d3, #cfcfcf);
-  display: flex;
-  flex-direction: column;
-  max-height: 100vh;
-}
-
-img { max-width: 100%; height: auto; }
+*{margin:0;padding:0;box-sizing:border-box}
+html{max-height:100vh;-ms-overflow-style:none;scrollbar-width:none;overflow:auto}
+html::-webkit-scrollbar{display:none}
+html,body{font-family:"Poppins",sans-serif;-webkit-font-smoothing:antialiased;-moz-osx-font-smoothing:grayscale}
+body{background:linear-gradient(120deg,#d3d3d3,#cfcfcf);display:flex;flex-direction:column;max-height:100vh}
+img{max-width:100%;height:auto}
 
 /* ================== Cores ================== */
 :root{
@@ -52,248 +29,326 @@ img { max-width: 100%; height: auto; }
 }
 
 /* ================== Cabeçalho (espelhado do atendimento.css) ================== */
-header {
-  width: 100%;
-  background: var(--white);
-  display: flex;
-  align-items: center;
-  justify-content: space-between;
-  padding: 12px 32px;
-  border-radius: 0;
-  margin: 0;
-  gap: 32px;
+header{
+  width:100%;background:var(--white);
+  display:flex;align-items:center;justify-content:space-between;
+  padding:12px 32px;gap:32px
 }
+.logo{height:36px;width:auto}
+nav{display:flex;gap:24px;padding-left:200px}
+nav a{text-decoration:none;font-weight:bold;color:var(--green-700);font-size:16px;transition:color .25s}
+nav a:hover,nav a:focus{color:var(--orange);outline:none}
 
-.logo { height: 36px; width: auto; }
+.perfil-wrap{position:relative;display:flex;align-items:center;gap:14px;min-width:0}
+.nome-usuario{font-weight:700;color:var(--orange);font-size:15px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;max-width:140px}
+.avatar-btn{background:transparent;border:0;padding:0;cursor:pointer;line-height:0;border-radius:50%}
+.avatar-btn img{width:42px;height:42px;border-radius:50%;display:block;transition:box-shadow .25s ease}
+.avatar-btn:hover img,.avatar-btn:focus img{box-shadow:0 0 0 2px #fff,0 0 0 3px var(--orange);outline:none}
 
-nav {
-  display: flex;
-  gap: 24px;
-  padding-left: 200px;
+/* Menu do perfil */
+.profile-menu{
+  position:absolute;top:calc(100% + 10px);right:0;
+  max-width:min(280px,90vw);width:240px;background:#fff;border-radius:12px;
+  box-shadow:0 12px 28px rgba(0,0,0,.18);border:1px solid #eee;overflow:hidden;
+  display:none;z-index:1000
 }
-
-nav a {
-  text-decoration: none;
-  font-weight: bold;
-  color: var(--green-700);
-  font-size: 16px;
-  transition: color 0.25s;
-}
-nav a:hover, nav a:focus { color: var(--orange); outline: none; }
-
-.perfil-wrap {
-  position: relative;
-  display: flex;
-  align-items: center;
-  gap: 14px;
-  min-width: 0;
-}
-
-.nome-usuario {
-  font-weight: 700;
-  color: var(--orange);
-  font-size: 15px;
-  white-space: nowrap;
-  overflow: hidden;
-  text-overflow: ellipsis;
-  max-width: 140px;
-}
-
-.avatar-btn {
-  background: transparent;
-  border: 0;
-  padding: 0;
-  cursor: pointer;
-  line-height: 0;
-  border-radius: 50%;
-}
-.avatar-btn img {
-  width: 42px;
-  height: 42px;
-  border-radius: 50%;
-  display: block;
-  transition: box-shadow 0.25s ease; /* sem scale, igual atendimento */
-}
-.avatar-btn:hover img, .avatar-btn:focus img {
-  box-shadow: 0 0 0 2px #fff, 0 0 0 3px var(--orange);
-  outline: none;
-}
-
-/* Menu do perfil (igual atendimento) */
-.profile-menu {
-  position: absolute;
-  top: calc(100% + 10px);
-  right: 0;
-  max-width: min(280px, 90vw);
-  width: 240px;
-  background: #fff;
-  border-radius: 12px;
-  box-shadow: 0 12px 28px rgba(0,0,0,.18);
-  border: 1px solid #eee;
-  overflow: hidden;
-  display: none;
-  z-index: 1000;
-}
-.profile-menu.open,
-.profile-menu[aria-hidden="false"] { display: block; }
-
-.profile-header {
-  display: flex; align-items: center; gap: 10px;
-  padding: 12px 14px;
-}
-.profile-header .thumb { width: 36px; height: 36px; border-radius: 50%; }
-.profile-header .who strong { display: block; font-size: 14px; color: var(--grey-900); }
-.profile-header .who small { display: block; font-size: 12px; color: var(--grey-600); }
-.profile-menu hr { border: 0; height: 1px; background: #f0f0f0; margin: 4px 0; }
-
-.menu-item {
-  display: flex; align-items: center; gap: 10px;
-  padding: 10px 14px; text-decoration: none; color: #222;
-  font-size: 14px; transition: background .15s ease;
-}
-.menu-item:hover, .menu-item:focus { background: #f6f6f6; outline: none; }
-.menu-item.danger { color: #d0342c; }
-.menu-item.danger:hover, .menu-item.danger:focus { background: #fdeeee; }
-.mi { width: 18px; height: 18px; color: currentColor; }
+.profile-menu.open,.profile-menu[aria-hidden="false"]{display:block}
+.profile-header{display:flex;align-items:center;gap:10px;padding:12px 14px}
+.profile-header .thumb{width:36px;height:36px;border-radius:50%}
+.profile-header .who strong{display:block;font-size:14px;color:var(--grey-900)}
+.profile-header .who small{display:block;font-size:12px;color:var(--grey-600)}
+.profile-menu hr{border:0;height:1px;background:#f0f0f0;margin:4px 0}
+.menu-item{display:flex;align-items:center;gap:10px;padding:10px 14px;text-decoration:none;color:#222;font-size:14px;transition:background .15s}
+.menu-item:hover,.menu-item:focus{background:#f6f6f6;outline:none}
+.menu-item.danger{color:#d0342c}
+.menu-item.danger:hover,.menu-item.danger:focus{background:#fdeeee}
+.mi{width:18px;height:18px;color:currentColor}
 
 /* ================== Conteúdo ================== */
-main {
-  background: #fff;
-  width: calc(100% - 224px);
-  margin: 16px 112px;
-  padding: clamp(16px, 2.2vw, 28px);
-  border-radius: 12px;
-  box-shadow: 0 0 12px rgba(0,0,0,0.1);
-  flex: 1;
+main{
+  background:#fff;width:calc(100% - 224px);margin:16px 112px;
+  padding:clamp(16px,2.2vw,28px);border-radius:12px;box-shadow:0 0 12px rgba(0,0,0,.1);
+  flex:1
 }
-
-main h1 {
-  text-align: center;
-  margin-bottom: 25px;
-  font-size: clamp(22px, 3vw, 28px); /* maior */
-  color: var(--grey-800);
-}
+main h1{text-align:center;margin-bottom:25px;font-size:clamp(22px,3vw,28px);color:var(--grey-800)}
 
 /* Formulário (inputs maiores) */
-label {
-  font-weight: bold;
-  margin-bottom: 6px;
-  color: var(--grey-800);
-  font-size: clamp(14px, 1.6vw, 16px);
+label{font-weight:bold;margin-bottom:6px;color:var(--grey-800);font-size:clamp(14px,1.6vw,16px)}
+input,select{
+  font-family:"Poppins",sans-serif;padding:14px 14px;border:1px solid var(--grey-300);
+  border-radius:8px;font-size:clamp(15px,1.8vw,17px);color:var(--grey-900);background:#fff
+}
+input::placeholder{color:var(--grey-500)}
+input:focus,select:focus{outline:none;border-color:var(--orange);box-shadow:0 0 0 2px rgba(247,147,30,.25);transition:border-color .25s,box-shadow .25s}
+
+/* Avatar */
+.avatar-box{display:flex;flex-direction:column;align-items:center;gap:12px;margin-bottom:28px}
+#avatar-preview{
+  width:220px;height:220px;object-fit:cover;border-radius:50%;
+  border:4px solid transparent;transition:border .3s,transform .3s ease;cursor:pointer
+}
+#avatar-preview:hover{border-color:var(--orange);transform:scale(1.06)}
+
+/* Form da conta */
+.conta-form{max-width:clamp(520px,56vw,720px);margin:0 auto;display:flex;flex-direction:column;gap:22px;align-items:center}
+.form-group{width:100%;max-width:720px;display:flex;flex-direction:column;gap:6px}
+
+/* Botões */
+.btn-salvar{
+  background-color:var(--green-500);color:#fff;font-weight:600;padding:14px 24px;border:none;
+  border-radius:8px;font-size:16px;cursor:pointer;transition:background-color .25s,color .25s,box-shadow .25s
+}
+.btn-salvar:hover{background-color:var(--green-700);color:var(--orange)}
+/* genéricos p/ modal */
+.btn{padding:10px 16px;border-radius:10px;border:0;cursor:pointer;font-weight:700;transition:all .2s;font-size:14px}
+.btn.verde{background:var(--green-500);color:#fff}
+.btn.verde:hover{background:var(--green-700);color:#fff}
+.btn.cinza{background:#e9ecef;color:#333}
+.btn.cinza:hover{background:#dfe3e6}
+
+/* ================== Segurança > “Alterar senha” tile ================== */
+.sec-seguranca{width:100%;max-width:720px}
+.sec-title{font-size:18px;color:var(--grey-800);margin:6px 0 12px}
+.tile-action{
+  width:100%;display:flex;align-items:center;gap:10px;
+  padding:14px 16px;border-radius:12px;
+  background:#fff;border:1px solid #e6e6e6; /* borda leve (não preta) */
+  box-shadow:0 1px 3px rgba(0,0,0,.06);
+  cursor:pointer;transition:transform .12s ease,box-shadow .12s ease,background .12s ease
+}
+.tile-action:hover{transform:translateY(-1px);box-shadow:0 6px 14px rgba(0,0,0,.1);background:#fafafa}
+.tile-action .ico-lock{
+  width:28px;height:28px;display:grid;place-items:center;border-radius:8px;
+  background:var(--green-100);color:var(--green-700);flex:none
 }
 
-input, select {
-  font-family: "Poppins", sans-serif;
-  padding: 14px 14px;                 /* ↑ padding */
-  border: 1px solid var(--grey-300);
-  border-radius: 8px;
-  font-size: clamp(15px, 1.8vw, 17px); /* ↑ fonte */
-  color: var(--grey-900);
-  background: #fff;
+/* ================== Modal Alterar Senha ================== */
+.modal{position:fixed;inset:0;display:none;z-index:1200}
+.modal[aria-hidden="false"]{display:block}
+.modal__backdrop{position:absolute;inset:0;background:rgba(0,0,0,.35)}
+.modal__dialog{
+  position:relative;z-index:1;margin:6vh auto 0;background:#fff;width:min(820px,94vw);
+  border-radius:14px;box-shadow:0 20px 60px rgba(0,0,0,.25);overflow:hidden
 }
-input::placeholder { color: var(--grey-500); }
+.modal-lg{width:min(920px,96vw)}
+/* topo verde da marca */
+.modal__header{
+  padding:14px 16px;display:flex;align-items:center;justify-content:space-between;
+  background:var(--green-700);color:#fff
+}
+.modal__header h2{font-size:18px;color:#fff}
+.modal__close{background:transparent;border:0;font-size:26px;line-height:1;cursor:pointer;color:#fff;padding:2px 8px;border-radius:8px}
+.modal__close:hover{background:rgba(255,255,255,.12)}
+.modal__body{padding:16px;max-height:62vh;overflow:auto;background:#fff}
+.modal__footer{padding:12px 16px;border-top:1px solid #eee;display:flex;gap:10px;justify-content:flex-end;background:#fafafa}
 
-input:focus, select:focus {
-  outline: none;
-  border-color: var(--orange);
-  box-shadow: 0 0 0 2px rgba(247, 147, 30, 0.25);
-  transition: border-color 0.25s, box-shadow 0.25s;
-}
+/* grid interno do modal */
+.grid{display:grid;gap:16px}
+.grid-senha{grid-template-columns:1fr 1.25fr}
+@media (max-width:820px){.grid-senha{grid-template-columns:1fr}}
 
-/* Avatar (página Minha Conta) */
-.avatar-box {
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  gap: 12px;
-  margin-bottom: 28px; /* um pouquinho mais de respiro */
+.box-remember{
+  background:#f4f5f5;border:1px solid #e8e8e8;border-radius:12px;padding:14px
 }
+.box-remember .rules{margin-top:8px;padding-left:18px}
+.box-remember .rules li{margin:6px 0;color:#333}
 
-#avatar-preview {
-  width: 220px;      /* ↑ maior */
-  height: 220px;     /* ↑ maior */
-  object-fit: cover;
-  border-radius: 50%;
-  border: 4px solid transparent; /* sem argola fixa */
-  transition: border 0.3s, transform 0.3s ease;
-  cursor: pointer;
+/* campos de senha + botão olho */
+.senha-form .fg{display:flex;flex-direction:column;gap:6px}
+.pwd-field{position:relative}
+.pwd-field input{width:100%;padding-right:42px}
+.toggle-pwd{
+  position:absolute;right:6px;top:50%;transform:translateY(-50%);
+  width:32px;height:32px;border-radius:8px;border:1px solid #e6e6e6;background:#fff;cursor:pointer
 }
-#avatar-preview:hover {
-  border-color: var(--orange);
-  transform: scale(1.06); /* leve zoom no hover */
-}
+.toggle-pwd::before{content:"👁";font-size:16px;display:block;text-align:center;line-height:30px}
 
-/* Form da conta (mais largo) */
-.conta-form {
-  max-width: clamp(520px, 56vw, 720px); /* ↑ largura máxima */
-  margin: 0 auto;
-  display: flex;
-  flex-direction: column;
-  gap: 22px; /* ↑ espaçamento entre grupos */
-  align-items: center;
-}
-
-.form-group {
-  width: 100%;
-  max-width: 720px; /* acompanha a largura do form */
-  display: flex;
-  flex-direction: column;
-  gap: 6px;
-}
-
-/* Botão Salvar — padronizado com o botão do login */
-.btn-salvar {
-  background-color: var(--green-500);   /* normal: verde médio */
-  color: #fff;
-  font-weight: 600;
-  padding: 14px 24px;                   /* ↑ altura do botão */
-  border: none;
-  border-radius: 8px;                    /* mantém formato */
-  font-size: 16px;
-  cursor: pointer;
-  transition: background-color .25s ease, color .25s ease, box-shadow .25s ease;
-}
-.btn-salvar:hover {
-  background-color: var(--green-700);   /* hover: verde escuro */
-  color: var(--orange);                 /* texto laranja no hover */
-}
+/* medidor de força */
+.pwd-meter{height:8px;background:#eee;border-radius:999px;overflow:hidden}
+.pwd-meter .bar{height:100%;width:0;background:var(--orange);transition:width .2s ease}
 
 /* ================== Rodapé ================== */
-footer {
-  width: 100%;
-  background: #fff;
-  border-radius: 0;
-  padding-top: 12px;
-  padding-bottom: 12px;
-  display: flex;
-  justify-content: center;
-  align-items: center;
-  gap: 30px;
-  box-shadow: none;
+footer{
+  width:100%;background:#fff;border-radius:0;padding:12px 0;
+  display:flex;justify-content:center;align-items:center;gap:30px;box-shadow:none
 }
-
-footer img { height: 45px; }
-
-.icon-footer {
-  height: 35px;
-  transition: transform 500ms;
-}
-.icon-footer:hover { transform: scale(1.07); }
+footer img{height:45px}
+.icon-footer{height:35px;transition:transform .5s}
+.icon-footer:hover{transform:scale(1.07)}
 
 /* ================== Breakpoints ================== */
-@media (max-width: 960px){
-  .nome-usuario{ max-width: 96px; }
-  nav a{ font-size: 15px; }
+@media (max-width:960px){
+  .nome-usuario{max-width:96px}
+  nav a{font-size:15px}
+}
+@media (max-width:720px){
+  header{padding:12px 16px}
+  .logo{height:38px}
+  nav a{font-size:14px}
+  #avatar-preview{width:180px;height:180px}
+  .conta-form{max-width:92vw;gap:18px}
+  .form-group{max-width:92vw}
+  input,select{font-size:16px;padding:12px}
+}
+/* ================== Segurança / Alterar Senha ================== */
+.seguranca{
+  width:100%;
+  max-width: 720px;
+  margin: 6px auto 0;
+}
+.seguranca h2{
+  font-size: 18px;
+  color: var(--grey-800);
+  margin: 2px 0 8px;
 }
 
+.pwd-tile{
+  display:flex;
+  align-items:center;
+  gap:10px;
+  width:100%;
+  padding:12px 14px;
+  border:1px solid var(--grey-300);
+  background:#fff;
+  border-radius:10px;
+  cursor:pointer;
+  transition: box-shadow .2s ease, transform .1s ease, background .2s ease;
+}
+.pwd-tile:hover{
+  background:#fff;
+  box-shadow:0 6px 16px rgba(0,0,0,.10);
+  transform: translateY(-1px);
+}
+.pwd-tile:focus-visible{
+  outline:2px solid var(--orange);
+  outline-offset:2px;
+}
+.lock-ic{
+  width:22px;
+  height:22px;
+  color: var(--green-700);
+  flex: 0 0 22px;
+}
+
+/* ================== Modal (genérico) ================== */
+.modal{ position:fixed; inset:0; display:none; z-index: 2000; }
+.modal[aria-hidden="false"]{ display:block; }
+
+.modal__backdrop{
+  position:absolute; inset:0;
+  background: rgba(0,0,0,.38);
+  display:flex; align-items:flex-start; justify-content:center;
+  padding: 16px;
+}
+.modal__dialog{
+  position:relative; z-index:1;
+  margin-top: 8vh;
+  width: min(720px, 96vw);
+  background:#fff;
+  border-radius:14px;
+  box-shadow: 0 20px 60px rgba(0,0,0,.25);
+  overflow:hidden;
+}
+.modal-lg{ width: min(900px, 96vw); }
+
+.modal__header{
+  display:flex; align-items:center; justify-content:space-between;
+  padding: 14px 16px;
+  background: var(--green-700);
+  color:#fff;
+}
+.modal__header h2{
+  margin:0;
+  font-size: 18px;
+  color:#fff;
+}
+.modal__close{
+  background:transparent; border:0;
+  font-size:26px; line-height:1; color:#fff;
+  cursor:pointer; padding:2px 8px; border-radius:8px;
+}
+.modal__close:hover{ background: rgba(255,255,255,.14); }
+
+.modal__body{
+  padding:16px;
+  max-height: 62vh;
+  overflow:auto;
+}
+.modal__footer{
+  padding:12px 16px;
+  display:flex; gap:10px; justify-content:flex-end;
+  background:#fafafa; border-top:1px solid #eee;
+}
+
+/* Grid do conteúdo do modal */
+.grid{ display:grid; gap:14px; }
+.filtros-grid{ grid-template-columns: 280px 1fr; align-items:start; }
 @media (max-width: 720px){
-  header{ padding: 12px 16px; }
-  .logo{ height: 38px; }
-  nav a{ font-size: 14px; }
-
-  /* resposividade maissss ou menos */
-  #avatar-preview { width: 180px; height: 180px; }
-  .conta-form      { max-width: 92vw; gap: 18px; }
-  .form-group      { max-width: 92vw; }
-  input, select    { font-size: 16px; padding: 12px; }
+  .filtros-grid{ grid-template-columns: 1fr; }
 }
+
+/* Bloco de dicas */
+.pwd-tips{
+  background:#fafafa;
+  border:1px solid var(--grey-300);
+  border-radius:12px;
+  padding:12px;
+}
+.pwd-tips h3{
+  font-size:15px;
+  color: var(--grey-800);
+  margin-bottom:8px;
+}
+.pwd-tips ul{
+  padding-left:18px;
+  color: var(--grey-700);
+  line-height:1.6;
+  font-size:14px;
+}
+
+/* Form do modal */
+.pwd-form .form-row{
+  display:flex; flex-direction:column; gap:6px;
+  margin-bottom:12px;
+}
+.pwd-field input{
+  width:100%;
+  padding:12px;
+  border:1px solid var(--grey-300);
+  border-radius:8px;
+  font-size:16px;
+  background:#fff; color: var(--grey-900);
+}
+.pwd-field input:focus{
+  outline:none;
+  border-color: var(--orange);
+  box-shadow: 0 0 0 2px rgba(247,147,30,.25);
+}
+
+/* Barra de força da senha */
+.pwd-meter{
+  height:8px;
+  background:#f1f1f1;
+  border-radius: 999px;
+  overflow:hidden;
+  margin-top:6px;
+}
+.pwd-meter .bar{
+  height:100%; width:0%;
+  background:#d9534f; /* JS atualiza cor/width */
+  transition: width .25s ease, background .25s ease;
+}
+
+/* Botões genéricos (se ainda não existir aqui) */
+.btn{
+  padding:10px 16px; border-radius:8px; border:0; cursor:pointer;
+  font-weight:700; font-size:14px;
+  transition: background .2s ease, color .2s ease, filter .2s ease;
+}
+.btn.verde{ background: var(--green-500); color:#fff; }
+.btn.verde:hover{ background: var(--green-700); color: var(--orange); }
+.btn.cinza{ background:#e9ecef; color:#333; }
+.btn.cinza:hover{ background:#dfe3e6; }
+
+/* Garantir que o avatar não fique com argola preta padrão */
+#avatar-preview{ border-color: transparent; }
