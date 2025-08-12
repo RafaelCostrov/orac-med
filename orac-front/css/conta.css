@@ -352,3 +352,120 @@ footer img{height:45px}
 
 /* Garantir que o avatar não fique com argola preta padrão */
 #avatar-preview{ border-color: transparent; }
+
+/* ==== NOVO (APPEND): Ícones nos inputs + olho (modal de senha) ==== */
+.pwd-field { position: relative; }
+
+/* cadeado à esquerda — usa <img class="icon-left" src="../img/icons/cadeado.png"> */
+.pwd-field .icon-left{
+  position:absolute; left:12px; top:50%; transform:translateY(-50%);
+  width:20px; height:20px; pointer-events:none; opacity:.9;
+}
+
+/* espaço interno pros ícones (esq/dir) */
+.pwd-field input{
+  padding-left:44px;   /* espaço para cadeado */
+  padding-right:44px;  /* espaço para botão do olho */
+}
+
+/* botão olho (usa view.png / hide.png no HTML) */
+.toggle-pass{
+  position:absolute; right:8px; top:50%; transform:translateY(-50%);
+  width:36px; height:36px; display:grid; place-items:center;
+  border:1px solid var(--grey-300); border-radius:8px;
+  background:#fff; cursor:pointer; transition:filter .2s ease;
+}
+.toggle-pass:hover{ filter:brightness(.98); }
+.toggle-pass img{ width:18px; height:18px; display:block; }
+
+/* alterna view/hide via aria-pressed */
+.toggle-pass .eye-closed{ display:none; }
+.toggle-pass[aria-pressed="true"] .eye-open{ display:none; }
+.toggle-pass[aria-pressed="true"] .eye-closed{ display:inline; }
+
+/* Lista “Lembre-se” com ícone info (se usar <ul class="requisitos">) */
+.requisitos{ list-style:none; padding-left:0; display:flex; flex-direction:column; gap:8px; }
+.requisitos li{
+  display:flex; align-items:flex-start; gap:8px;
+  color:var(--grey-700); font-size:14px; line-height:1.5;
+}
+.requisitos .info-ic{
+  width:16px; height:16px; flex:0 0 16px; margin-top:2px; opacity:.9;
+}
+/* ==== Ajustes visuais==== */
+
+/* Cadeados e infos fantasmas  */
+.pwd-field .icon-left{
+  opacity: .35;
+  filter: grayscale(1);
+}
+.requisitos .info-ic{
+  opacity: .7;
+  filter: grayscale(1);
+}
+
+/* Olho sem borda mantendo área clicável e acessível */
+.toggle-pass{
+  border: 0;
+  background: transparent;
+  width: 36px; height: 36px;
+  display: grid; place-items: center;
+  box-shadow: none;
+}
+.toggle-pass img{
+  width: 20px; height: 20px;
+  opacity: .7;        /* mais discreto por padrão */
+}
+.toggle-pass:hover img{ opacity: 1; }
+.toggle-pass:focus-visible{
+  outline: 2px solid var(--orange);
+  outline-offset: 2px;
+  border-radius: 6px;
+}
+
+.toggle-pass{ border:0; background:transparent; box-shadow:none; }
+.toggle-pass img{ opacity:.7; }
+.toggle-pass:hover img{ opacity:1; transform:scale(1.05); }
+.toggle-pass:focus-visible{ outline:2px solid var(--orange); outline-offset:2px; border-radius:6px; }
+
+/* ===== Ícones verdes quando aprovar ===== */
+
+/* deixa info e cadeado em modo "fantasma" por padrão */
+.requisitos .info-ic { opacity:.7; filter:grayscale(1); }
+.pwd-field .icon-left { opacity:.35; filter:grayscale(1); }
+
+/* quando a regra ficar OK */
+.requisitos li.ok span { color: var(--green-700) !important; }
+/* "pinta" o PNG de info em um verde aproximado via filter */
+.requisitos li.ok .info-ic {
+  opacity:1;
+  /* filtro para aproximar ao verde da marca */
+  filter: invert(49%) sepia(24%) saturate(987%) hue-rotate(85deg) brightness(92%) contrast(92%);
+}
+
+/* cadeado verde apenas em Nova/Confirme quando TODAS as regras OK */
+.pwd-field.ok-all .icon-left{
+  opacity:1;
+  filter: invert(49%) sepia(24%) saturate(987%) hue-rotate(85deg) brightness(92%) contrast(92%);
+}
+
+/* ---- Info: verde sem virar “bolinha” ---- */
+.requisitos .info-ic{
+  width:18px; height:18px;               /* um tiquinho maior p/ o “i” aparecer */
+  flex:0 0 18px;
+  margin-top:2px;
+  opacity:.9;
+  filter:none;                            /* mantém as cores originais do PNG */
+  border-radius:50%;
+}
+
+.requisitos li.ok .info-ic{
+  /* anel verde ao redor, preserva o “i” do PNG */
+  outline:2px solid var(--green-700);
+  outline-offset:-1px;                    /* traz o anel para dentro do círculo */
+  opacity:1;
+}
+
+.requisitos li.ok span{
+  color: var(--green-700) !important;     /* texto verde já estava no JS */
+}
