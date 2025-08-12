@@ -286,11 +286,12 @@ input:focus, select:focus, .dropdown-selected:focus {
   padding: 14px 22px;
   border: none;
   border-radius: 10px;
-  font-weight: bold;
+  font-weight: 500;
   cursor: pointer;
   box-shadow: 0 2px 4px rgba(0,0,0,0.15);
   font-size: 15px;
   min-width: 160px;
+  font-family: "Poppins", sans-serif;
 }
 .remover { background-color: #e53935; color: #fff; }
 .enviar  { background-color: var(--green-500); color: #fff; }

@@ -7,7 +7,7 @@ from db.db import Session
 
 class ClienteRepository:
     def __init__(self):
-        self.session = Session()
+        self.session = Session
 
     def adicionar_cliente(self, cliente: Cliente):
         try:
@@ -16,8 +16,6 @@ class ClienteRepository:
         except Exception as e:
             self.session.rollback()
             raise e
-        finally:
-            self.session.close()
 
     def listar_todos_clientes(self):
         try:
@@ -26,8 +24,6 @@ class ClienteRepository:
             return clientes
         except Exception as e:
             raise e
-        finally:
-            self.session.close()
 
     def filtrar_clientes(self, id_cliente=None, nome_cliente=None, cnpj_cliente=None, tipo_cliente=None, exames_incluidos=None):
         try:
@@ -58,8 +54,6 @@ class ClienteRepository:
             return query.filter(and_(*filtros)).options(joinedload(Cliente.exames_incluidos)).all()
         except Exception as e:
             raise e
-        finally:
-            self.session.close()
 
     def filtrar_por_id(self, id_cliente):
         try:
@@ -77,8 +71,6 @@ class ClienteRepository:
             self.session.commit()
         except Exception as e:
             raise e
-        finally:
-            self.session.close()
 
     def atualizar_cliente(self, id_cliente, nome_cliente, cnpj_cliente, tipo_cliente, exames_incluidos):
         try:
@@ -107,5 +99,3 @@ class ClienteRepository:
         except Exception as e:
             self.session.rollback()
             raise e
-        finally:
-            self.session.close()

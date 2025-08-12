@@ -1,8 +1,9 @@
 <!DOCTYPE html>
 <html lang="pt-br">
+
 <head>
   <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <title>Relatório - ORAC</title>
 
   <!-- Fonte padrão do projeto -->
@@ -11,6 +12,7 @@
   <!-- CSS da página (vou enviar a versão nova no próximo passo) -->
   <link rel="stylesheet" href="../css/relatorio.css" />
 </head>
+
 <body>
   <!-- Cabeçalho -->
   <header>
@@ -36,13 +38,15 @@
         <hr />
         <a href="conta.html" class="menu-item" role="menuitem" id="btnMinhaConta">
           <svg viewBox="0 0 24 24" class="mi">
-            <path d="M12 12c2.761 0 5-2.463 5-5.5S14.761 1 12 1 7 3.463 7 6.5 9.239 12 12 12zm0 2c-4.418 0-8 2.91-8 6.5V22h16v-1.5c0-3.59-3.582-6.5-8-6.5z" fill="currentColor"/>
+            <path
+              d="M12 12c2.761 0 5-2.463 5-5.5S14.761 1 12 1 7 3.463 7 6.5 9.239 12 12 12zm0 2c-4.418 0-8 2.91-8 6.5V22h16v-1.5c0-3.59-3.582-6.5-8-6.5z"
+              fill="currentColor" />
           </svg>
           Minha conta
         </a>
         <a href="login.html" class="menu-item danger" role="menuitem" id="btnSair">
           <svg viewBox="0 0 24 24" class="mi">
-            <path d="M10 17l-1.41-1.41L12.17 12 8.59 8.41 10 7l5 5-5 5zM4 4h7v2H6v12h5v2H4V4z" fill="currentColor"/>
+            <path d="M10 17l-1.41-1.41L12.17 12 8.59 8.41 10 7l5 5-5 5zM4 4h7v2H6v12h5v2H4V4z" fill="currentColor" />
           </svg>
           Sair
         </a>
@@ -90,26 +94,29 @@
             <th data-sort="data">Data</th>
             <th data-sort="empresa">Empresa</th>
             <th data-sort="colaborador">Colaborador</th>
-            <th data-sort="tipoAt">Tipo Atend.</th>
+            <th data-sort="tipoAt">Tipo Cliente</th>
             <th data-sort="tipoEx">Tipo Exame</th>
             <th>Exames</th>
             <th data-sort="valor" class="num">Valor</th>
-            <th data-sort="status">Status</th>
+            <!-- <th data-sort="status">Status</th> -->
           </tr>
         </thead>
         <tbody></tbody>
       </table>
 
       <div class="paginacao">
-        <button id="prev" class="btn cinza">&laquo; Anterior</button>
+        <button id="prev" class="btn cinza"><img src="../img/icons/arrow_esquerda.png" class="icon-paginacao"
+            alt="Seta para direita"><span>Anterior</span></button>
         <span id="pinfo">Página 1 de 1</span>
-        <button id="next" class="btn cinza">Próxima &raquo;</button>
+        <button id="next" class="btn cinza"><span>Próxima</span><img src="../img/icons/arrow.png" class="icon-paginacao"
+            alt="Seta para direita"></button>
       </div>
     </section>
   </main>
 
   <!-- MODAL: Filtros -->
-  <div id="modalFiltros" class="modal" aria-hidden="true" role="dialog" aria-modal="true" aria-labelledby="filtrosTitle">
+  <div id="modalFiltros" class="modal" aria-hidden="true" role="dialog" aria-modal="true"
+    aria-labelledby="filtrosTitle">
     <div class="modal__backdrop" data-close="modalFiltros"></div>
     <div class="modal__dialog modal-lg">
       <div class="modal__header">
@@ -119,50 +126,70 @@
       <div class="modal__body">
         <div class="grid filtros-grid">
           <div class="fg">
-            <label for="ini">Início</label>
-            <input type="date" id="ini" />
+            <label for="data_min">Data mínima</label>
+            <input type="date" id="data_min" />
           </div>
           <div class="fg">
-            <label for="fim">Fim</label>
-            <input type="date" id="fim" />
+            <label for="data_max">Data máxima</label>
+            <input type="date" id="data_max" />
           </div>
           <div class="fg">
             <label for="emp">Empresa</label>
-            <select id="emp"><option value="">Todas</option></select>
+            <select id="emp">
+              <option value="">Todas</option>
+            </select>
+          </div>
+          <div class="fg">
+            <label for="usuario">Usuario</label>
+            <input type="text" id="usuario" />
+          </div>
+          <div class="fg">
+            <label for="colaborador">Colaborador</label>
+            <input type="text" id="colaborador" />
+          </div>
+          <div class="fg">
+            <label for="tipoCl">Tipo de Cliente</label>
+            <select id="tipoCl">
+              <option value="">Todos</option>
+              <option value="cliente">Cliente</option>
+              <option value="credenciado">Credenciado</option>
+              <option value="servico_prestado">Serviço Prestado</option>
+              <option value="particular">Particular</option>
+            </select>
           </div>
           <div class="fg">
             <label for="tipoAt">Tipo de Atendimento</label>
             <select id="tipoAt">
               <option value="">Todos</option>
-              <option>Cliente</option>
-              <option>Credenciado</option>
-              <option>Serviço Prestado</option>
-              <option>Particular</option>
+              <option value="admissional">Admissional</option>
+              <option value="demissional">Demissional</option>
+              <option value="periodico">Periódico</option>
+              <option value="mudanca_funcao">Mudança de Função</option>
+              <option value="retorno_trabalho">Retorno ao Trabalho</option>
+              <option value="outros">Outros</option>
             </select>
           </div>
           <div class="fg">
-            <label for="tipoEx">Tipo de Exame</label>
-            <select id="tipoEx">
+            <label for="exames">Exames</label>
+            <select id="exames">
               <option value="">Todos</option>
-              <option>Admissional</option>
-              <option>Demissional</option>
-              <option>Periódico</option>
-              <option>Mudança de Função</option>
-              <option>Retorno ao Trabalho</option>
-              <option>Outros</option>
             </select>
           </div>
           <div class="fg">
             <label for="status">Status</label>
             <select id="status">
               <option value="">Todos</option>
-              <option>Pago</option>
-              <option>Pendente</option>
+              <option value="1">Ativas</option>
+              <option value="0">Canceladas</option>
             </select>
           </div>
-          <div class="fg fg-full">
-            <label for="q">Busca (nome, empresa, exame…)</label>
-            <input type="text" id="q" placeholder="Digite para filtrar…" />
+          <div class="fg">
+            <label for="valor_min">Valor mínimo</label>
+            <input type="number" id="valor_min" />
+          </div>
+          <div class="fg">
+            <label for="valor_max">Valor máximo</label>
+            <input type="number" id="valor_max" />
           </div>
         </div>
       </div>
@@ -210,7 +237,11 @@
   </footer>
 
   <!-- Scripts (o JS novo eu mando depois) -->
-  <script src="../js/core.js" defer></script>
+  <!-- <script src="../js/core.js" defer></script> -->
   <script src="../js/relatorio.js" defer></script>
+  <script src="../js/relatorio/atendimentos.js" defer></script>
+  <script src="../js/relatorio/clientes.js" defer></script>
+  <script src="../js/relatorio/exames.js" defer></script>
 </body>
+
 </html>

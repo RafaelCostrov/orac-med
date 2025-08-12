@@ -5,7 +5,7 @@ from db.db import Session
 
 class UsuarioRepository:
     def __init__(self):
-        self.session = Session()
+        self.session = Session
 
     def adicionar_usuario(self, usuario: Usuario):
         try:
@@ -14,8 +14,6 @@ class UsuarioRepository:
         except Exception as e:
             self.session.rollback()
             raise e
-        finally:
-            self.session.close()
 
     def listar_todos_usuarios(self):
         try:
@@ -23,8 +21,6 @@ class UsuarioRepository:
             return usuarios
         except Exception as e:
             raise e
-        finally:
-            self.session.close()
 
     def filtrar_usuarios(self, id_usuario=None, nome_usuario=None, email_usuario=None, role=None):
         try:
@@ -44,8 +40,6 @@ class UsuarioRepository:
             return query.filter(and_(*filtros)).all()
         except Exception as e:
             raise e
-        finally:
-            self.session.close()
 
     def filtrar_por_id(self, id_usuario):
         try:
@@ -62,8 +56,6 @@ class UsuarioRepository:
             self.session.commit()
         except Exception as e:
             raise e
-        finally:
-            self.session.close()
 
     def atualizar_usuario(self, id_usuario, nome_usuario, email_usuario, role):
         try:
@@ -88,5 +80,3 @@ class UsuarioRepository:
         except Exception as e:
             self.session.rollback()
             raise e
-        finally:
-            self.session.close()

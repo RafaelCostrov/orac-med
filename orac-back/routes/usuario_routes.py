@@ -24,13 +24,11 @@ def cadastrar_usuario():
             role=role,
         )
         service.cadastrar_usuario(novo_usuario)
-        Session.remove()
         return jsonify({
             "mensagem": f"Usuário cadastrado!"
         }), 200
     except Exception as e:
         print(f"Erro: {e}")
-        Session.remove()
         return jsonify({
             "erro": "Ocorreu um erro! Tente novamente"
         }), 400
@@ -40,14 +38,12 @@ def cadastrar_usuario():
 def listar_todos_usuarios():
     try:
         usuarios = service.listar_todos_usuarios()
-        Session.remove()
         return jsonify({
             "mensagem": "Usuários listadas com sucesso!",
             "usuarios": usuarios
         }), 200
     except Exception as e:
         print(f"Erro: {e}")
-        Session.remove()
         return jsonify({
             "erro": "Ocorreu um erro, tente novamente!"
         }), 400
@@ -68,14 +64,12 @@ def filtrar_usuario():
             email_usuario=email_usuario,
             role=role
         )
-        Session.remove()
         return jsonify({
             "mensagem": "Usuários filtradas com sucesso!",
             "usuarios": usuarios_filtrados
         }), 200
     except Exception as e:
         print(f"Erro: {e}")
-        Session.remove()
         return jsonify({
             "erro": "Ocorreu um erro, tente novamente!"
         }), 400
@@ -87,13 +81,11 @@ def remover_usuario():
         data = request.get_json()
         id_usuario = data.get('id_usuario')
         service.remover_usuario(id_usuario=id_usuario)
-        Session.remove()
         return ({
             "mensagem": "Usuario removido com sucesso!"
         }), 200
     except Exception as e:
         print(f"Erro: {e}")
-        Session.remove()
         return jsonify({
             "erro": "Ocorreu um erro, tente novamente!"
         }), 400
@@ -113,14 +105,12 @@ def atualizar_usuario():
             email_usuario=email_usuario,
             role=role,
         )
-        Session.remove()
         return ({
             "mensagem": "Usuário atualizado com sucesso!",
             "usuario_atualizado": usuario_atualizado
         }), 200
     except Exception as e:
         print(f"Erro: {e}")
-        Session.remove()
         return jsonify({
             "erro": "Ocorreu um erro, tente novamente!"
         }), 400

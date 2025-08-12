@@ -120,16 +120,17 @@ tbody tr:hover{background:#fcfcfc}
 
 /* ================== Paginação & Botões ================== */
 .paginacao{display:flex;gap:12px;align-items:center;justify-content:flex-end;padding:12px}
-.btn{padding:10px 16px;border-radius:10px;border:0;cursor:pointer;font-weight:700;transition:all .2s;font-size:14px}
-.btn.verde{background:var(--green-500);color:#fff}
+.btn{padding:10px 16px;border-radius:10px;border:0;cursor:pointer;transition:all .2s;font-size:14px}
+.btn.verde{background:var(--green-500);color:#fff; font-family: "Poppins", sans-serif;}
 .btn.verde:hover{background:var(--green-700);color:var(--orange)}
-.btn.cinza{background:#e9ecef;color:#333}
+.btn.cinza{background:#e9ecef;color:#333; align-items: center; justify-content: center;font-weight: 500; display: flex; gap: 4px; font-family: "Poppins", sans-serif;}
 .btn.cinza:hover{background:#dfe3e6}
 .btn.laranja{background:var(--orange);color:#fff}
 .btn.laranja:hover{filter:brightness(.95)}
 .btn.branco{background:#fff;border:1px solid var(--grey-300);color:#333}
 .btn.branco:hover{background:#f7f7f7}
 .btn.outline{border:1px solid var(--grey-300)}
+.icon-paginacao{height:20px; margin: 0; padding: 0;}
 
 /* ================== Modal ================== */
 .modal{position:fixed;inset:0;display:none;z-index:1200}

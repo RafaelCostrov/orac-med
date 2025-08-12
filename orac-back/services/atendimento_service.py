@@ -3,6 +3,7 @@ from repository.cliente_repository import ClienteRepository
 from repository.exame_repository import ExameRepository
 from repository.atendimento_repository import AtendimentoRepository
 from enums.tipos_atendimento import TiposAtendimento
+from enums.tipos_cliente import TiposCliente
 import json
 import datetime
 
@@ -69,8 +70,10 @@ class AtendimentoService():
         return lista
 
     def filtrar_atendimentos(self, id_atendimento: str, min_data: str, max_data: str, tipo_atendimento: TiposAtendimento, usuario: str, min_valor: float,
-                             max_valor: str, colaborador_atendimento: str, is_ativo: bool, ids_clientes: list[int], ids_exames: list[int]):
-        atendimentos_filtrados = self.repositorio.filtrar_atendimentos(
+                             max_valor: str, colaborador_atendimento: str, tipo_cliente: TiposCliente, is_ativo: bool, ids_clientes: list[int], ids_exames: list[int], pagina: int = 1,
+                             por_pagina: int = 50):
+        offset = (pagina - 1) * por_pagina
+        atendimentos_filtrados, total, total_filtrado, valor_total = self.repositorio.filtrar_atendimentos(
             id_atendimento=id_atendimento,
             min_data=min_data,
             max_data=max_data,
@@ -79,9 +82,12 @@ class AtendimentoService():
             min_valor=min_valor,
             max_valor=max_valor,
             colaborador_atendimento=colaborador_atendimento,
+            tipo_cliente=tipo_cliente,
             is_ativo=is_ativo,
             ids_clientes=ids_clientes,
-            ids_exames=ids_exames
+            ids_exames=ids_exames,
+            offset=offset,
+            limit=por_pagina
         )
 
         lista_filtrada = []
@@ -97,6 +103,7 @@ class AtendimentoService():
             json_cliente = {
                 "id_cliente": atendimento.cliente_atendimento.id_cliente,
                 "nome_cliente": atendimento.cliente_atendimento.nome_cliente,
+                "tipo_cliente": atendimento.cliente_atendimento.tipo_cliente.__str__()
             }
             json_atendimento = {
                 "id_atendimento": atendimento.id_atendimento,
@@ -110,7 +117,12 @@ class AtendimentoService():
                 "exames_atendimento": exames
             }
             lista_filtrada.append(json_atendimento)
-        return lista_filtrada
+        return {
+            "total": total,
+            "total_filtrado": total_filtrado,
+            "atendimentos": lista_filtrada,
+            "valor_total": valor_total
+        }
 
     def remover_atendimento(self, id_atendimento):
         self.repositorio.remover_atendimento(id_atendimento=id_atendimento)
