@@ -104,13 +104,31 @@
             <!-- Lembrete -->
             <aside class="pwd-tips">
               <h3>Lembre-se:</h3>
-              <ul>
-                <li>No mínimo 8 caracteres</li>
-                <li>Pelo menos 1 letra minúscula</li>
-                <li>Pelo menos 1 letra maiúscula</li>
-                <li>Pelo menos 1 número</li>
-                <li>Pelo menos 1 caractere especial</li>
-                <li>Ser diferente da senha atual</li>
+              <ul class="requisitos">
+                <li>
+                  <img src="../img/icons/info.png" class="info-ic" alt="" aria-hidden="true">
+                  <span>No mínimo 8 caracteres</span>
+                </li>
+                <li>
+                  <img src="../img/icons/info.png" class="info-ic" alt="" aria-hidden="true">
+                  <span>Pelo menos 1 letra minúscula</span>
+                </li>
+                <li>
+                  <img src="../img/icons/info.png" class="info-ic" alt="" aria-hidden="true">
+                  <span>Pelo menos 1 letra maiúscula</span>
+                </li>
+                <li>
+                  <img src="../img/icons/info.png" class="info-ic" alt="" aria-hidden="true">
+                  <span>Pelo menos 1 número</span>
+                </li>
+                <li>
+                  <img src="../img/icons/info.png" class="info-ic" alt="" aria-hidden="true">
+                  <span>Pelo menos 1 caractere especial</span>
+                </li>
+                <li>
+                  <img src="../img/icons/info.png" class="info-ic" alt="" aria-hidden="true">
+                  <span>Ser diferente da senha atual</span>
+                </li>
               </ul>
             </aside>
 
@@ -119,14 +137,24 @@
               <div class="form-row">
                 <label for="pwdAtual">Senha atual</label>
                 <div class="pwd-field">
+                  <img class="icon-left" src="../img/icons/cadeado.png" alt="" aria-hidden="true">
                   <input id="pwdAtual" type="password" autocomplete="current-password" />
+                  <button type="button" class="toggle-pass" aria-label="Mostrar senha" aria-pressed="false" data-target="#pwdAtual">
+                    <img class="eye eye-open" src="../img/icons/view.png" alt="">
+                    <img class="eye eye-closed" src="../img/icons/hide.png" alt="">
+                  </button>
                 </div>
               </div>
 
               <div class="form-row">
                 <label for="pwdNova">Nova senha</label>
                 <div class="pwd-field">
+                  <img class="icon-left" src="../img/icons/cadeado.png" alt="" aria-hidden="true">
                   <input id="pwdNova" type="password" autocomplete="new-password" />
+                  <button type="button" class="toggle-pass" aria-label="Mostrar senha" aria-pressed="false" data-target="#pwdNova">
+                    <img class="eye eye-open" src="../img/icons/view.png" alt="">
+                    <img class="eye eye-closed" src="../img/icons/hide.png" alt="">
+                  </button>
                 </div>
                 <div class="pwd-meter"><div class="bar" id="pwdBar"></div></div>
               </div>
@@ -134,7 +162,12 @@
               <div class="form-row">
                 <label for="pwdConfirma">Confirme a nova senha</label>
                 <div class="pwd-field">
+                  <img class="icon-left" src="../img/icons/cadeado.png" alt="" aria-hidden="true">
                   <input id="pwdConfirma" type="password" autocomplete="new-password" />
+                  <button type="button" class="toggle-pass" aria-label="Mostrar senha" aria-pressed="false" data-target="#pwdConfirma">
+                    <img class="eye eye-open" src="../img/icons/view.png" alt="">
+                    <img class="eye eye-closed" src="../img/icons/hide.png" alt="">
+                  </button>
                 </div>
               </div>
             </form>

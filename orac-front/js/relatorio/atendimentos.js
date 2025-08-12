@@ -34,7 +34,7 @@ async function carregarAtendimentos({ pagina = 1, filtros = {}, porPagina = 20 }
 
     try {
 
-        const resposta = await fetch("http://127.0.0.1:5000/atendimentos/filtrar-atendimentos", {
+        const resposta = await fetch("http://10.10.10.47:5000/atendimentos/filtrar-atendimentos", {
             method: "POST",
             headers: {
                 "Content-Type": "application/json"

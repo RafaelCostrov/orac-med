@@ -1,5 +1,5 @@
 async function carregarEmpresas() {
-    const response = await fetch("http://127.0.0.1:5000/clientes/listar-clientes");
+    const response = await fetch("http://10.10.10.47:5000/clientes/listar-clientes");
     const dados = await response.json();
     const clientes = dados.clientes;
 
