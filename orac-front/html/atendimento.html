@@ -69,17 +69,6 @@
 
     <form id="form-atendimento" autocomplete="off">
       <div class="form-grid">
-        <!-- Tipo de Atendimento -->
-        <div class="form-group">
-          <label for="tipo-atendimento">Tipo de Atendimento</label>
-          <select id="tipo-atendimento" required>
-            <option value="" disabled selected hidden>Selecione</option>
-            <option value="cliente">Cliente</option>
-            <option value="credenciado">Credenciado</option>
-            <option value="servico_prestado">Serviço Prestado</option>
-            <option value="particular">Particular</option>
-          </select>
-        </div>
 
         <!-- Empresa -->
         <div class="form-group">
@@ -100,12 +89,12 @@
           <label for="tipo-exame">Tipo de Exame</label>
           <select id="tipo-exame" required>
             <option value="" disabled selected hidden>Selecione</option>
-            <option>Admissional</option>
-            <option>Demissional</option>
-            <option>Periódico</option>
-            <option>Mudança de Função</option>
-            <option>Retorno ao Trabalho</option>
-            <option>Outros</option>
+            <option value="admissional">Admissional</option>
+            <option value="demissional">Demissional</option>
+            <option value="periodico">Periódico</option>
+            <option value="mudanca_funcao">Mudança de Função</option>
+            <option value="retorno_trabalho">Retorno ao Trabalho</option>
+            <option value="outros">Outros</option>
           </select>
         </div>
 
@@ -113,7 +102,7 @@
         <div class="form-group">
           <label for="exames">Exames</label>
           <div class="dropdown-checkbox">
-            <div class="dropdown-selected">Selecione os exames</div>
+            <div class="dropdown-selected" id="dropdown-selected">Selecione os exames</div>
             <div class="dropdown-list" id="exames">
             </div>
           </div>
@@ -132,10 +121,14 @@
           <label>Exames selecionados</label>
           <ul id="lista-exames"></ul>
         </div>
+        <div>
+          <label>Exames inclusos</label>
+          <ul id="exames-cliente"></ul>
+        </div>
 
         <div class="botoes">
-          <button type="button" class="remover">Remover Exames</button>
-          <button type="submit" class="enviar">Enviar</button>
+          <button class="remover" id="remover">Limpar</button>
+          <button class="enviar" id="enviar">Enviar</button>
         </div>
       </div>
     </form>
@@ -153,8 +146,8 @@
 
   <!-- JS -->
   <script src="../js/atendimento.js" defer></script>
-  <script src="../js/atendimento/exames_atendimento.js" defer></script>
-  <script src="../js/atendimento/clientes_atendimento.js" defer></script>
+  <script src="../js/atendimento/carregar.js" defer></script>
+  <script src="../js/atendimento/cadastro.js" defer></script>
 </body>
 
 </html>

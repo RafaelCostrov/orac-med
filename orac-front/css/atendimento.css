@@ -266,7 +266,7 @@ input:focus, select:focus, .dropdown-selected:focus {
   border-radius: 12px;
   background: #fafafa;
   font-size: 15px;
-  line-height: 1.6;
+  line-height: 1.8;
   height: 260px;
   width: 100%;
   box-shadow: 0 2px 4px rgba(0,0,0,0.08);
@@ -280,7 +280,8 @@ input:focus, select:focus, .dropdown-selected:focus {
 
 .exames-selecionados li {
   padding-left: 12px;
-
+  font-weight: 500;
+  font-size: medium;
 }
 
 

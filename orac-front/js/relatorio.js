@@ -209,18 +209,18 @@ document.addEventListener('DOMContentLoaded', () => {
 
   /* ================== EVENTS ================== */
   // Ordenação
-  ths.forEach(th => {
-    th.addEventListener('click', () => {
-      const key = th.dataset.sort;
-      if (sort.key === key) {
-        sort.dir = sort.dir === 'asc' ? 'desc' : 'asc';
-      } else {
-        sort.key = key;
-        sort.dir = key === 'valor' ? 'desc' : 'asc';
-      }
-      render();
-    });
-  });
+  // ths.forEach(th => {
+  //   th.addEventListener('click', () => {
+  //     const key = th.dataset.sort;
+  //     if (sort.key === key) {
+  //       sort.dir = sort.dir === 'asc' ? 'desc' : 'asc';
+  //     } else {
+  //       sort.key = key;
+  //       sort.dir = key === 'valor' ? 'desc' : 'asc';
+  //     }
+  //     render();
+  //   });
+  // });
 
   // // Paginação
   // prev.addEventListener('click', () => { page = Math.max(1, page - 1); render(); });

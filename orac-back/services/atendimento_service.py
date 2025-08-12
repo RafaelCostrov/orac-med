@@ -13,19 +13,24 @@ class AtendimentoService():
     repositorio_cliente = ClienteRepository()
     repositorio_exame = ExameRepository()
 
-    def cadastrar_atendimento(self, tipo_atendimento: TiposAtendimento, usuario: str, valor: float, colaborador_atendimento: str, id_cliente: int, ids_exames: list[int]):
+    def cadastrar_atendimento(self, tipo_atendimento: TiposAtendimento, usuario: str, valor: float, colaborador_atendimento: str, id_cliente: int,
+                              ids_exames: list[int]):
         exames = []
         valor_exames = 0
-        for exame_id in ids_exames:
-            exame = self.repositorio_exame.filtrar_por_id(exame_id)
+
+        cliente = self.repositorio_cliente.filtrar_por_id(id_cliente)
+        exames_incluidos = cliente.exames_incluidos
+
+        for id_exame in ids_exames:
+            exame = self.repositorio_exame.filtrar_por_id(id_exame)
             exames.append(exame)
-            valor_exame = exame.valor_exame
-            valor_exames += valor_exame
+            if id_exame not in [exame_incluido.id_exame for exame_incluido in exames_incluidos]:
+                valor_exame = exame.valor_exame
+                valor_exames += valor_exame
         if valor is not None:
             valor_final = valor
         else:
             valor_final = valor_exames
-        cliente = self.repositorio_cliente.filtrar_por_id(id_cliente)
         data_hora = datetime.datetime.now()
         atendimento = Atendimento(
             data_atendimento=data_hora,
@@ -71,7 +76,7 @@ class AtendimentoService():
 
     def filtrar_atendimentos(self, id_atendimento: str, min_data: str, max_data: str, tipo_atendimento: TiposAtendimento, usuario: str, min_valor: float,
                              max_valor: str, colaborador_atendimento: str, tipo_cliente: TiposCliente, is_ativo: bool, ids_clientes: list[int], ids_exames: list[int], pagina: int = 1,
-                             por_pagina: int = 50):
+                             por_pagina: int = 50, order_by: str = "data_atendimento", order_dir: str = "desc"):
         offset = (pagina - 1) * por_pagina
         atendimentos_filtrados, total, total_filtrado, valor_total = self.repositorio.filtrar_atendimentos(
             id_atendimento=id_atendimento,
@@ -87,7 +92,9 @@ class AtendimentoService():
             ids_clientes=ids_clientes,
             ids_exames=ids_exames,
             offset=offset,
-            limit=por_pagina
+            limit=por_pagina,
+            order_by=order_by,
+            order_dir=order_dir
         )
 
         lista_filtrada = []

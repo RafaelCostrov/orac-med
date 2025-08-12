@@ -2,6 +2,8 @@ let paginaAtual = 1;
 let porPagina = 20;
 let totalPaginas = 1;
 let filtrosAtuais = {};
+let orderByAtual = null;
+let orderDirAtual = 'asc';
 
 const $ = (s, ctx = document) => ctx.querySelector(s);
 function closeModal(id) {
@@ -34,7 +36,7 @@ async function carregarAtendimentos({ pagina = 1, filtros = {}, porPagina = 20 }
 
     try {
 
-        const resposta = await fetch("http://127.0.0.1:5000/atendimentos/filtrar-atendimentos", {
+        const resposta = await fetch("http://10.10.10.47:5000/atendimentos/filtrar-atendimentos", {
             method: "POST",
             headers: {
                 "Content-Type": "application/json"
@@ -57,13 +59,13 @@ async function carregarAtendimentos({ pagina = 1, filtros = {}, porPagina = 20 }
                 const tipoClienteFormatado = tiposCliente[atendimento.cliente_atendimento.tipo_cliente] || atendimento.cliente_atendimento.tipo_cliente;
                 const nomesExames = atendimento.exames_atendimento?.map(e => e.nome_exame).join(", ") || "-";
                 tr.innerHTML = `
-                    <td>${atendimento.data_atendimento}</td>
-                    <td>${atendimento.cliente_atendimento.nome_cliente}</td>
-                    <td>${atendimento.colaborador_atendimento}</td>
-                    <td>${tipoClienteFormatado}</td>
-                    <td>${tipoAtendimentoFormatado}</td>
-                    <td>${nomesExames}</td>
-                    <td>${valorFormatado}</td>
+                    <td title="${atendimento.data_atendimento}">${atendimento.data_atendimento}</td>
+                    <td title="${atendimento.cliente_atendimento.nome_cliente}">${atendimento.cliente_atendimento.nome_cliente}</td>
+                    <td title="${atendimento.colaborador_atendimento}">${atendimento.colaborador_atendimento}</td>
+                    <td title="${tipoClienteFormatado}">${tipoClienteFormatado}</td>
+                    <td title="${tipoAtendimentoFormatado}">${tipoAtendimentoFormatado}</td>
+                    <td title="${nomesExames}">${nomesExames}</td>
+                    <td title="${valorFormatado}" class="num">${valorFormatado}</td>
                 `;
                 tbody.appendChild(tr)
             });
@@ -95,6 +97,8 @@ document.getElementById("next").addEventListener("click", () => {
     }
 });
 
+
+
 function getFiltros() {
     return {
         data_min: document.getElementById("data_min").value || null,
@@ -113,7 +117,7 @@ function getFiltros() {
 
 
 document.getElementById("filtrosLimpar").addEventListener("click", () => {
-    carregarAtendimentos({ pagina: paginaAtual })
+    carregarAtendimentos({ pagina: paginaAtual, filtrosAtuais: {} })
 })
 
 document.getElementById("filtrosAplicar").addEventListener("click", () => {
@@ -154,3 +158,26 @@ document.getElementById("filtrosAplicar").addEventListener("click", () => {
 })
 
 carregarAtendimentos();
+
+document.querySelectorAll("th[data-sort]").forEach(th => {
+    th.addEventListener("click", () => {
+        const campo = th.getAttribute("data-sort");
+
+        if (orderByAtual === campo) {
+            orderDirAtual = orderDirAtual === 'asc' ? 'desc' : 'asc';
+        } else {
+            orderByAtual = campo;
+            orderDirAtual = 'asc';
+        }
+
+        filtrosAtuais.order_by = orderByAtual;
+        filtrosAtuais.order_dir = orderDirAtual;
+
+        document.querySelectorAll("th[data-sort]").forEach(e => {
+            e.classList.remove('asc', 'desc');
+        });
+        th.classList.add(orderDirAtual);
+
+        carregarAtendimentos({ filtros: filtrosAtuais, pagina: 1 });
+    });
+});

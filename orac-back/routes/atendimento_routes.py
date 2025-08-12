@@ -71,6 +71,8 @@ def filtrar_atendimentos():
         ids_exames = data.get('ids_exames')
         pagina = data.get('pagina', 1)
         por_pagina = data.get('por_pagina', 20)
+        order_by = data.get('order_by')
+        order_dir = data.get('order_dir')
 
         atendimentos_filtrados = service.filtrar_atendimentos(
             id_atendimento=id_atendimento,
@@ -86,7 +88,9 @@ def filtrar_atendimentos():
             ids_clientes=ids_clientes,
             ids_exames=ids_exames,
             pagina=pagina,
-            por_pagina=por_pagina
+            por_pagina=por_pagina,
+            order_by=order_by,
+            order_dir=order_dir
         )
 
         return jsonify({

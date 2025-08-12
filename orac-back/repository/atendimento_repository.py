@@ -29,8 +29,9 @@ class AtendimentoRepository:
         except Exception as e:
             raise e
 
-    def filtrar_atendimentos(self, id_atendimento=None, min_data=None, max_data=None, tipo_atendimento=None, usuario=None, min_valor=None, max_valor=None,
-                             colaborador_atendimento=None, tipo_cliente=None, is_ativo=None, ids_clientes=None, ids_exames=None, offset=None, limit=None):
+    def filtrar_atendimentos(self, id_atendimento=None, min_data=None, max_data=None, tipo_atendimento=None, usuario=None, min_valor=None,
+                             max_valor=None, colaborador_atendimento=None, tipo_cliente=None, is_ativo=None, ids_clientes=None,
+                             ids_exames=None, offset=None, limit=None, order_by=None, order_dir=None):
         try:
             query = self.session.query(Atendimento)
             total = query.count()
@@ -68,15 +69,15 @@ class AtendimentoRepository:
                     Atendimento.colaborador_atendimento).like(f"%{colaborador_atendimento}%"))
 
             if tipo_cliente:
-                query = query.join(Atendimento.cliente_atendimento)\
-                    .filter((Cliente.tipo_cliente).like(f"%{tipo_cliente}%"))
+                filtros.append(Atendimento.cliente_atendimento.has(
+                    Cliente.tipo_cliente.like(f"%{tipo_cliente}%")
+                ))
 
             if is_ativo is not None:
                 filtros.append(Atendimento.is_ativo == is_ativo)
             # Filtros com clienteX OR clienteY
             if ids_clientes:
-                query = query.join(Atendimento.cliente_atendimento)\
-                    .filter(Cliente.id_cliente.in_(ids_clientes))
+                filtros.append(Atendimento.id_cliente.in_(ids_clientes))
             # Filtros com exameX AND exameY
             if ids_exames:
                 query = query.join(Atendimento.exames_atendimento)\
@@ -84,8 +85,32 @@ class AtendimentoRepository:
                     .group_by(Atendimento.id_atendimento)\
                     .having(func.count(distinct(Exame.id_exame)) == len(ids_exames))
 
-            query = query.filter(and_(*filtros)).options(joinedload(
-                Atendimento.cliente_atendimento), joinedload(Atendimento.exames_atendimento))
+            query = query.filter(and_(*filtros)).options(
+                joinedload(Atendimento.cliente_atendimento),
+                joinedload(Atendimento.exames_atendimento)
+            )
+
+            campos_permitidos = {
+                "id_atendimento": Atendimento.id_atendimento,
+                "nome_cliente": Cliente.nome_cliente,
+                "colaborador_atendimento": Atendimento.colaborador_atendimento,
+                "tipo_atendimento": Atendimento.tipo_atendimento,
+                "tipo_cliente": Cliente.tipo_cliente,
+                "data_atendimento": Atendimento.data_atendimento,
+                "valor": Atendimento.valor,
+            }
+
+            if order_by in campos_permitidos:
+                coluna = campos_permitidos[order_by]
+                if order_dir == "desc":
+                    coluna = coluna.desc()
+                else:
+                    coluna = coluna.asc()
+
+                if order_by in ["nome_cliente", "tipo_cliente"]:
+                    query = query.join(Atendimento.cliente_atendimento)
+
+                query = query.order_by(coluna)
 
             total_filtrado = query.count()
             valor_total = query.with_entities(
