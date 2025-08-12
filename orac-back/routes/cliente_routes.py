@@ -23,13 +23,11 @@ def cadastrar_cliente():
             tipo_cliente=tipo_cliente,
             exames_incluidos=exames_incluidos
         )
-        Session.remove()
         return jsonify({
             "mensagem": f"Cliente cadastrado!"
         }), 200
     except Exception as e:
         print(f"Erro: {e}")
-        Session.remove()
         return jsonify({
             "erro": "Ocorreu um erro! Tente novamente"
         }), 400
@@ -39,14 +37,12 @@ def cadastrar_cliente():
 def listar_todos_clientes():
     try:
         clientes = service.listar_todos_clientes()
-        Session.remove()
         return jsonify({
             "mensagem": "Clientes listados com sucesso!",
             "clientes": clientes
         }), 200
     except Exception as e:
         print(f"Erro: {e}")
-        Session.remove()
         return jsonify({
             "erro": "Ocorreu um erro, tente novamente!"
         }), 400
@@ -70,14 +66,12 @@ def filtrar_clientes():
             exames_incluidos=exames_incluidos
         )
 
-        Session.remove()
         return jsonify({
             "mensagem": "Clientes filtrados com sucesso!",
             "clientes": clientes_filtrados
         }), 200
     except Exception as e:
         print(f"Erro: {e}")
-        Session.remove()
         return jsonify({
             "erro": "Ocorreu um erro, tente novamente!"
         }), 400
@@ -90,13 +84,11 @@ def remover_cliente():
         id_cliente = data.get('id_cliente')
 
         service.remover_cliente(id_cliente=id_cliente)
-        Session.remove()
         return ({
             "mensagem": "Cliente removido com sucesso!"
         }), 200
     except Exception as e:
         print(f"Erro: {e}")
-        Session.remove()
         return jsonify({
             "erro": "Ocorreu um erro, tente novamente!"
         }), 400
@@ -119,14 +111,12 @@ def atualizar_cliente():
             tipo_cliente=tipo_cliente,
             exames_incluidos=exames_incluidos
         )
-        Session.remove()
         return ({
             "mensagem": "Atendimento atualizado com sucesso!",
             "cliente": atendimento_atualizado
         }), 200
     except Exception as e:
         print(f"Erro: {e}")
-        Session.remove()
         return jsonify({
             "erro": "Ocorreu um erro, tente novamente!"
         }), 400

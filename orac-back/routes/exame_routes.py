@@ -23,13 +23,11 @@ def cadastrar_exame():
         )
 
         service.cadastrar_exame(novo_exame)
-        Session.remove()
         return jsonify({
             "mensagem": f"Exame cadastrado!"
         }), 200
     except Exception as e:
         print(f"Erro: {e}")
-        Session.remove()
         return jsonify({
             "erro": "Ocorreu um erro! Tente novamente"
         }), 400
@@ -39,14 +37,12 @@ def cadastrar_exame():
 def listar_todos_exames():
     try:
         exames = service.listar_todos_exames()
-        Session.remove()
         return jsonify({
             "mensagem": "Exames listadas com sucesso!",
             "exames": exames
         }), 200
     except Exception as e:
         print(f"Erro: {e}")
-        Session.remove()
         return jsonify({
             "erro": "Ocorreu um erro, tente novamente!"
         }), 400
@@ -69,14 +65,12 @@ def filtrar_exame():
             min_valor=min_valor,
             max_valor=max_valor
         )
-        Session.remove()
         return jsonify({
             "mensagem": "Exames filtradas com sucesso!",
             "exames": exames_filtrados
         }), 200
     except Exception as e:
         print(f"Erro: {e}")
-        Session.remove()
         return jsonify({
             "erro": "Ocorreu um erro, tente novamente!"
         }), 400
@@ -89,13 +83,11 @@ def remover_exame():
         id_exame = data.get('id_exame')
 
         service.remover_exame(id_exame=id_exame)
-        Session.remove()
         return ({
             "mensagem": "Exame removido com sucesso!"
         }), 200
     except Exception as e:
         print(f"Erro: {e}")
-        Session.remove()
         return jsonify({
             "erro": "Ocorreu um erro, tente novamente!"
         }), 400
@@ -115,14 +107,12 @@ def atualizar_exame():
             is_interno=is_interno,
             valor_exame=valor_exame
         )
-        Session.remove()
         return ({
             "mensagem": "Exame atualizado com sucesso!",
             "exame_atualizado": exame_atualizado
         }), 200
     except Exception as e:
         print(f"Erro: {e}")
-        Session.remove()
         return jsonify({
             "erro": "Ocorreu um erro, tente novamente!"
         }), 400

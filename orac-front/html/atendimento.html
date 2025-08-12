@@ -19,10 +19,10 @@
     <img src="../img/Logo.png" alt="Logo ORAC" class="logo" />
 
     <nav>
-  <a href="atendimento.html">Atendimento</a>
-  <a href="cadastro.html">Cadastro</a>
-  <a href="relatorio.html">Relatório</a>
-</nav>
+      <a href="atendimento.html">Atendimento</a>
+      <a href="cadastro.html">Cadastro</a>
+      <a href="relatorio.html">Relatório</a>
+    </nav>
 
 
 
@@ -74,10 +74,10 @@
           <label for="tipo-atendimento">Tipo de Atendimento</label>
           <select id="tipo-atendimento" required>
             <option value="" disabled selected hidden>Selecione</option>
-            <option>Cliente</option>
-            <option>Credenciado</option>
-            <option>Serviço Prestado</option>
-            <option>Particular</option>
+            <option value="cliente">Cliente</option>
+            <option value="credenciado">Credenciado</option>
+            <option value="servico_prestado">Serviço Prestado</option>
+            <option value="particular">Particular</option>
           </select>
         </div>
 
@@ -86,10 +86,6 @@
           <label for="empresa">Empresa</label>
           <select class="dropdown-empresa" id="empresa" required>
             <option value="" disabled selected hidden>Selecione</option>
-            <option value="105">105 - Oraculus</option>
-            <option value="106">106 - Controller</option>
-            <option value="449">449 - Azul Serviços</option>
-            <option value="2808">2808 - Orac</option>
           </select>
         </div>
 
@@ -118,16 +114,7 @@
           <label for="exames">Exames</label>
           <div class="dropdown-checkbox">
             <div class="dropdown-selected">Selecione os exames</div>
-            <div class="dropdown-list">
-              <label><input type="checkbox" value="Clínico"> Clínico</label>
-              <label><input type="checkbox" value="Audiometria"> Audiometria</label>
-              <label><input type="checkbox" value="Espirometria"> Espirometria</label>
-              <label><input type="checkbox" value="Teste Ishira"> Teste Ishira</label>
-              <label><input type="checkbox" value="TGO"> TGO</label>
-              <label><input type="checkbox" value="Aval. Psicossocial"> Aval. Psicossocial</label>
-              <label><input type="checkbox" value="ECG"> ECG</label>
-              <label><input type="checkbox" value="EEC"> EEC</label>
-              <label><input type="checkbox" value="Teste ROMBERG"> Teste ROMBERG</label>
+            <div class="dropdown-list" id="exames">
             </div>
           </div>
         </div>
@@ -166,6 +153,8 @@
 
   <!-- JS -->
   <script src="../js/atendimento.js" defer></script>
+  <script src="../js/atendimento/exames_atendimento.js" defer></script>
+  <script src="../js/atendimento/clientes_atendimento.js" defer></script>
 </body>
 
 </html>

@@ -5,11 +5,12 @@ from model.cliente import Cliente
 from model.atendimento import Atendimento
 from db.db import Session
 from datetime import datetime
+from flask import jsonify
 
 
 class AtendimentoRepository:
     def __init__(self):
-        self.session = Session()
+        self.session = Session
 
     def adicionar_atendimento(self, atendimento: Atendimento):
         try:
@@ -18,8 +19,6 @@ class AtendimentoRepository:
         except Exception as e:
             self.session.rollback()
             raise e
-        finally:
-            self.session.close()
 
     def listar_todos_atendimentos(self):
         try:
@@ -29,24 +28,23 @@ class AtendimentoRepository:
             return atendimentos
         except Exception as e:
             raise e
-        finally:
-            self.session.close()
 
     def filtrar_atendimentos(self, id_atendimento=None, min_data=None, max_data=None, tipo_atendimento=None, usuario=None, min_valor=None, max_valor=None,
-                             colaborador_atendimento=None, is_ativo=None, ids_clientes=None, ids_exames=None):
+                             colaborador_atendimento=None, tipo_cliente=None, is_ativo=None, ids_clientes=None, ids_exames=None, offset=None, limit=None):
         try:
             query = self.session.query(Atendimento)
+            total = query.count()
             filtros = []
 
             if id_atendimento is not None:
                 filtros.append(Atendimento.id_atendimento == id_atendimento)
 
             if min_data:
-                data_formatada = datetime.strptime(min_data, "%d/%m/%Y")
+                data_formatada = datetime.strptime(min_data, "%Y-%m-%d")
                 filtros.append(Atendimento.data_atendimento >= data_formatada)
 
             if max_data:
-                data_formatada = datetime.strptime(max_data, "%d/%m/%Y")
+                data_formatada = datetime.strptime(max_data, "%Y-%m-%d")
                 data_formatada = data_formatada.replace(
                     hour=23, minute=59, second=59)
                 filtros.append(Atendimento.data_atendimento <= data_formatada)
@@ -69,6 +67,10 @@ class AtendimentoRepository:
                 filtros.append(func.lower(
                     Atendimento.colaborador_atendimento).like(f"%{colaborador_atendimento}%"))
 
+            if tipo_cliente:
+                query = query.join(Atendimento.cliente_atendimento)\
+                    .filter((Cliente.tipo_cliente).like(f"%{tipo_cliente}%"))
+
             if is_ativo is not None:
                 filtros.append(Atendimento.is_ativo == is_ativo)
             # Filtros com clienteX OR clienteY
@@ -82,11 +84,22 @@ class AtendimentoRepository:
                     .group_by(Atendimento.id_atendimento)\
                     .having(func.count(distinct(Exame.id_exame)) == len(ids_exames))
 
-            return query.filter(and_(*filtros)).options(joinedload(Atendimento.cliente_atendimento), joinedload(Atendimento.exames_atendimento)).all()
+            query = query.filter(and_(*filtros)).options(joinedload(
+                Atendimento.cliente_atendimento), joinedload(Atendimento.exames_atendimento))
+
+            total_filtrado = query.count()
+            valor_total = query.with_entities(
+                func.sum(Atendimento.valor)).scalar()
+            if offset is not None:
+                query = query.offset(offset)
+            if limit is not None:
+                query = query.limit(limit)
+
+            resultados = query.all()
+            return resultados, total, total_filtrado, valor_total
+
         except Exception as e:
             raise e
-        finally:
-            self.session.close()
 
     def filtrar_por_id(self, id_atendimento):
         try:
@@ -105,8 +118,6 @@ class AtendimentoRepository:
             self.session.commit()
         except Exception as e:
             raise e
-        finally:
-            self.session.close()
 
     def atualizar_atendimento(self, id_atendimento, data_atendimento, tipo_atendimento, usuario, valor,
                               colaborador_atendimento, is_ativo, cliente_atendimento, exames_atendimento):
@@ -155,5 +166,3 @@ class AtendimentoRepository:
         except Exception as e:
             self.session.rollback()
             raise e
-        finally:
-            self.session.close()

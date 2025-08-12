@@ -27,13 +27,11 @@ def cadastrar_atendimento():
             id_cliente=id_cliente,
             ids_exames=ids_exames
         )
-        Session.remove()
         return jsonify({
             "mensagem": f"Atendimento cadastrado!"
         }), 200
     except Exception as e:
         print(f"Erro: {e}")
-        Session.remove()
         return jsonify({
             "erro": "Ocorreu um erro! Tente novamente"
         }), 400
@@ -43,23 +41,22 @@ def cadastrar_atendimento():
 def listar_todos_atendimentos():
     try:
         atendimentos = service.listar_todos_atendimentos()
-        Session.remove()
         return jsonify({
             "mensagem": "Atendimentos listados com sucesso!",
             "atendimentos": atendimentos
         }), 200
     except Exception as e:
         print(f"Erro: {e}")
-        Session.remove()
         return jsonify({
             "erro": "Ocorreu um erro, tente novamente!"
         }), 400
 
 
-@atendimento_bp.route('/filtrar-atendimentos')
+@atendimento_bp.route('/filtrar-atendimentos', methods=['POST'])
 def filtrar_atendimentos():
     try:
         data = request.get_json()
+        print(data)
         id_atendimento = data.get('id_atendimento')
         min_data = data.get('min_data')
         max_data = data.get('max_data')
@@ -68,9 +65,12 @@ def filtrar_atendimentos():
         min_valor = data.get('min_valor')
         max_valor = data.get('max_valor')
         colaborador_atendimento = data.get('colaborador_atendimento')
+        tipo_cliente = data.get('tipo_cliente')
         is_ativo = data.get('is_ativo')
         ids_clientes = data.get('ids_clientes')
         ids_exames = data.get('ids_exames')
+        pagina = data.get('pagina', 1)
+        por_pagina = data.get('por_pagina', 20)
 
         atendimentos_filtrados = service.filtrar_atendimentos(
             id_atendimento=id_atendimento,
@@ -81,19 +81,20 @@ def filtrar_atendimentos():
             min_valor=min_valor,
             max_valor=max_valor,
             colaborador_atendimento=colaborador_atendimento,
+            tipo_cliente=tipo_cliente,
             is_ativo=is_ativo,
             ids_clientes=ids_clientes,
-            ids_exames=ids_exames
+            ids_exames=ids_exames,
+            pagina=pagina,
+            por_pagina=por_pagina
         )
 
-        Session.remove()
         return jsonify({
             "mensagem": "Atendimentos filtrados com sucesso!",
-            "atendimentos": atendimentos_filtrados
+            **atendimentos_filtrados
         }), 200
     except Exception as e:
         print(f"Erro: {e}")
-        Session.remove()
         return jsonify({
             "erro": "Ocorreu um erro, tente novamente!"
         }), 400
@@ -106,13 +107,13 @@ def filtrar_atendimentos():
 #         id_atendimento = data.get('id_atendimento')
 
 #         service.remover_atendimento(id_atendimento=id_atendimento)
-#         Session.remove()
+#
 #         return ({
 #             "mensagem": "Atendimento removido com sucesso!"
 #         }), 200
 #     except Exception as e:
 #         print(f"Erro: {e}")
-#         Session.remove()
+#
 #         return jsonify({
 #             "erro": "Ocorreu um erro, tente novamente!"
 #         }), 400
@@ -128,6 +129,7 @@ def atualizar_atendimento():
         usuario = data.get('usuario')
         valor = data.get('valor')
         colaborador_atendimento = data.get('colaborador_atendimento')
+        tipo_cliente = data.get('tipo_cliente')
         is_ativo = data.get('is_ativo')
         id_cliente = data.get('id_cliente')
         ids_exames = data.get('ids_exames')
@@ -139,18 +141,17 @@ def atualizar_atendimento():
             usuario=usuario,
             valor=valor,
             colaborador_atendimento=colaborador_atendimento,
+            tipo_cliente=tipo_cliente,
             is_ativo=is_ativo,
             id_cliente=id_cliente,
             ids_exames=ids_exames
         )
-        Session.remove()
         return ({
             "mensagem": "Atendimento atualizado com sucesso!",
             "atendimento": atendimento_atualizado
         }), 200
     except Exception as e:
         print(f"Erro: {e}")
-        Session.remove()
         return jsonify({
             "erro": "Ocorreu um erro, tente novamente!"
         }), 400

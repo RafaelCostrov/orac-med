@@ -5,7 +5,7 @@ from db.db import Session
 
 class ExameRepository:
     def __init__(self):
-        self.session = Session()
+        self.session = Session
 
     def adicionar_exame(self, exame: Exame):
         try:
@@ -14,8 +14,6 @@ class ExameRepository:
         except Exception as e:
             self.session.rollback()
             raise e
-        finally:
-            self.session.close()
 
     def listar_todos_exames(self):
         try:
@@ -23,8 +21,6 @@ class ExameRepository:
             return exames
         except Exception as e:
             raise e
-        finally:
-            self.session.close()
 
     def filtrar_exames(self, id_exame=None, nome_exame=None, is_interno=None, min_valor=None, max_valor=None):
         try:
@@ -50,8 +46,6 @@ class ExameRepository:
             return query.filter(and_(*filtros)).all()
         except Exception as e:
             raise e
-        finally:
-            self.session.close()
 
     def filtrar_por_id(self, id_exame):
         try:
@@ -68,8 +62,6 @@ class ExameRepository:
             self.session.commit()
         except Exception as e:
             raise e
-        finally:
-            self.session.close()
 
     def atualizar_exame(self, id_exame, nome_exame, is_interno, valor_exame):
         try:
@@ -94,5 +86,3 @@ class ExameRepository:
         except Exception as e:
             self.session.rollback()
             raise e
-        finally:
-            self.session.close()
