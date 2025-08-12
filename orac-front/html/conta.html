@@ -50,6 +50,7 @@
   <!-- Conteúdo principal -->
   <main>
     <h1>Minha Conta</h1>
+
     <form id="form-conta" autocomplete="off" class="conta-form">
       <!-- Foto de Perfil -->
       <div class="avatar-box">
@@ -65,24 +66,90 @@
         <input type="text" id="nome" placeholder="Digite seu nome" required />
       </div>
 
-      <!-- E-mail -->
+      <!-- E-mail (somente leitura) -->
       <div class="form-group">
         <label for="email">E-mail</label>
         <input type="email" id="email" value="eduardo@email.com" readonly />
       </div>
 
-      <!-- Data de nascimento -->
-      <div class="form-group">
-        <label for="data-nasc">Data de nascimento</label>
-        <input type="date" id="data-nasc" required />
-      </div>
+      <!-- Segurança -->
+      <section class="seguranca">
+        <h2>Segurança</h2>
 
-      <!-- Botão -->
+        <!-- Tile/linha clicável para abrir o modal -->
+        <button type="button" id="openChangePwd" class="pwd-tile" aria-haspopup="dialog" aria-controls="modalSenha">
+          <svg class="lock-ic" viewBox="0 0 24 24" aria-hidden="true">
+            <path fill="currentColor" d="M12 1a6 6 0 0 1 6 6v3h1a2 2 0 0 1 2 2v9a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-9a2 2 0 0 1 2-2h1V7a6 6 0 0 1 6-6zm0 2a4 4 0 0 0-4 4v3h8V7a4 4 0 0 0-4-4z"/>
+          </svg>
+          <span>Alterar senha</span>
+        </button>
+      </section>
+
+      <!-- Botão salvar (dados da conta) -->
       <button type="submit" class="btn-salvar">Salvar alterações</button>
     </form>
   </main>
 
-<!-- Rodapé -->
+  <!-- Modal Alterar Senha -->
+  <div id="modalSenha" class="modal" aria-hidden="true" role="dialog" aria-modal="true">
+    <div class="modal__backdrop">
+      <div class="modal__dialog modal-lg" role="document">
+        <header class="modal__header">
+          <h2>Alterar senha</h2>
+          <button class="modal__close" type="button" data-close aria-label="Fechar">&times;</button>
+        </header>
+
+        <div class="modal__body">
+          <div class="grid filtros-grid">
+            <!-- Lembrete -->
+            <aside class="pwd-tips">
+              <h3>Lembre-se:</h3>
+              <ul>
+                <li>No mínimo 8 caracteres</li>
+                <li>Pelo menos 1 letra minúscula</li>
+                <li>Pelo menos 1 letra maiúscula</li>
+                <li>Pelo menos 1 número</li>
+                <li>Pelo menos 1 caractere especial</li>
+                <li>Ser diferente da senha atual</li>
+              </ul>
+            </aside>
+
+            <!-- Form Senha -->
+            <form id="formSenha" class="pwd-form" autocomplete="off">
+              <div class="form-row">
+                <label for="pwdAtual">Senha atual</label>
+                <div class="pwd-field">
+                  <input id="pwdAtual" type="password" autocomplete="current-password" />
+                </div>
+              </div>
+
+              <div class="form-row">
+                <label for="pwdNova">Nova senha</label>
+                <div class="pwd-field">
+                  <input id="pwdNova" type="password" autocomplete="new-password" />
+                </div>
+                <div class="pwd-meter"><div class="bar" id="pwdBar"></div></div>
+              </div>
+
+              <div class="form-row">
+                <label for="pwdConfirma">Confirme a nova senha</label>
+                <div class="pwd-field">
+                  <input id="pwdConfirma" type="password" autocomplete="new-password" />
+                </div>
+              </div>
+            </form>
+          </div>
+        </div>
+
+        <div class="modal__footer">
+          <button class="btn cinza" id="btnCancelarSenha" type="button">Voltar</button>
+          <button class="btn verde" form="formSenha" type="submit">Alterar Senha</button>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Rodapé -->
   <footer>
     <a href="https://www.instagram.com/controllermedseg/" target="_blank">
       <img src="../img/icons/instagram.png" alt="Instagram" class="icon-footer" />
