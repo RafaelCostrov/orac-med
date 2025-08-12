@@ -28,7 +28,7 @@ document.addEventListener('DOMContentLoaded', () => {
   const PACKAGE_MAP = {
     'Admissional': ['Clínico'],
     'Demissional': ['Clínico'],
-    'Periódico':   ['Clínico'],
+    'Periódico': ['Clínico'],
     'Mudança de Função': ['Clínico'],
     'Retorno ao Trabalho': ['Clínico'],
     'Outros': []
@@ -65,16 +65,16 @@ document.addEventListener('DOMContentLoaded', () => {
     else label.classList.remove('selected');
   }
 
-  function applyPackage(tipo) {
-    selected = new Set(PACKAGE_MAP[tipo] || []);
-    checkboxes.forEach(chk => {
-      chk.checked = selected.has(chk.value);
-      toggleHighlight(chk);
-    });
-    renderList();
-    updateTotal();
-    updateDropdownText();
-  }
+  // function applyPackage(tipo) {
+  //   selected = new Set(PACKAGE_MAP[tipo] || []);
+  //   checkboxes.forEach(chk => {
+  //     chk.checked = selected.has(chk.value);
+  //     toggleHighlight(chk);
+  //   });
+  //   renderList();
+  //   updateTotal();
+  //   updateDropdownText();
+  // }
 
   function updateDropdownText() {
     if (!dropdownSelected) return;
@@ -143,7 +143,7 @@ document.addEventListener('DOMContentLoaded', () => {
   });
 
   // ====== Dropdown do Perfil ======
-  const btn  = document.getElementById('avatarBtn');
+  const btn = document.getElementById('avatarBtn');
   const menu = document.getElementById('profileMenu');
   const minhaConta = document.getElementById('btnMinhaConta');
   const sair = document.getElementById('btnSair');

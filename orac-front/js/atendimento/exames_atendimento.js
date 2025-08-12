@@ -8,17 +8,27 @@ async function carregarExames() {
 
 
     const valoresExames = {};
+    const nomesExame = {};
     exames.forEach(exame => {
         valoresExames[exame.id_exame] = exame.valor_exame ?? 0;
+        nomesExame[exame.id_exame] = exame.nome_exame ?? "";
     });
 
     function atualizarValorTotal() {
         let soma = 0;
+        const lista = document.getElementById("lista-exames");
+        lista.innerHTML = "";
+
         const checkboxes = container.querySelectorAll('input[type="checkbox"]:checked');
         checkboxes.forEach(cb => {
             const id = cb.value;
             soma += valoresExames[id] || 0;
+
+            const exame = document.createElement("li");
+            exame.textContent = `${id} - ${nomesExame[id]}`;
+            lista.appendChild(exame);
         });
+
         inputValorTotal.value = new Intl.NumberFormat("pt-BR", {
             style: "currency",
             currency: "BRL"

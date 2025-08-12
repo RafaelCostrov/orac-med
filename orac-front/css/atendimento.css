@@ -248,10 +248,10 @@ input:focus, select:focus, .dropdown-selected:focus {
 /* ================== Exames selecionados + botões ================== */
 .exames-selecionados {
   display: flex;
-  flex-direction: column;
   gap: 15px;
   margin-top: 8px;
-  margin-bottom: 30px;
+  align-items: end;
+  justify-content: space-between;
 }
 .exames-selecionados label {
   font-weight: bold;
@@ -261,24 +261,33 @@ input:focus, select:focus, .dropdown-selected:focus {
 .exames-selecionados ul {
   list-style: disc;
   padding: 18px;
+  min-width: 400px;
   border: 1px solid var(--grey-300);
   border-radius: 12px;
   background: #fafafa;
   font-size: 15px;
   line-height: 1.6;
+  height: 260px;
   width: 100%;
-  max-width: 420px;
   box-shadow: 0 2px 4px rgba(0,0,0,0.08);
   max-height: min(260px, 45vh);
   overflow-y: auto;
+  list-style-type: none;
 }
 .exames-selecionados ul::-webkit-scrollbar { width: 8px; }
 .exames-selecionados ul::-webkit-scrollbar-thumb { background: var(--grey-300); border-radius: 4px; }
 .exames-selecionados ul::-webkit-scrollbar-thumb:hover { background: var(--grey-400); }
 
+.exames-selecionados li {
+  padding-left: 12px;
+
+}
+
+
 .botoes {
   display: flex;
   justify-content: flex-end;
+  height: 50px;
   gap: 12px;
   flex-wrap: wrap;
 }
