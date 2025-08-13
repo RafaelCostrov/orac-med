@@ -237,7 +237,7 @@ document.addEventListener('DOMContentLoaded', () => {
   filtrosLimpar.addEventListener('click', () => {
     Object.values(campos).forEach(i => { if (i && 'value' in i) i.value = ''; });
   });
-  campos.q.addEventListener('input', () => { page = 1; applyFilters(); });
+  // campos.q.addEventListener('input', () => { page = 1; applyFilters(); });
 
   // Exportar (modal)
   exportCsvBtn.addEventListener('click', () => {

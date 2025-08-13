@@ -74,6 +74,7 @@ async function carregarAtendimentos({ pagina = 1, filtros = {}, porPagina = 20 }
             filtros ? totalPaginas = Math.ceil(dados.total_filtrado / porPagina) : totalPaginas = Math.ceil(dados.total / porPagina)
             document.getElementById("pinfo").textContent = `Página ${paginaAtual} de ${totalPaginas}`;
             document.getElementById("count").textContent = dados.total_filtrado ?? 0;
+            document.getElementById("expCount").textContent = dados.total_filtrado ?? 0;
             const valorTotalFormatado = new Intl.NumberFormat("pt-BR", {
                 style: "currency",
                 currency: "BRL"
@@ -181,3 +182,87 @@ document.querySelectorAll("th[data-sort]").forEach(th => {
         carregarAtendimentos({ filtros: filtrosAtuais, pagina: 1 });
     });
 });
+
+document.getElementById("exportXls").addEventListener("click", async () => {
+
+    const payload = {
+        filtrosAtuais
+    };
+
+    try {
+
+        const resposta = await fetch("http://10.10.10.47:5000/atendimentos/exportar-atendimentos-xls", {
+            method: "POST",
+            headers: {
+                "Content-Type": "application/json"
+            },
+            body: JSON.stringify(payload)
+        });
+
+
+        const blob = await resposta.blob();
+        const url = window.URL.createObjectURL(blob);
+
+        const a = document.createElement('a');
+        a.href = url;
+
+
+        const agora = new Date();
+        const pad = (num) => num.toString().padStart(2, '0');
+        const hora = pad(agora.getHours());
+        const minuto = pad(agora.getMinutes());
+        const segundo = pad(agora.getSeconds());
+        const nome_excel = `atendimentos_${hora}-${minuto}-${segundo}.xlsx`;
+
+        a.download = nome_excel;
+        document.body.appendChild(a);
+        a.click();
+        a.remove();
+        window.URL.revokeObjectURL(url);
+
+    } catch (e) {
+        console.log(e)
+    }
+})
+
+document.getElementById("exportTxt").addEventListener("click", async () => {
+
+    const payload = {
+        filtrosAtuais
+    };
+
+    try {
+
+        const resposta = await fetch("http://10.10.10.47:5000/atendimentos/exportar-atendimentos-txt", {
+            method: "POST",
+            headers: {
+                "Content-Type": "application/json"
+            },
+            body: JSON.stringify(payload)
+        });
+
+
+        const blob = await resposta.blob();
+        const url = window.URL.createObjectURL(blob);
+
+        const a = document.createElement('a');
+        a.href = url;
+
+
+        const agora = new Date();
+        const pad = (num) => num.toString().padStart(2, '0');
+        const hora = pad(agora.getHours());
+        const minuto = pad(agora.getMinutes());
+        const segundo = pad(agora.getSeconds());
+        const nome_excel = `atendimentos_${hora}-${minuto}-${segundo}.txt`;
+
+        a.download = nome_excel;
+        document.body.appendChild(a);
+        a.click();
+        a.remove();
+        window.URL.revokeObjectURL(url);
+
+    } catch (e) {
+        console.log(e)
+    }
+})

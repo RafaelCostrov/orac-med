@@ -24,7 +24,7 @@ body {
 }
 
 body {
-  background: linear-gradient(120deg, #d3d3d3, #cfcfcf);
+  background: #d8d8d8;
   display: flex;
   flex-direction: column;
   max-height: 100vh
@@ -57,7 +57,7 @@ img {
 /* ================== Cabeçalho (padrão do projeto) ================== */
 header {
   width: 100%;
-  background: #fff;
+  background: #242424;
   display: flex;
   align-items: center;
   justify-content: space-between;
@@ -79,14 +79,14 @@ nav {
 nav a {
   text-decoration: none;
   font-weight: bold;
-  color: var(--green-700);
+  color: var(--orange);
   font-size: 16px;
   transition: color .25s
 }
 
 nav a:hover,
 nav a:focus {
-  color: var(--orange);
+  color: var(--green-400);
   outline: none
 }
 
@@ -127,7 +127,7 @@ nav a:focus {
 
 .avatar-btn:hover img,
 .avatar-btn:focus img {
-  box-shadow: 0 0 0 2px #fff, 0 0 0 3px var(--orange);
+  box-shadow: 0 0 0 2px #000000, 0 0 0 3px var(--orange);
   outline: none
 }
 
@@ -396,7 +396,7 @@ thead th:nth-child(7) {
 thead th.ordenavel {
   cursor: pointer;
   padding-right: 10px;
-  position: relative;
+  position: sticky;
 }
 
 th.ordenavel.asc::after {
@@ -669,7 +669,7 @@ select:focus {
   width: 160px;
   height: 130px;
   border-radius: 14px;
-  background: #fafafa;
+  background: #eeeeee;
   border: 1px solid var(--grey-300);
   display: flex;
   flex-direction: column;
@@ -697,28 +697,51 @@ select:focus {
 }
 
 /* ================== Rodapé ================== */
+
 footer {
   width: 100%;
-  background: #fff;
-  border-radius: 0;
-  padding: 12px 0;
+  padding-top: 24px;
+}
+
+footer hr {
+  margin: 0 5%;
+  border-top: 1px solid rgb(75, 75, 75);
+  ;
+}
+
+.container-footer {
+  width: 100%;
   display: flex;
-  justify-content: center;
+  font-size: small;
+  color: rgb(75, 75, 75);
+  justify-content: space-between;
   align-items: center;
-  gap: 30px
+  font-weight: 500;
 }
 
-footer img {
-  height: 45px
+.container-footer div {
+  padding: 24px 5%;
+  display: flex;
+  gap: 30px;
 }
 
-.icon-footer {
-  height: 35px;
-  transition: transform .5s
+.container-footer a {
+  cursor: pointer;
+  transition: all 0.3s ease;
 }
 
-.icon-footer:hover {
-  transform: scale(1.07)
+.container-footer a:hover {
+  cursor: pointer;
+  color: var(--orange);
+}
+
+.container-footer img {
+  height: 28px;
+  transition: all 0.3s ease;
+}
+
+.container-footer img:hover {
+  transform: scale(1.05);
 }
 
 /* ================== Responsivo ================== */

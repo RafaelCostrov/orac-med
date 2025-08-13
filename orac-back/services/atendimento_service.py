@@ -6,6 +6,8 @@ from enums.tipos_atendimento import TiposAtendimento
 from enums.tipos_cliente import TiposCliente
 import json
 import datetime
+import pandas as pd
+from io import BytesIO
 
 
 class AtendimentoService():
@@ -76,8 +78,11 @@ class AtendimentoService():
 
     def filtrar_atendimentos(self, id_atendimento: str, min_data: str, max_data: str, tipo_atendimento: TiposAtendimento, usuario: str, min_valor: float,
                              max_valor: str, colaborador_atendimento: str, tipo_cliente: TiposCliente, is_ativo: bool, ids_clientes: list[int], ids_exames: list[int], pagina: int = 1,
-                             por_pagina: int = 50, order_by: str = "data_atendimento", order_dir: str = "desc"):
-        offset = (pagina - 1) * por_pagina
+                             por_pagina=50, order_by: str = "data_atendimento", order_dir: str = "desc"):
+        if por_pagina is not None:
+            offset = (pagina - 1) * por_pagina
+        else:
+            offset = None
         atendimentos_filtrados, total, total_filtrado, valor_total = self.repositorio.filtrar_atendimentos(
             id_atendimento=id_atendimento,
             min_data=min_data,
@@ -205,3 +210,155 @@ class AtendimentoService():
         }
 
         return json_atendimento
+
+    def exportar_excel(self, id_atendimento: str, min_data: str, max_data: str, tipo_atendimento: TiposAtendimento, usuario: str, min_valor: float,
+                       max_valor: str, colaborador_atendimento: str, tipo_cliente: TiposCliente, is_ativo: bool, ids_clientes: list[int], ids_exames: list[int]):
+        atendimentos_filtrados = self.filtrar_atendimentos(
+            id_atendimento=id_atendimento,
+            min_data=min_data,
+            max_data=max_data,
+            tipo_atendimento=tipo_atendimento,
+            usuario=usuario,
+            min_valor=min_valor,
+            max_valor=max_valor,
+            colaborador_atendimento=colaborador_atendimento,
+            tipo_cliente=tipo_cliente,
+            is_ativo=is_ativo,
+            ids_clientes=ids_clientes,
+            ids_exames=ids_exames,
+            por_pagina=None
+        )
+
+        linhas = []
+        for atendimento in atendimentos_filtrados.get("atendimentos"):
+            cliente = atendimento.pop("cliente_atendimento")
+            nomes_exames = [exame.get("nome_exame") for exame in atendimento.get(
+                "exames_atendimento", [])]
+            exames_str = ", ".join(nomes_exames)
+            atendimento["exames_atendimento"] = exames_str
+            linha = {**atendimento, **cliente}
+            linhas.append(linha)
+
+        novos_cabecalhos = {
+            "id_atendimento": "ID Atendimento",
+            "data_atendimento": "Data",
+            "tipo_atendimento": "Tipo",
+            "usuario": "Atendente",
+            "valor": "Valor",
+            "colaborador_atendimento": "Colaborador",
+            "is_ativo": "Status",
+            "exames_atendimento": "Exames",
+            "id_cliente": "ID Cliente",
+            "nome_cliente": "Nome Cliente",
+            "tipo_cliente": "Tipo Cliente",
+        }
+
+        map_tipos_atendimento = {
+            "admissional": "Admissional",
+            "demissional": "Demissional",
+            "periodico": "Periódico",
+            "mudanca_funcao": "Mudança de Função",
+            "retorno_trabalho": "Retorno ao Trabalho",
+            "outros": "Outros"
+        }
+
+        map_tipos_cliente = {
+            "cliente": "Cliente",
+            "credenciado": "Credenciado",
+            "servico_prestado": "Serviço Prestado",
+            "particular": "Particular"
+        }
+
+        map_status = {
+            True: "Ativo",
+            False: "Cancelada"
+        }
+
+        df = pd.DataFrame(linhas)
+        df["tipo_atendimento"] = df["tipo_atendimento"].map(
+            map_tipos_atendimento)
+        df["tipo_cliente"] = df["tipo_cliente"].map(map_tipos_cliente)
+        df["is_ativo"] = df["is_ativo"].map(map_status)
+        df.rename(columns=novos_cabecalhos, inplace=True)
+        output = BytesIO()
+        with pd.ExcelWriter(output, engine="xlsxwriter") as writer:
+            df.to_excel(writer, sheet_name='Atendimentos', index=False)
+        output.seek(0)
+
+        return output
+
+    def exportar_txt(self, id_atendimento: str, min_data: str, max_data: str, tipo_atendimento: TiposAtendimento, usuario: str, min_valor: float,
+                     max_valor: str, colaborador_atendimento: str, tipo_cliente: TiposCliente, is_ativo: bool, ids_clientes: list[int], ids_exames: list[int]):
+        atendimentos_filtrados = self.filtrar_atendimentos(
+            id_atendimento=id_atendimento,
+            min_data=min_data,
+            max_data=max_data,
+            tipo_atendimento=tipo_atendimento,
+            usuario=usuario,
+            min_valor=min_valor,
+            max_valor=max_valor,
+            colaborador_atendimento=colaborador_atendimento,
+            tipo_cliente=tipo_cliente,
+            is_ativo=is_ativo,
+            ids_clientes=ids_clientes,
+            ids_exames=ids_exames,
+            por_pagina=None
+        )
+
+        linhas = []
+        for atendimento in atendimentos_filtrados.get("atendimentos"):
+            cliente = atendimento.pop("cliente_atendimento")
+            nomes_exames = [exame.get("nome_exame") for exame in atendimento.get(
+                "exames_atendimento", [])]
+            exames_str = ", ".join(nomes_exames)
+            atendimento["exames_atendimento"] = exames_str
+            linha = {**atendimento, **cliente}
+            linhas.append(linha)
+
+        novos_cabecalhos = {
+            "id_atendimento": "ID Atendimento",
+            "data_atendimento": "Data",
+            "tipo_atendimento": "Tipo",
+            "usuario": "Atendente",
+            "valor": "Valor",
+            "colaborador_atendimento": "Colaborador",
+            "is_ativo": "Status",
+            "exames_atendimento": "Exames",
+            "id_cliente": "ID Cliente",
+            "nome_cliente": "Nome Cliente",
+            "tipo_cliente": "Tipo Cliente",
+        }
+
+        map_tipos_atendimento = {
+            "admissional": "Admissional",
+            "demissional": "Demissional",
+            "periodico": "Periódico",
+            "mudanca_funcao": "Mudança de Função",
+            "retorno_trabalho": "Retorno ao Trabalho",
+            "outros": "Outros"
+        }
+
+        map_tipos_cliente = {
+            "cliente": "Cliente",
+            "credenciado": "Credenciado",
+            "servico_prestado": "Serviço Prestado",
+            "particular": "Particular"
+        }
+
+        map_status = {
+            True: "Ativo",
+            False: "Cancelada"
+        }
+        df = pd.DataFrame(linhas)
+
+        df["tipo_atendimento"] = df["tipo_atendimento"].map(
+            map_tipos_atendimento)
+        df["tipo_cliente"] = df["tipo_cliente"].map(map_tipos_cliente)
+        df["is_ativo"] = df["is_ativo"].map(map_status)
+        df.rename(columns=novos_cabecalhos, inplace=True)
+        output = BytesIO()
+        df.to_csv(output, sep="\t", index=False,
+                  encoding="utf-8")
+        output.seek(0)
+
+        return output
