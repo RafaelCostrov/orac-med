@@ -118,6 +118,7 @@ function getFiltros() {
 
 
 document.getElementById("filtrosLimpar").addEventListener("click", () => {
+    filtrosAtuais = {}
     carregarAtendimentos({ pagina: paginaAtual, filtrosAtuais: {} })
 })
 
@@ -184,7 +185,7 @@ document.querySelectorAll("th[data-sort]").forEach(th => {
 });
 
 document.getElementById("exportXls").addEventListener("click", async () => {
-
+    console.log(filtrosAtuais)
     const payload = {
         filtrosAtuais
     };

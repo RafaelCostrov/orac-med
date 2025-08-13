@@ -294,8 +294,8 @@ document.addEventListener('DOMContentLoaded', () => {
 
   // Navegação
   const goConta = document.getElementById('btnMinhaConta');
-  if (goConta) goConta.addEventListener('click', (e) => { e.preventDefault(); window.location.href = 'conta.html'; });
+  if (goConta) goConta.addEventListener('click', (e) => { e.preventDefault(); window.location.href = 'conta'; });
 
   const sair = document.getElementById('btnSair');
-  if (sair) sair.addEventListener('click', (e) => { e.preventDefault(); window.location.href = 'login.html'; });
+  if (sair) sair.addEventListener('click', (e) => { e.preventDefault(); window.location.href = 'login'; });
 })();

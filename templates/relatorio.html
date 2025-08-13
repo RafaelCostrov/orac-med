@@ -10,33 +10,33 @@
   <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;500;600;700&display=swap" rel="stylesheet">
 
   <!-- CSS da página (vou enviar a versão nova no próximo passo) -->
-  <link rel="stylesheet" href="../css/relatorio.css" />
+  <link rel="stylesheet" href="{{url_for('static', filename='/css/relatorio.css')}}" />
 </head>
 
 <body>
   <!-- Cabeçalho -->
   <header>
-    <img src="../img/Logo.png" alt="Logo ORAC" class="logo" />
+    <img src="{{url_for('static', filename='/img/Logo.png')}}" alt="Logo ORAC" class="logo" />
     <nav>
-      <a href="atendimento.html">Atendimento</a>
-      <a href="cadastro.html">Cadastro</a>
-      <a href="relatorio.html">Relatório</a>
+      <a href="{{ url_for('atendimento') }}">Atendimento</a>
+      <a href="">Cadastro</a>
+      <a href="{{ url_for('relatorio') }}">Relatório</a>
     </nav>
     <div class="perfil-wrap">
       <span class="nome-usuario">Eduardo</span>
       <button id="avatarBtn" class="avatar-btn" aria-haspopup="true" aria-expanded="false" aria-controls="profileMenu">
-        <img src="../img/perfil1.png" alt="Abrir menu do usuário" />
+        <img src="{{url_for('static', filename='/img/perfil1.png')}}" alt="Abrir menu do usuário" />
       </button>
       <div id="profileMenu" class="profile-menu" role="menu" aria-hidden="true">
         <div class="profile-header">
-          <img src="../img/perfil1.png" alt="" class="thumb" />
+          <img src="{{url_for('static', filename='/img/perfil1.png')}}" alt="" class="thumb" />
           <div class="who">
             <strong>Eduardo</strong>
             <small>@usuario</small>
           </div>
         </div>
         <hr />
-        <a href="conta.html" class="menu-item" role="menuitem" id="btnMinhaConta">
+        <a href="{{url_for('conta')}}" class="menu-item" role="menuitem" id="btnMinhaConta">
           <svg viewBox="0 0 24 24" class="mi">
             <path
               d="M12 12c2.761 0 5-2.463 5-5.5S14.761 1 12 1 7 3.463 7 6.5 9.239 12 12 12zm0 2c-4.418 0-8 2.91-8 6.5V22h16v-1.5c0-3.59-3.582-6.5-8-6.5z"
@@ -69,13 +69,13 @@
         </div>
 
         <button id="btnFiltro" class="icon-btn" title="Filtros">
-          <img src="../img/icons/icon-filtro.png" alt="Filtros">
+          <img src="{{url_for('static', filename='/img/icons/icon-filtro.png')}}" alt="Filtros">
         </button>
         <button id="btnExportar" class="icon-btn" title="Exportar">
-          <img src="../img/icons/icon-exportar.png" alt="Exportar">
+          <img src="{{url_for('static', filename='/img/icons/icon-exportar.png')}}" alt="Exportar">
         </button>
         <button id="btnImprimir" class="icon-btn" title="Imprimir">
-          <img src="../img/icons/icon-impressora.png" alt="Imprimir">
+          <img src="{{url_for('static', filename='/img/icons/icon-impressora.png')}}" alt="Imprimir">
         </button>
       </div>
     </div>
@@ -104,10 +104,11 @@
       </table>
 
       <div class="paginacao">
-        <button id="prev" class="btn cinza"><img src="../img/icons/arrow_esquerda.png" class="icon-paginacao"
-            alt="Seta para direita"><span>Anterior</span></button>
+        <button id="prev" class="btn cinza"><img src="{{url_for('static', filename='/img/icons/arrow_esquerda.png')}}"
+            class="icon-paginacao" alt="Seta para direita"><span>Anterior</span></button>
         <span id="pinfo">Página 1 de 1</span>
-        <button id="next" class="btn cinza"><span>Próxima</span><img src="../img/icons/arrow.png" class="icon-paginacao"
+        <button id="next" class="btn cinza"><span>Próxima</span><img
+            src="{{url_for('static', filename='/img/icons/arrow.png')}}" class="icon-paginacao"
             alt="Seta para direita"></button>
       </div>
     </section>
@@ -213,11 +214,11 @@
         </p>
         <div class="export-grid">
           <button id="exportXls" class="export-tile" aria-label="Exportar CSV">
-            <img src="../img/icons/xls-file.png" alt="">
+            <img src="{{url_for('static', filename='/img/icons/xls-file.png')}}" alt="">
             <span>Excel</span>
           </button>
           <button id="exportTxt" class="export-tile" aria-label="Exportar TXT">
-            <img src="../img/icons/txt-file.png" alt="">
+            <img src="{{url_for('static', filename='/img/icons/txt-file.png')}}" alt="">
             <span>TXT</span>
           </button>
         </div>
@@ -236,28 +237,22 @@
         <a>Controller Medicina</a>
       </div>
       <div>
-        <a><img src="../img/icons/instagram (2).png" alt="Instagram icon" class="icon-footer"></a>
-        <a><img src="../img/icons/linkedin.png" alt="LinkedIn icon" class="icon-footer"></a>
-        <a><img src="../img/icons/whatsapp.png" alt="Whatsapp icon" class="icon-footer"></a>
+        <a><img src=" {{url_for('static', filename='/img/icons/instagram (2).png')}}" alt="Instagram icon"
+            class="icon-footer"></a>
+        <a><img src="{{url_for('static', filename='/img/icons/linkedin.png')}}" alt="LinkedIn icon"
+            class="icon-footer"></a>
+        <a><img src="{{url_for('static', filename='/img/icons/whatsapp.png')}}" alt="Whatsapp icon"
+            class="icon-footer"></a>
       </div>
     </div>
-
-    <!-- <div>
-      <a href="https://www.instagram.com/controllermedseg/" target="_blank">
-        <img src="../img/icons/instagram.png" alt="Instagram" class="icon-footer" />
-      </a>
-      <a href="https://www.instagram.com/controllermedseg/" target="_blank" class="img-footer">
-        <img src="../img/medseg.png" alt="Logo ORAC" />
-      </a>
-    </div> -->
   </footer>
 
   <!-- Scripts (o JS novo eu mando depois) -->
   <!-- <script src="../js/core.js" defer></script> -->
-  <script src="../js/relatorio.js" defer></script>
-  <script src="../js/relatorio/atendimentos.js" defer></script>
-  <script src="../js/relatorio/clientes.js" defer></script>
-  <script src="../js/relatorio/exames.js" defer></script>
+  <script src="{{url_for('static', filename='/js/relatorio.js')}}" defer></script>
+  <script src=" {{url_for('static', filename='/js/relatorio/atendimentos.js')}}" defer></script>
+  <script src="{{url_for('static', filename='/js/relatorio/clientes.js')}}" defer></script>
+  <script src="{{url_for('static', filename='/js/relatorio/exames.js ')}}" defer></script>
 </body>
 
 </html>

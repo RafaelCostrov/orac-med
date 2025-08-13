@@ -7,7 +7,7 @@
   <title>Ficha de Atendimento - ORAC</title>
 
   <!-- CSS -->
-  <link rel="stylesheet" href="../css/atendimento.css" />
+  <link rel="stylesheet" href="{{url_for('static', filename='/css/atendimento.css')}}" />
   <style>
     @import url('https://fonts.googleapis.com/css2?family=Poppins:ital,wght@0,100;0,200;0,300;0,400;0,500;0,600;0,700;0,800;0,900;1,100;1,200;1,300;1,400;1,500;1,600;1,700;1,800;1,900&display=swap');
   </style>
@@ -16,12 +16,12 @@
 <body>
   <!-- Cabeçalho -->
   <header>
-    <img src="../img/Logo.png" alt="Logo ORAC" class="logo" />
+    <img src="{{ url_for('static' ,filename='/img/Logo.png')}}" alt="Logo ORAC" class="logo" />
 
     <nav>
-      <a href="atendimento.html">Atendimento</a>
-      <a href="cadastro.html">Cadastro</a>
-      <a href="relatorio.html">Relatório</a>
+      <a href="{{ url_for('atendimento') }}">Atendimento</a>
+      <a href="">Cadastro</a>
+      <a href="{{ url_for('relatorio') }}">Relatório</a>
     </nav>
 
 
@@ -30,12 +30,12 @@
     <div class="perfil-wrap">
       <span class="nome-usuario">Eduardo</span>
       <button id="avatarBtn" class="avatar-btn" aria-haspopup="true" aria-expanded="false" aria-controls="profileMenu">
-        <img src="../img/perfil1.png" alt="Abrir menu do usuário" />
+        <img src="{{ url_for('static' ,filename='/img/perfil1.png')}}" alt="Abrir menu do usuário" />
       </button>
 
       <div id="profileMenu" class="profile-menu" role="menu" aria-hidden="true">
         <div class="profile-header">
-          <img src="../img/perfil1.png" alt="" class="thumb" />
+          <img src="{{ url_for('static' ,filename='/img/perfil1.png')}}" alt="" class="thumb" />
           <div class="who">
             <strong>Eduardo</strong>
             <small>@usuario</small>
@@ -136,18 +136,31 @@
 
   <!-- Rodapé -->
   <footer>
-    <a href="https://www.instagram.com/controllermedseg/" target="_blank">
-      <img src="../img/icons/instagram.png" alt="Instagram" class="icon-footer" />
-    </a>
-    <a href="https://www.instagram.com/controllermedseg/" target="_blank" class="img-footer">
-      <img src="../img/medseg.png" alt="Logo ORAC" />
-    </a>
+    <hr class="solid">
+    <div class="container-footer">
+      <div>
+        <p class="texto-footer">© 2025 Orac</p>
+        <a>Suporte</a>
+        <a>Controller & Oraculu's</a>
+        <a>Controller Medicina</a>
+      </div>
+      <div>
+        <a><img src=" {{url_for('static', filename='/img/icons/instagram (2).png')}}" alt="Instagram icon"
+            class="icon-footer"></a>
+        <a><img src="{{url_for('static', filename='/img/icons/linkedin.png')}}" alt="LinkedIn icon"
+            class="icon-footer"></a>
+        <a><img src="{{url_for('static', filename='/img/icons/whatsapp.png')}}" alt="Whatsapp icon"
+            class="icon-footer"></a>
+      </div>
+    </div>
   </footer>
 
+
   <!-- JS -->
-  <script src="../js/atendimento.js" defer></script>
-  <script src="../js/atendimento/carregar.js" defer></script>
-  <script src="../js/atendimento/cadastro.js" defer></script>
+
+  <script src="{{ url_for('static', filename='js/atendimento.js') }}" defer></script>
+  <script src="{{ url_for('static', filename='js/atendimento/cadastro.js') }}" defer></script>
+  <script src="{{ url_for('static', filename='js/atendimento/carregar.js') }}" defer></script>
 </body>
 
 </html>
