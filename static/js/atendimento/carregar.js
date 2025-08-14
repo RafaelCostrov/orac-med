@@ -7,7 +7,7 @@ let nomesExame = {};
 let inputValorTotal;
 
 async function carregarExames() {
-    const request = await fetch("http://10.10.10.47:5000/exames/listar-exames");
+    const request = await fetch("/exames/listar-exames");
     const resposta = await request.json();
     const exames = resposta.exames;
 
@@ -68,7 +68,7 @@ async function carregarExames() {
 }
 
 async function carregarEmpresas() {
-    const response = await fetch("http://10.10.10.47:5000/clientes/listar-clientes");
+    const response = await fetch("/clientes/listar-clientes");
     const dados = await response.json();
     const clientes = dados.clientes;
 

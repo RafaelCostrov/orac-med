@@ -1,38 +1,40 @@
 <!DOCTYPE html>
 <html lang="pt-br">
+
 <head>
   <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <title>Cadastro - ORAC</title>
 
   <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;500;600;700&display=swap" rel="stylesheet">
-  <link rel="stylesheet" href="../css/cadastro.css" />
+  <link rel="stylesheet" href="{{url_for('static', filename='/css/cadastro.css')}}" />
 
-  </head>
+</head>
+
 <body>
   <!-- Cabeçalho -->
   <header>
-    <img src="../img/Logo.png" alt="Logo ORAC" class="logo" />
+    <img src="{{url_for('static', filename='/img/logo.png')}}" alt="Logo ORAC" class="logo" />
     <nav>
-      <a href="atendimento.html">Atendimento</a>
-      <a href="cadastro.html">Cadastro</a>
-      <a href="relatorio.html">Relatório</a>
+      <a href="{{ url_for('atendimento') }}">Atendimento</a>
+      <a href="{{ url_for('cadastro') }}">Cadastro</a>
+      <a href="{{ url_for('relatorio') }}">Relatório</a>
     </nav>
     <div class="perfil-wrap">
       <span class="nome-usuario">Eduardo</span>
       <button id="avatarBtn" class="avatar-btn" aria-haspopup="true" aria-expanded="false" aria-controls="profileMenu">
-        <img src="../img/perfil1.png" alt="Abrir menu do usuário" />
+        <img src="{{ url_for('static' ,filename='/img/perfil1.png')}}" alt="Abrir menu do usuário" />
       </button>
       <div id="profileMenu" class="profile-menu" role="menu" aria-hidden="true">
         <div class="profile-header">
-          <img src="../img/perfil1.png" alt="" class="thumb" />
+          <img src="{{ url_for('static' ,filename='/img/perfil1.png')}}" alt="" class="thumb" />
           <div class="who">
             <strong>Eduardo</strong>
             <small>@usuario</small>
           </div>
         </div>
         <hr />
-        <a href="conta.html" class="menu-item" role="menuitem" id="btnMinhaConta">
+        <a href="{{ url_for('conta') }}" class="menu-item" role="menuitem" id="btnMinhaConta">
           <svg viewBox="0 0 24 24" class="mi">
             <path
               d="M12 12c2.761 0 5-2.463 5-5.5S14.761 1 12 1 7 3.463 7 6.5 9.239 12 12 12zm0 2c-4.418 0-8 2.91-8 6.5V22h16v-1.5c0-3.59-3.582-6.5-8-6.5z"
@@ -40,7 +42,7 @@
           </svg>
           Minha conta
         </a>
-        <a href="login.html" class="menu-item danger" role="menuitem" id="btnSair">
+        <a href="{{ url_for('login') }}" class="menu-item danger" role="menuitem" id="btnSair">
           <svg viewBox="0 0 24 24" class="mi">
             <path d="M10 17l-1.41-1.41L12.17 12 8.59 8.41 10 7l5 5-5 5zM4 4h7v2H6v12h5v2H4V4z" fill="currentColor" />
           </svg>
@@ -58,8 +60,8 @@
         <div class="tipo-lista">
           <label for="tipoLista">Tipo</label>
           <select id="tipoLista">
-            <option value="usuarios">Usuários</option>
             <option value="clientes">Clientes</option>
+            <option value="usuarios">Usuários</option>
             <option value="exames">Exames</option>
           </select>
         </div>
@@ -67,18 +69,20 @@
         <div class="itens-por-pagina">
           <label for="ipp">Itens/página</label>
           <select id="ipp">
-            <option>10</option><option>20</option><option>50</option>
+            <option>20</option>
+            <option>50</option>
+            <option>100</option>
           </select>
         </div>
 
         <button id="btnFiltro" class="icon-btn" title="Filtros">
-          <img src="../img/icons/icon-filtro.png" alt="Filtros">
+          <img src=" {{ url_for('static' ,filename='/img/icons/icon-filtro.png')}}" alt="Filtros">
         </button>
         <button id="btnImprimir" class="icon-btn" title="Imprimir">
-          <img src="../img/icons/icon-impressora.png" alt="Imprimir">
+          <img src=" {{ url_for('static' ,filename='/img/icons/icon-impressora.png')}}" alt="Imprimir">
         </button>
         <button id="btnNovo" class="icon-btn" title="Novo cadastro">
-          <img src="../img/icons/icon-plus.png" alt="Novo">
+          <img src=" {{ url_for('static' ,filename='/img/icons/icon-plus.png')}}" alt="Novo">
         </button>
       </div>
     </div>
@@ -87,23 +91,27 @@
     <section class="tabela-wrap">
       <table id="tblCad">
         <thead id="theadCad"></thead>
-        <tbody id="tbodyCad"><tr><td>Sem registros.</td></tr></tbody>
+        <tbody id="tbodyCad">
+        </tbody>
       </table>
 
       <div class="paginacao">
         <button id="prev" class="btn cinza">
-          <img src="../img/icons/arrow_esquerda.png" class="icon-paginacao" alt=""><span>Anterior</span>
+          <img src="{{ url_for('static' ,filename='/img/icons/arrow_esquerda.png')}}" class="icon-paginacao"
+            alt=""><span>Anterior</span>
         </button>
         <span id="pinfo">Página 1 de 1</span>
         <button id="next" class="btn cinza">
-          <span>Próxima</span><img src="../img/icons/arrow.png" class="icon-paginacao" alt="">
+          <span>Próxima</span><img src="{{ url_for('static' ,filename='/img/icons/arrow.png')}}" class="icon-paginacao"
+            alt="">
         </button>
       </div>
     </section>
   </main>
 
   <!-- MODAL: Novo/Editar -->
-  <div id="modalCadastro" class="modal modal--brand" aria-hidden="true" role="dialog" aria-modal="true" aria-labelledby="cadTitle">
+  <div id="modalCadastro" class="modal modal--brand" aria-hidden="true" role="dialog" aria-modal="true"
+    aria-labelledby="cadTitle">
     <div class="modal__backdrop" data-close="modalCadastro"></div>
     <div class="modal__dialog modal-lg">
       <div class="modal__header">
@@ -114,10 +122,10 @@
         <form id="formCadastro" autocomplete="off">
           <div class="grid filtros-grid">
             <div class="fg">
-              <label for="cadTipo">Tipo</label>
+              <label for="cadTipo">Tipo de Cadastro</label>
               <select id="cadTipo">
-                <option value="usuarios">Usuário</option>
                 <option value="clientes">Cliente</option>
+                <option value="usuarios">Usuário</option>
                 <option value="exames">Exame</option>
               </select>
             </div>
@@ -144,20 +152,26 @@
             </div>
 
             <!-- ======= CLIENTES ======= -->
+
+            <div class="fg cad-field hidden" data-for="clientes">
+              <label>CNPJ do cliente</label>
+              <div class="input-wrapper">
+                <input id="cnpj_cliente" type="text" placeholder="00.000.000/0000-00">
+                <button id="pesquisar_cnpj"><img id="pesquisar_cnpj"
+                    src="{{ url_for('static' ,filename='/img/icons/search.png')}}" alt="Pesquisar"></button>
+              </div>
+            </div>
             <div class="fg cad-field hidden" data-for="clientes">
               <label>Nome do cliente</label>
               <input id="nome_cliente" type="text" placeholder="Razão/Nome">
             </div>
             <div class="fg cad-field hidden" data-for="clientes">
-              <label>CNPJ do cliente</label>
-              <input id="cnpj_cliente" type="text" placeholder="00.000.000/0000-00">
-            </div>
-            <div class="fg cad-field hidden" data-for="clientes">
               <label>Tipo do cliente</label>
               <select id="tipo_cliente">
-                <option value="EMPRESA">EMPRESA</option>
-                <option value="PARTICULAR">PARTICULAR</option>
-                <option value="CREDENCIADO">CREDENCIADO</option>
+                <option value="cliente">Cliente</option>
+                <option value="credenciado">Credenciado</option>
+                <option value="servico_prestado">Serviço Prestado</option>
+                <option value="particular">Particular</option>
               </select>
             </div>
 
@@ -189,7 +203,8 @@
   </div>
 
   <!-- MODAL: Filtros -->
-  <div id="modalFiltrosCad" class="modal" aria-hidden="true" role="dialog" aria-modal="true" aria-labelledby="filtrosTitle">
+  <div id="modalFiltrosCad" class="modal" aria-hidden="true" role="dialog" aria-modal="true"
+    aria-labelledby="filtrosTitle">
     <div class="modal__backdrop" data-close="modalFiltrosCad"></div>
     <div class="modal__dialog">
       <div class="modal__header">
@@ -202,60 +217,60 @@
             <!-- Usuários -->
             <div class="fg filtro-field" data-for="usuarios">
               <label>Nome</label>
-              <input id="f_u_nome" type="text">
+              <input id="nome_usuario_filtro" type="text">
             </div>
             <div class="fg filtro-field" data-for="usuarios">
               <label>E-mail</label>
-              <input id="f_u_email" type="text">
+              <input id="email_usuario_filtro" type="text">
             </div>
             <div class="fg filtro-field" data-for="usuarios">
               <label>Perfil</label>
-              <select id="f_u_role">
+              <select id="role_filtro">
                 <option value="">Todos</option>
-                <option value="ADMIN">ADMIN</option>
-                <option value="OPERADOR">OPERADOR</option>
+                <option value="administrador">Administrador</option>
+                <option value="gesto">Gestor</option>
+                <option value="usuario">Usuário</option>
               </select>
             </div>
 
             <!-- Clientes -->
             <div class="fg filtro-field hidden" data-for="clientes">
               <label>Nome</label>
-              <input id="f_c_nome" type="text">
+              <input id="nome_cliente_filtro" type="text">
             </div>
             <div class="fg filtro-field hidden" data-for="clientes">
               <label>CNPJ</label>
-              <input id="f_c_cnpj" type="text">
+              <input id="cnpj_cliente_filtro" type="text">
             </div>
             <div class="fg filtro-field hidden" data-for="clientes">
               <label>Tipo</label>
-              <select id="f_c_tipo">
+              <select id="tipo_cliente_filtro">
                 <option value="">Todos</option>
-                <option value="EMPRESA">EMPRESA</option>
-                <option value="PARTICULAR">PARTICULAR</option>
-                <option value="CREDENCIADO">CREDENCIADO</option>
+                <option value="cliente">Cliente</option>
+                <option value="credenciado">Credenciado</option>
               </select>
             </div>
 
             <!-- Exames -->
             <div class="fg filtro-field hidden" data-for="exames">
               <label>Nome do exame</label>
-              <input id="f_e_nome" type="text">
+              <input id="nome_exame_filtro" type="text">
             </div>
             <div class="fg filtro-field hidden" data-for="exames">
               <label>Interno?</label>
-              <select id="f_e_interno">
+              <select id="is_interno_filtro">
                 <option value="">Todos</option>
-                <option value="true">Sim</option>
-                <option value="false">Não</option>
+                <option value="1">Sim</option>
+                <option value="0">Não</option>
               </select>
             </div>
             <div class="fg filtro-field hidden" data-for="exames">
               <label>Valor mín.</label>
-              <input id="f_e_valor_min" type="number" step="0.01" min="0">
+              <input id="min_valor_filtro" type="number" step="0.01" min="0">
             </div>
             <div class="fg filtro-field hidden" data-for="exames">
               <label>Valor máx.</label>
-              <input id="f_e_valor_max" type="number" step="0.01" min="0">
+              <input id="max_valor_filtro" type="number" step="0.01" min="0">
             </div>
           </div>
         </form>
@@ -278,23 +293,18 @@
         <a>Controller Medicina</a>
       </div>
       <div>
-        <a><img src="../img/icons/instagram (2).png" alt="Instagram icon" class="icon-footer"></a>
-        <a><img src="../img/icons/linkedin.png" alt="LinkedIn icon" class="icon-footer"></a>
-        <a><img src="../img/icons/whatsapp.png" alt="Whatsapp icon" class="icon-footer"></a>
+        <a><img src="{{ url_for('static' ,filename='/img/icons/instagram (2).png')}}" alt="Instagram icon"
+            class="icon-footer"></a>
+        <a><img src=" {{ url_for('static' ,filename='/img/icons/linkedin.png')}}" alt="LinkedIn icon"
+            class="icon-footer"></a>
+        <a><img src=" {{ url_for('static' ,filename='/img/icons/whatsapp.png')}}" alt="Whatsapp icon"
+            class="icon-footer"></a>
       </div>
     </div>
-
-    <!-- <div>
-      <a href="https://www.instagram.com/controllermedseg/" target="_blank">
-        <img src="../img/icons/instagram.png" alt="Instagram" class="icon-footer" />
-      </a>
-      <a href="https://www.instagram.com/controllermedseg/" target="_blank" class="img-footer">
-        <img src="../img/medseg.png" alt="Logo ORAC" />
-      </a>
-    </div> -->
   </footer>
 
-  <script src="../js/cadastro.js" defer></script>
+  <script src="{{ url_for('static' ,filename='/js/cadastro.js')}}" defer></script>
+  <script src="{{ url_for('static' ,filename='/js/cadastro/carregar.js')}}" defer></script>
 </body>
+
 </html>
-   

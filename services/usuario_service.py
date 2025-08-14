@@ -1,5 +1,6 @@
 from model.usuario import Usuario
 from repository.usuario_repository import UsuarioRepository
+from enums.tipos_usuario import TiposUsuario
 import json
 
 
@@ -22,12 +23,22 @@ class UsuarioService():
             lista.append(json_usuario)
         return lista
 
-    def filtrar_usuarios(self, id_usuario, nome_usuario,  email_usuario, role):
-        usuarios_filtrados = self.repositorio.filtrar_usuarios(
+    def filtrar_usuarios(self, id_usuario: int, nome_usuario: str,  email_usuario: str, role: TiposUsuario, por_pagina=50, pagina: int = 1,
+                         order_by: str = "nome_usuario", order_dir: str = "desc"):
+        if por_pagina is not None:
+            offset = (pagina - 1) * por_pagina
+        else:
+            offset = None
+
+        usuarios_filtrados, total, total_filtrado = self.repositorio.filtrar_usuarios(
             id_usuario=id_usuario,
             nome_usuario=nome_usuario,
             email_usuario=email_usuario,
             role=role,
+            offset=offset,
+            limit=por_pagina,
+            order_by=order_by,
+            order_dir=order_dir
         )
         lista_filtrada = []
         for usuario in usuarios_filtrados:
@@ -38,7 +49,11 @@ class UsuarioService():
                 "role": usuario.role.__str__(),
             }
             lista_filtrada.append(json_usuario)
-        return lista_filtrada
+        return {
+            "usuarios": lista_filtrada,
+            "total": total,
+            "total_filtrado": total_filtrado
+        }
 
     def remover_usuario(self, id_usuario):
         self.repositorio.remover_usuario(id_usuario=id_usuario)
