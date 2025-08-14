@@ -5,14 +5,16 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
   <title>Cadastro - ORAC</title>
 
+  <!-- Fonte padrão -->
   <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;500;600;700&display=swap" rel="stylesheet">
-  <link rel="stylesheet" href="../css/cadastro.css" />
 
-  </head>
+  <!-- CSS desta página (agora em /static) -->
+  <link rel="stylesheet" href="/static/css/cadastro.css" />
+</head>
 <body>
   <!-- Cabeçalho -->
   <header>
-    <img src="../img/Logo.png" alt="Logo ORAC" class="logo" />
+    <img src="/static/img/Logo.png" alt="Logo ORAC" class="logo" />
     <nav>
       <a href="atendimento.html">Atendimento</a>
       <a href="cadastro.html">Cadastro</a>
@@ -21,11 +23,11 @@
     <div class="perfil-wrap">
       <span class="nome-usuario">Eduardo</span>
       <button id="avatarBtn" class="avatar-btn" aria-haspopup="true" aria-expanded="false" aria-controls="profileMenu">
-        <img src="../img/perfil1.png" alt="Abrir menu do usuário" />
+        <img src="/static/img/perfil1.png" alt="Abrir menu do usuário" />
       </button>
       <div id="profileMenu" class="profile-menu" role="menu" aria-hidden="true">
         <div class="profile-header">
-          <img src="../img/perfil1.png" alt="" class="thumb" />
+          <img src="/static/img/perfil1.png" alt="" class="thumb" />
           <div class="who">
             <strong>Eduardo</strong>
             <small>@usuario</small>
@@ -33,15 +35,13 @@
         </div>
         <hr />
         <a href="conta.html" class="menu-item" role="menuitem" id="btnMinhaConta">
-          <svg viewBox="0 0 24 24" class="mi">
-            <path
-              d="M12 12c2.761 0 5-2.463 5-5.5S14.761 1 12 1 7 3.463 7 6.5 9.239 12 12 12zm0 2c-4.418 0-8 2.91-8 6.5V22h16v-1.5c0-3.59-3.582-6.5-8-6.5z"
-              fill="currentColor" />
+          <svg viewBox="0 0 24 24" class="mi" aria-hidden="true">
+            <path d="M12 12c2.761 0 5-2.463 5-5.5S14.761 1 12 1 7 3.463 7 6.5 9.239 12 12 12zm0 2c-4.418 0-8 2.91-8 6.5V22h16v-1.5c0-3.59-3.582-6.5-8-6.5z" fill="currentColor" />
           </svg>
           Minha conta
         </a>
         <a href="login.html" class="menu-item danger" role="menuitem" id="btnSair">
-          <svg viewBox="0 0 24 24" class="mi">
+          <svg viewBox="0 0 24 24" class="mi" aria-hidden="true">
             <path d="M10 17l-1.41-1.41L12.17 12 8.59 8.41 10 7l5 5-5 5zM4 4h7v2H6v12h5v2H4V4z" fill="currentColor" />
           </svg>
           Sair
@@ -72,13 +72,13 @@
         </div>
 
         <button id="btnFiltro" class="icon-btn" title="Filtros">
-          <img src="../img/icons/icon-filtro.png" alt="Filtros">
+          <img src="/static/img/icons/icon-filtro.png" alt="Filtros">
         </button>
         <button id="btnImprimir" class="icon-btn" title="Imprimir">
-          <img src="../img/icons/icon-impressora.png" alt="Imprimir">
+          <img src="/static/img/icons/icon-impressora.png" alt="Imprimir">
         </button>
         <button id="btnNovo" class="icon-btn" title="Novo cadastro">
-          <img src="../img/icons/icon-plus.png" alt="Novo">
+          <img src="/static/img/icons/icon-plus.png" alt="Novo">
         </button>
       </div>
     </div>
@@ -92,11 +92,11 @@
 
       <div class="paginacao">
         <button id="prev" class="btn cinza">
-          <img src="../img/icons/arrow_esquerda.png" class="icon-paginacao" alt=""><span>Anterior</span>
+          <img src="/static/img/icons/arrow_esquerda.png" class="icon-paginacao" alt=""><span>Anterior</span>
         </button>
         <span id="pinfo">Página 1 de 1</span>
         <button id="next" class="btn cinza">
-          <span>Próxima</span><img src="../img/icons/arrow.png" class="icon-paginacao" alt="">
+          <span>Próxima</span><img src="/static/img/icons/arrow.png" class="icon-paginacao" alt="">
         </button>
       </div>
     </section>
@@ -278,23 +278,25 @@
         <a>Controller Medicina</a>
       </div>
       <div>
-        <a><img src="../img/icons/instagram (2).png" alt="Instagram icon" class="icon-footer"></a>
-        <a><img src="../img/icons/linkedin.png" alt="LinkedIn icon" class="icon-footer"></a>
-        <a><img src="../img/icons/whatsapp.png" alt="Whatsapp icon" class="icon-footer"></a>
+        <a><img src="/static/img/icons/instagram (2).png" alt="Instagram icon" class="icon-footer"></a>
+        <a><img src="/static/img/icons/linkedin.png" alt="LinkedIn icon" class="icon-footer"></a>
+        <a><img src="/static/img/icons/whatsapp.png" alt="Whatsapp icon" class="icon-footer"></a>
       </div>
     </div>
 
-    <!-- <div>
+    <!-- 
+    <div>
       <a href="https://www.instagram.com/controllermedseg/" target="_blank">
-        <img src="../img/icons/instagram.png" alt="Instagram" class="icon-footer" />
+        <img src="/static/img/icons/instagram.png" alt="Instagram" class="icon-footer" />
       </a>
       <a href="https://www.instagram.com/controllermedseg/" target="_blank" class="img-footer">
-        <img src="../img/medseg.png" alt="Logo ORAC" />
+        <img src="/static/img/medseg.png" alt="Logo ORAC" />
       </a>
-    </div> -->
+    </div> 
+    -->
   </footer>
 
-  <script src="../js/cadastro.js" defer></script>
+  <!-- JS desta página -->
+  <script src="/static/js/cadastro.js" defer></script>
 </body>
 </html>
-   

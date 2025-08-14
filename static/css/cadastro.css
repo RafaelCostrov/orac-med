@@ -14,7 +14,7 @@ img{max-width:100%;height:auto}
   --orange:#f7931e; --grey-900:#111; --grey-800:#333; --grey-700:#555; --grey-600:#666; --grey-500:#777; --grey-400:#999; --grey-300:#ccc; --grey-200:#f1f1f1; --white:#fff;
 }
 
-/* Cabeçalho (padrão) */
+/* Cabeçalho (base) */
 header{width:100%;background:#fff;display:flex;align-items:center;justify-content:space-between;padding:12px 32px;gap:32px}
 .logo{height:36px;width:auto}
 nav{display:flex;gap:24px;padding-left:200px}
@@ -105,13 +105,13 @@ input,select,textarea{font-family:"Poppins",sans-serif;padding:10px;border:1px s
 input:focus,select:focus,textarea:focus{outline:none;border-color:var(--orange);box-shadow:0 0 0 2px rgba(247,147,30,.25)}
 .hidden{display:none}
 
-/* Rodapé */
+/* Rodapé base da página */
 footer{width:100%;background:#fff;border-radius:0;padding:12px 0;display:flex;justify-content:center;align-items:center;gap:30px}
 footer img{height:45px}
 .icon-footer{height:35px;transition:transform .5s}
 .icon-footer:hover{transform:scale(1.07)}
 
-/* Responsivo pq o pai é bigas */
+/* Responsivo */
 @media (max-width:1200px){.filtros-grid{grid-template-columns:repeat(2,1fr)}}
 @media (max-width:960px){nav a{font-size:15px}.filtros-grid{grid-template-columns:1fr}}
 @media (max-width:720px){
@@ -123,9 +123,8 @@ footer img{height:45px}
   .icon-btn{width:36px;height:36px}
   .modal__dialog{width:min(540px,96vw)}
 }
-/* ... (cabeçalho e base idênticos ao anterior) ... */
 
-/* Ações na tabela */
+/* ===== Ações extras ===== */
 .acoes{display:flex;gap:8px}
 .btn-ac{width:34px;height:34px;border:1px solid var(--grey-300);border-radius:8px;background:#fff;display:grid;place-items:center;cursor:pointer}
 .btn-ac:hover{background:#f7f7f7}
@@ -139,45 +138,41 @@ footer img{height:45px}
 .pill.no{background:#fff3cd;color:#916400;border-color:#ffe19a}
 td.num{text-align:right}
 
-/* ... (restante igual: modal, grid, responsivo) ... */
+/* === Overrides para igualar ao RELATÓRIO (header/menu/footer) === */
 
+/* Header dark e navegação */
+header{background:#242424}
+nav a{color:#fff}
+nav a:hover,nav a:focus{color:var(--orange)}
+.nome-usuario{color:var(--orange)} /* mantém o destaque laranja igual no relatório */
 
-/* === Overrides para igualar ao relatório (header/menu/footer) === */
+/* HR e textos do footer */
+hr.solid{border:0;border-top:1px solid rgb(75,75,75);margin:0}
+.texto-footer{margin-right:12px;color:rgb(75,75,75);}
 
-.container-footer {
-  width: 100%;
-  display: flex;
-  font-size: small;
-  color: rgb(75, 75, 75);
-  justify-content: space-between;
-  align-items: center;
-  font-weight: 500;
-}
+/* Footer do relatório (container com links e ícones) */
+.container-footer{width:100%;display:flex;font-size:small;color:rgb(75,75,75);justify-content:space-between;align-items:center;font-weight:500}
+.container-footer div{padding:24px 5%;display:flex;gap:30px}
+.container-footer a{cursor:pointer;transition:all .3s ease}
+.container-footer a:hover{color:var(--orange)}
+.container-footer img{height:28px;transition:all .3s ease}
+.container-footer img:hover{transform:scale(1.05)}
 
-.container-footer div {
-  padding: 24px 5%;
-  display: flex;
-  gap: 30px;
-}
+/* === Ajuste: linhas com separação tipo Relatório === */
+.tabela-wrap { background:#fff; border:1px solid var(--grey-300); border-radius:12px; overflow:hidden; }
 
-.container-footer a {
-  cursor: pointer;
-  transition: all 0.3s ease;
-}
+/* Remove a linha padrão e cria “faixas” entre linhas */
+tbody td { border-bottom: 0; }
+tbody tr + tr td { border-top: 6px solid #f5f5f5; } /* separação visível entre linhas */
 
-.container-footer a:hover {
-  cursor: pointer;
-  color: var(--orange);
-}
+/* Realce e usabilidade */
+tbody tr { cursor: pointer; transition: box-shadow .2s, background-color .15s; }
+tbody tr:hover { background:#fcfcfc; box-shadow: 0 1px 6px rgba(0,0,0,.06) inset; }
+/*
+tbody tr:nth-child(even) { background: #fbfbfb; }
+*/
 
-.container-footer img {
-  height: 28px;
-  transition: all 0.3s ease;
-}
-
-.container-footer img:hover {
-  transform: scale(1.05);
-}
-
-/* ================== Responsivo ================== */
+/* === Botão Excluir vermelho (no modal) === */
+.btn.vermelho { background:#d0342c; color:#fff; }
+.btn.vermelho:hover { background:#a82822; color:#fff; }
 
