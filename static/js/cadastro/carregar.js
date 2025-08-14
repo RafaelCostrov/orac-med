@@ -90,10 +90,6 @@ function verificarCliqueHead() {
                 e.classList.remove('asc', 'desc');
             });
             th.classList.add(orderDirAtual);
-
-            console.log(orderByAtual)
-            console.log(orderDirAtual)
-
             recarregarTipoLista({ filtros: filtrosAtuais, pagina: 1 });
         });
     });
@@ -108,6 +104,7 @@ async function carregarClientesLista({ pagina = 1, filtros = {}, porPagina = 20 
 
 
 
+    const thead = document.querySelector("#tblCad thead");
     try {
         const resposta = await fetch("/clientes/filtrar-clientes", {
             method: "POST",
@@ -120,7 +117,6 @@ async function carregarClientesLista({ pagina = 1, filtros = {}, porPagina = 20 
         const dados = await resposta.json();
 
         if (resposta.ok) {
-            const thead = document.querySelector("#tblCad thead");
             thead.innerHTML = "";
             const tbody = document.querySelector("#tblCad tbody");
             tbody.innerHTML = "";
@@ -139,16 +135,34 @@ async function carregarClientesLista({ pagina = 1, filtros = {}, porPagina = 20 
             }
             dados.clientes.forEach(cliente => {
                 const trBody = document.createElement("tr");
-                const cnpjFormatado = formatarCNPJ(cliente.cnpj_cliente) || cliente.cnpj_cliente
-                const tipoClienteFormatado = tiposCliente[cliente.tipo_cliente] || cliente.tipo_cliente;
-                const nomesExames = cliente.exames_incluidos?.map(e => e.nome_exame).join(", ") || "-";
+                trBody.setAttribute("uk-toggle", "target: #cliente-modal")
+
+                trBody.dataset.id = cliente.id_cliente;
+                trBody.dataset.nome = cliente.nome_cliente;
+                trBody.dataset.cnpj = formatarCNPJ(cliente.cnpj_cliente) || cliente.cnpj_cliente;
+                trBody.dataset.tipo = tiposCliente[cliente.tipo_cliente] || cliente.tipo_cliente;
+                trBody.dataset.exames = cliente.exames_incluidos?.map(e => e.nome_exame).join(", ") || "-";
+
                 trBody.innerHTML = `
                     <td title="${cliente.id_cliente}">${cliente.id_cliente}</td>
                     <td title="${cliente.nome_cliente}">${cliente.nome_cliente}</td>
-                    <td title="${cnpjFormatado}">${cnpjFormatado}</td>
-                    <td title="${tipoClienteFormatado}">${tipoClienteFormatado}</td>
-                    <td title="${nomesExames}">${nomesExames}</td>
+                    <td title="${trBody.dataset.cnpj}">${trBody.dataset.cnpj}</td>
+                    <td title="${trBody.dataset.tipo}">${trBody.dataset.tipo}</td>
+                    <td title="${trBody.dataset.exames}">${trBody.dataset.exames}</td>
                 `;
+                const modalIdCliente = document.getElementById("modal-id-cliente-tr")
+                const modalNomeCliente = document.getElementById("modal-nome-cliente-tr");
+                const modalCnpjCliente = document.getElementById("modal-cnpj-cliente-tr");
+                const modalTipoCliente = document.getElementById("modal-tipo-cliente-tr");
+                const modalExamesCliente = document.getElementById("modal-exames-cliente-tr");
+                trBody.addEventListener("click", () => {
+                    modalIdCliente.textContent = `${trBody.dataset.id} - ${trBody.dataset.nome}`
+                    modalNomeCliente.value = trBody.dataset.nome;
+                    modalCnpjCliente.value = trBody.dataset.cnpj;
+                    modalTipoCliente.value = trBody.dataset.tipo;
+                    modalExamesCliente.value = trBody.dataset.exames;
+                });
+
                 tbody.appendChild(trBody)
             });
             paginaAtual = pagina;
@@ -169,6 +183,7 @@ async function carregarUsuariosLista({ pagina = 1, filtros = {}, porPagina = 20 
         ...filtros
     };
 
+    const thead = document.querySelector("#tblCad thead");
     try {
         const resposta = await fetch("/usuarios/filtrar-usuarios", {
             method: "POST",
@@ -179,9 +194,8 @@ async function carregarUsuariosLista({ pagina = 1, filtros = {}, porPagina = 20 
         });
 
         const dados = await resposta.json();
-
         if (resposta.ok) {
-            const thead = document.querySelector("#tblCad thead");
+
             thead.innerHTML = "";
             const tbody = document.querySelector("#tblCad tbody");
             tbody.innerHTML = "";
@@ -199,13 +213,29 @@ async function carregarUsuariosLista({ pagina = 1, filtros = {}, porPagina = 20 
             }
             dados.usuarios.forEach(usuario => {
                 const trBody = document.createElement("tr");
-                const tipoUsuarioFormatado = tiposUsuario[usuario.role] || usuario.role;
+                trBody.setAttribute("uk-toggle", "target: #usuario-modal")
+
+                trBody.dataset.id = usuario.id_usuario;
+                trBody.dataset.nome = usuario.nome_usuario;
+                trBody.dataset.email = usuario.email_usuario;
+                trBody.dataset.tipo = tiposUsuario[usuario.role] || usuario.role;
+
                 trBody.innerHTML = `
                     <td title="${usuario.id_usuario}">${usuario.id_usuario}</td>
                     <td title="${usuario.nome_usuario}">${usuario.nome_usuario}</td>
                     <td title="${usuario.email_usuario}">${usuario.email_usuario}</td>
-                    <td title="${tipoUsuarioFormatado}">${tipoUsuarioFormatado}</td>
+                    <td title="${trBody.dataset.tipo}">${trBody.dataset.tipo}</td>
                 `;
+                const modalIdUsuario = document.getElementById("modal-id-usuario-tr");
+                const modalNomeUsuario = document.getElementById("modal-nome-usuario-tr");
+                const modalEmailUsuario = document.getElementById("modal-email-usuario-tr");
+                const modalTipoUsuario = document.getElementById("modal-tipo-usuario-tr");
+                trBody.addEventListener("click", () => {
+                    modalIdUsuario.textContent = `${trBody.dataset.id} - ${trBody.dataset.nome}`;
+                    modalNomeUsuario.value = trBody.dataset.nome;
+                    modalEmailUsuario.value = trBody.dataset.email;
+                    modalTipoUsuario.value = trBody.dataset.tipo;
+                });
                 tbody.appendChild(trBody)
             });
             paginaAtual = pagina;
@@ -229,6 +259,7 @@ async function carregarExamesLista({ pagina = 1, filtros = {}, porPagina = 20 } 
         ...filtros
     };
 
+    const thead = document.querySelector("#tblCad thead");
     try {
         const resposta = await fetch("/exames/filtrar-exames", {
             method: "POST",
@@ -241,7 +272,6 @@ async function carregarExamesLista({ pagina = 1, filtros = {}, porPagina = 20 } 
         const dados = await resposta.json();
 
         if (resposta.ok) {
-            const thead = document.querySelector("#tblCad thead");
             thead.innerHTML = "";
             const tbody = document.querySelector("#tblCad tbody");
             tbody.innerHTML = "";
@@ -259,17 +289,32 @@ async function carregarExamesLista({ pagina = 1, filtros = {}, porPagina = 20 } 
             }
             dados.exames.forEach(exame => {
                 const trBody = document.createElement("tr");
-                const valorFormatado = new Intl.NumberFormat("pt-BR", {
+                trBody.setAttribute("uk-toggle", "target: #exame-modal")
+
+                trBody.dataset.id = exame.id_exame;
+                trBody.dataset.nome = exame.nome_exame;
+                trBody.dataset.valor = new Intl.NumberFormat("pt-BR", {
                     style: "currency",
                     currency: "BRL"
                 }).format(exame.valor_exame ?? 0);
-                const interno = exame.is_interno == true ? "Sim" : "Não"
+                trBody.dataset.is_interno = exame.is_interno == true ? "Sim" : "Não";
+
                 trBody.innerHTML = `
                     <td title="${exame.id_exame}">${exame.id_exame}</td>
                     <td title="${exame.nome_exame}">${exame.nome_exame}</td>
-                    <td title="${interno}">${interno}</td>
-                    <td title="${valorFormatado}">${valorFormatado}</td>
+                    <td title="${trBody.dataset.is_interno}">${trBody.dataset.is_interno}</td>
+                    <td title="${trBody.dataset.valor}">${trBody.dataset.valor}</td>
                 `;
+                const modalIdExame = document.getElementById("modal-id-exame-tr");
+                const modalNomeExame = document.getElementById("modal-nome-exame-tr");
+                const modalIsInternoExame = document.getElementById("modal-is_interno-exame-tr");
+                const modalValorExame = document.getElementById("modal-valor-exame-tr");
+                trBody.addEventListener("click", () => {
+                    modalIdExame.textContent = `${trBody.dataset.id} - ${trBody.dataset.nome}`;
+                    modalNomeExame.value = trBody.dataset.nome;
+                    modalIsInternoExame.value = trBody.dataset.is_interno;
+                    modalValorExame.value = exame.valor_exame.toFixed(2);
+                });
                 tbody.appendChild(trBody)
             });
             paginaAtual = pagina;
@@ -386,8 +431,6 @@ function getFiltros() {
             }
             break;
         case "usuarios":
-
-            console.log(document.getElementById("nome_usuario_filtro").value)
             resultado = {
                 nome_usuario: document.getElementById("nome_usuario_filtro").value || null,
                 email_usuario: document.getElementById("email_usuario_filtro").value || null,
@@ -475,11 +518,21 @@ document.getElementById("pesquisar_cnpj").addEventListener("click", async (event
                 inputNome.value = nome
             }
             else {
-                alert("Erro")
+                UIkit.notification({
+                    message: "Erro ❌",
+                    status: 'danger',
+                    pos: 'top-center',
+                    timeout: 5000
+                })
             }
         }
         else {
-            alert("CNPJ inválido!")
+            UIkit.notification({
+                message: "CNPJ inválido ❌",
+                status: 'danger',
+                pos: 'top-center',
+                timeout: 5000
+            })
         }
     }
     catch (e) {
@@ -491,8 +544,6 @@ async function cadastrarCliente() {
     let cnpj = document.getElementById("cnpj_cliente").value
     let c = validaCNPJ(cnpj)
 
-
-
     if (c !== false) {
         let nome = document.getElementById("nome_cliente").value
         let tipo_cliente = document.getElementById("tipo_cliente").value
@@ -502,11 +553,15 @@ async function cadastrarCliente() {
         //     ids_exames.push(parseInt(exame.value));
         // });
         let exames_inclusos = document.getElementById("exames-select").value
-        console.log(exames_inclusos)
         ids_exames.push(parseInt(exames_inclusos))
 
         if (!nome || !tipo_cliente || !c) {
-            alert("Preencha os campos obrigatórios")
+            UIkit.notification({
+                message: "Preencha os campos obrigatórios ❌",
+                status: 'danger',
+                pos: 'top-center',
+                timeout: 5000
+            })
             return
         }
 
@@ -529,12 +584,23 @@ async function cadastrarCliente() {
 
             if (requisicao.ok) {
                 filtrosAtuais = {}
-                recarregarTipoLista()
+                recarregarTipoLista({})
+                UIkit.notification({
+                    message: "Cliente Cadastrado ✅",
+                    status: 'success',
+                    pos: 'top-center',
+                    timeout: 3000
+                });
                 closeModal("modalCadastro")
-                alert(resposta.mensagem)
+
             }
             else {
-                alert(resposta.erro)
+                UIkit.notification({
+                    message: resposta.erro,
+                    status: 'danger',
+                    pos: 'top-center',
+                    timeout: 5000
+                })
             }
         }
         catch (e) {
@@ -550,9 +616,13 @@ async function cadastrarUsuario() {
     let senha = document.getElementById("senha").value
     let role = document.getElementById("role").value
 
-    console.log(`${nome} - ${email} - ${senha} - ${role}`)
     if (!nome || !email || !senha || !role) {
-        alert("Preencha todos os campos")
+        UIkit.notification({
+            message: "Preencha todos os campos! ❌",
+            status: 'danger',
+            pos: 'top-center',
+            timeout: 5000
+        })
         return
     }
 
@@ -575,12 +645,22 @@ async function cadastrarUsuario() {
 
         if (requisicao.ok) {
             filtrosAtuais = {}
-            recarregarTipoLista()
+            recarregarTipoLista({})
+            UIkit.notification({
+                message: "Cliente Cadastrado ✅",
+                status: 'success',
+                pos: 'top-center',
+                timeout: 3000
+            });
             closeModal("modalCadastro")
-            alert(resposta.mensagem)
         }
         else {
-            alert(resposta.erro)
+            UIkit.notification({
+                message: resposta.erro + " ❌",
+                status: 'danger',
+                pos: 'top-center',
+                timeout: 5000
+            })
         }
     }
     catch (e) {
@@ -594,9 +674,13 @@ async function cadastrarExame() {
     let is_interno = parseInt(document.getElementById("is_interno").value)
     let valor = document.getElementById("valor_exame").value
 
-    console.log(`${nome} - ${is_interno} - ${valor}`)
     if (!nome || !is_interno || !valor) {
-        alert("Preencha todos os campos")
+        UIkit.notification({
+            message: "Prencha todos os campos ❌",
+            status: 'danger',
+            pos: 'top-center',
+            timeout: 5000
+        })
         return
     }
 
@@ -618,12 +702,22 @@ async function cadastrarExame() {
 
         if (requisicao.ok) {
             filtrosAtuais = {}
-            recarregarTipoLista()
+            recarregarTipoLista({})
+            UIkit.notification({
+                message: "Cliente Cadastrado ✅",
+                status: 'success',
+                pos: 'top-center',
+                timeout: 3000
+            });
             closeModal("modalCadastro")
-            alert(resposta.mensagem)
         }
         else {
-            alert(resposta.erro)
+            UIkit.notification({
+                message: resposta.erro + " ❌",
+                status: 'danger',
+                pos: 'top-center',
+                timeout: 5000
+            })
         }
     }
     catch (e) {
@@ -646,6 +740,8 @@ document.getElementById("button-cadastro").addEventListener("click", async (even
             break;
     }
 })
+
+
 
 
 carregarClientesLista()

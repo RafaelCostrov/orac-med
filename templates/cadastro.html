@@ -10,6 +10,10 @@
   <!-- Fonte padrão -->
   <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;500;600;700&display=swap" rel="stylesheet">
   <link rel="stylesheet" href="{{url_for('static', filename='/css/cadastro.css')}}" />
+  <!-- UIkit -->
+  <link rel="stylesheet" href="{{url_for('static', filename='css/uikit/uikit.min.css')}}" />
+  <script src="{{url_for('static', filename='js/uikit/uikit-icons.min.js')}}"></script>
+  <script src="{{url_for('static', filename='js/uikit/uikit.min.js')}}"></script>
 
 </head>
 
@@ -55,6 +59,7 @@
   </header>
 
   <main>
+
     <!-- Faixa verde -->
     <div class="faixa">
       <h1>Cadastro</h1>
@@ -111,7 +116,7 @@
     </section>
   </main>
 
-  <!-- MODAL: Novo/Editar -->
+  <!-- MODAL: Novo -->
   <div id="modalCadastro" class="modal modal--brand" aria-hidden="true" role="dialog" aria-modal="true"
     aria-labelledby="cadTitle">
     <div class="modal__backdrop" data-close="modalCadastro"></div>
@@ -289,6 +294,103 @@
       <div class="modal__footer">
         <button id="filtrosLimparCad" class="btn cinza" type="button">Limpar</button>
         <button id="filtrosAplicarCad" class="btn verde" type="button">Aplicar</button>
+      </div>
+    </div>
+  </div>
+
+
+  <!-- Modal TR Cliente -->
+  <div id="cliente-modal" uk-modal>
+    <div class="uk-modal-dialog uk-margin-auto-vertical uk-modal-body modal-body">
+      <div class="modal-container">
+        <button class="uk-modal-close-default" type="button" uk-close></button>
+        <h2 class="uk-modal-title" id="modal-id-cliente-tr"></h2>
+        <hr>
+        <div class="cliente-modal-div">
+          <div class="cliente-input-label">
+            <label for="modal-nome-cliente-tr">Nome</label>
+            <input id="modal-nome-cliente-tr" name="modal-nome-cliente-tr" class="div1"></input>
+          </div>
+          <div class="cliente-input-label">
+            <label for="modal-cnpj-cliente-tr">CNPJ</label>
+            <input id="modal-cnpj-cliente-tr" name="modal-cnpj-cliente-tr" class="div2"></input>
+          </div>
+          <div class="cliente-input-label">
+            <label for="modal-tipo-cliente-tr">Tipo de Cliente</label>
+            <input id="modal-tipo-cliente-tr" name="modal-tipo-cliente-tr" class="div3"></input>
+          </div>
+          <div class="cliente-input-label">
+            <label for="modal-exames-cliente-tr">Exames</label>
+            <input id="modal-exames-cliente-tr" name="modal-exames-cliente-tr" class="div4"></input>
+          </div>
+        </div>
+        <div class="cliente-modal-footer">
+          <button class="uk-modal-close btn vermelho">Excluir</button>
+          <button class="uk-modal-close btn verde">Atualizar</button>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Modal TR Usuario -->
+  <div id="usuario-modal" uk-modal>
+    <div class="uk-modal-dialog uk-margin-auto-vertical uk-modal-body modal-body">
+      <div class="modal-container">
+        <button class="uk-modal-close-default" type="button" uk-close></button>
+        <h2 class="uk-modal-title" id="modal-id-usuario-tr"></h2>
+        <hr>
+        <div class="cliente-modal-div">
+          <div class="cliente-input-label">
+            <label for="modal-nome-usuario-tr">Nome</label>
+            <input id="modal-nome-usuario-tr" type="text" name="modal-nome-usuario-tr" class="div1"></input>
+          </div>
+          <div class="cliente-input-label">
+            <label for="modal-tipo-usuario-tr">Tipo de Usuário</label>
+            <input id="modal-tipo-usuario-tr" type="text" name="modal-tipo-usuario-tr" class="div2"></input>
+          </div>
+          <div class="cliente-input-label">
+            <label for="modal-email-usuario-tr">Email</label>
+            <input id="modal-email-usuario-tr" type="email" name="modal-email-usuario-tr" class="div3"></input>
+          </div>
+          <div class="cliente-input-label">
+            <label for="modal-senha-usuario-tr">Senha</label>
+            <input id="modal-senha-usuario-tr" type="password" placeholder="Nova Senha" name="modal-senha-usuario-tr"
+              class="div3"></input>
+          </div>
+        </div>
+        <div class="cliente-modal-footer">
+          <button class="uk-modal-close btn vermelho">Excluir</button>
+          <button class="uk-modal-close btn verde">Atualizar</button>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Modal TR Exame -->
+  <div id="exame-modal" uk-modal>
+    <div class="uk-modal-dialog uk-margin-auto-vertical uk-modal-body modal-body">
+      <div class="modal-container">
+        <button class="uk-modal-close-default" type="button" uk-close></button>
+        <h2 class="uk-modal-title" id="modal-id-exame-tr"></h2>
+        <hr>
+        <div class="cliente-modal-div">
+          <div class="cliente-input-label">
+            <label for="modal-nome-exame-tr">Nome</label>
+            <input id="modal-nome-exame-tr" type="text" name="modal-nome-exame-tr" class="div1"></input>
+          </div>
+          <div class="cliente-input-label">
+            <label for="modal-is_interno-exame-tr">Interno</label>
+            <input id="modal-is_interno-exame-tr" name="modal-is_interno-exame-tr" class="div2"></input>
+          </div>
+          <div class="cliente-input-label">
+            <label for="modal-valor-exame-tr">Valor</label>
+            <input id="modal-valor-exame-tr" type="number" name="modal-valor-exame-tr" class="div3"></input>
+          </div>
+        </div>
+        <div class="cliente-modal-footer">
+          <button class="uk-modal-close btn vermelho">Excluir</button>
+          <button class="uk-modal-close btn verde">Atualizar</button>
+        </div>
       </div>
     </div>
   </div>

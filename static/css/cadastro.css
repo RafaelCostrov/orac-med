@@ -245,7 +245,7 @@ main {
 
 /* Faixa verde */
 .faixa {
-  background: var(--verde-500);
+  background: var(--green-700);
   border-radius: 12px;
   padding: 10px 14px;
   display: flex;
@@ -258,6 +258,7 @@ main {
 .faixa h1 {
   color: var(--orange);
   font-size: clamp(20px, 2.6vw, 24px);
+  font-family: "Poppins", sans-serif;
   font-weight: 700
 }
 
@@ -451,7 +452,9 @@ tbody tr:hover {
   border: 0;
   cursor: pointer;
   transition: all .2s;
-  font-size: 14px
+  font-size: 14px;
+  font-family: "Poppins", sans-serif;
+
 }
 
 .btn.verde {
@@ -462,6 +465,16 @@ tbody tr:hover {
 .btn.verde:hover {
   background: var(--green-700);
   color: var(--orange)
+}
+
+.btn.vermelho {
+  background: red;
+  color: #fff
+}
+
+.btn.vermelho:hover {
+  background: darkred;
+  color: white
 }
 
 .btn.cinza {
@@ -657,6 +670,100 @@ textarea:focus {
   height: 20px;
 }
 
+
+/* Modal UIkit */
+
+
+#cliente-modal {
+  margin: 0;
+  padding: 0;
+}
+
+.modal-body {
+  border-radius: 15px;
+  margin: 0;
+  padding: 0;
+}
+
+.modal-body h2 {
+  font-family: "Poppins", sans-serif;
+  margin-bottom: 0;
+}
+
+.modal-body hr {
+  margin: 0;
+}
+
+.modal-container {
+  display: flex;
+  flex-direction: column;
+  gap: 24px;
+}
+
+.cliente-modal-div {
+  display: grid;
+  grid-template-columns: repeat(2, 1fr);
+  grid-template-rows: auto auto;
+  gap: 15px;
+}
+
+
+.cliente-modal-div .div1 {
+  grid-column: span 2 / span 2;
+}
+
+.cliente-modal-div .div2 {
+  grid-column: span 2 / span 2;
+  grid-column-start: 3;
+}
+
+.cliente-modal-div .div3 {
+  grid-column: span 2 / span 2;
+  grid-row-start: 2;
+}
+
+.cliente-modal-div .div4 {
+  grid-column: span 2 / span 2;
+  grid-column-start: 3;
+  grid-row-start: 2;
+}
+
+.cliente-input-label {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+}
+
+.cliente-modal-footer {
+  display: flex;
+  gap: 12px;
+  align-items: end;
+  justify-content: end;
+  width: 100%;
+}
+
+/* Modal UIkit */
+
+/* Toast */
+
+.uk-notification {
+  z-index: 9999 !important;
+}
+
+.uk-notification-message {
+  border-radius: 12px;
+  font-family: "Poppins", sans-serif;
+  box-shadow: 0px 4px 12px rgba(0, 0, 0, 0.2);
+  align-items: center;
+  font-size: 12px;
+  max-height: 40px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  text-align: center;
+}
+
+/*Toast  */
 
 /* Rodapé */
 
