@@ -42,8 +42,7 @@ async function cadastrarAtendimento(event) {
     };
 
     try {
-        // const requisicao = await fetch("http://192.168.15.7:5000/atendimentos/cadastrar-atendimento", {
-        const requisicao = await fetch("http://10.10.10.47:5000/atendimentos/cadastrar-atendimento", {
+        const requisicao = await fetch("/atendimentos/cadastrar-atendimento", {
             method: "POST",
             headers: {
                 "Content-Type": "application/json"

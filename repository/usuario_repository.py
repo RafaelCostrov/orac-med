@@ -22,9 +22,11 @@ class UsuarioRepository:
         except Exception as e:
             raise e
 
-    def filtrar_usuarios(self, id_usuario=None, nome_usuario=None, email_usuario=None, role=None):
+    def filtrar_usuarios(self, id_usuario=None, nome_usuario=None, email_usuario=None, role=None, offset=None, limit=None,
+                         order_by=None, order_dir=None):
         try:
             query = self.session.query(Usuario)
+            total = query.count()
             filtros = []
             if id_usuario is not None:
                 filtros.append(Usuario.id_usuario == id_usuario)
@@ -37,7 +39,33 @@ class UsuarioRepository:
             if role:
                 filtros.append(func.lower(
                     Usuario.role).like(f"%{role}%"))
-            return query.filter(and_(*filtros)).all()
+
+            query = query.filter(and_(*filtros))
+
+            campos_permitidos = {
+                "id_usuario": Usuario.id_usuario,
+                "nome_usuario": Usuario.nome_usuario,
+                "email_usuario": Usuario.email_usuario,
+                "role": Usuario.role
+            }
+
+            if order_by in campos_permitidos:
+                coluna = campos_permitidos[order_by]
+                if order_dir == "desc":
+                    coluna = coluna.desc()
+                else:
+                    coluna = coluna.asc()
+
+                query = query.order_by(coluna)
+
+            total_filtrado = query.count()
+            if offset is not None:
+                query = query.offset(offset)
+            if limit is not None:
+                query = query.limit(limit)
+
+            resultados = query.all()
+            return resultados, total, total_filtrado
         except Exception as e:
             raise e
 

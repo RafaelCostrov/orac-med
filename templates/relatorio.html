@@ -19,7 +19,7 @@
     <img src="{{url_for('static', filename='/img/Logo.png')}}" alt="Logo ORAC" class="logo" />
     <nav>
       <a href="{{ url_for('atendimento') }}">Atendimento</a>
-      <a href="">Cadastro</a>
+      <a href="{{ url_for('cadastro') }}">Cadastro</a>
       <a href="{{ url_for('relatorio') }}">Relatório</a>
     </nav>
     <div class="perfil-wrap">
@@ -62,9 +62,9 @@
         <div class="itens-por-pagina">
           <label for="ipp">Itens/página</label>
           <select id="ipp">
-            <option>10</option>
             <option>20</option>
             <option>50</option>
+            <option>100</option>
           </select>
         </div>
 

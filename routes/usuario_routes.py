@@ -49,7 +49,7 @@ def listar_todos_usuarios():
         }), 400
 
 
-@usuario_bp.route('/filtrar-usuarios')
+@usuario_bp.route('/filtrar-usuarios', methods=['POST'])
 def filtrar_usuario():
     try:
         data = request.get_json()
@@ -57,16 +57,24 @@ def filtrar_usuario():
         nome_usuario = data.get('nome_usuario')
         email_usuario = data.get('email_usuario')
         role = data.get('role')
+        pagina = data.get('pagina', 1)
+        por_pagina = data.get('por_pagina', 20)
+        order_by = data.get('order_by')
+        order_dir = data.get('order_dir')
 
         usuarios_filtrados = service.filtrar_usuarios(
             id_usuario=id_usuario,
             nome_usuario=nome_usuario,
             email_usuario=email_usuario,
-            role=role
+            role=role,
+            pagina=pagina,
+            por_pagina=por_pagina,
+            order_by=order_by,
+            order_dir=order_dir
         )
         return jsonify({
             "mensagem": "Usuários filtradas com sucesso!",
-            "usuarios": usuarios_filtrados
+            **usuarios_filtrados
         }), 200
     except Exception as e:
         print(f"Erro: {e}")

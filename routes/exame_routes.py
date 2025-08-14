@@ -48,7 +48,7 @@ def listar_todos_exames():
         }), 400
 
 
-@exame_bp.route('/filtrar-exames')
+@exame_bp.route('/filtrar-exames', methods=['POST'])
 def filtrar_exame():
     try:
         data = request.get_json()
@@ -57,17 +57,25 @@ def filtrar_exame():
         is_interno = data.get('is_interno')
         min_valor = data.get('min_valor')
         max_valor = data.get('max_valor')
+        pagina = data.get('pagina', 1)
+        por_pagina = data.get('por_pagina', 20)
+        order_by = data.get('order_by')
+        order_dir = data.get('order_dir')
 
         exames_filtrados = service.filtrar_exames(
             id_exame=id_exame,
             nome_exame=nome_exame,
             is_interno=is_interno,
             min_valor=min_valor,
-            max_valor=max_valor
+            max_valor=max_valor,
+            pagina=pagina,
+            por_pagina=por_pagina,
+            order_by=order_by,
+            order_dir=order_dir
         )
         return jsonify({
             "mensagem": "Exames filtradas com sucesso!",
-            "exames": exames_filtrados
+            **exames_filtrados
         }), 200
     except Exception as e:
         print(f"Erro: {e}")

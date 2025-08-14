@@ -22,9 +22,11 @@ class ExameRepository:
         except Exception as e:
             raise e
 
-    def filtrar_exames(self, id_exame=None, nome_exame=None, is_interno=None, min_valor=None, max_valor=None):
+    def filtrar_exames(self, id_exame=None, nome_exame=None, is_interno=None, min_valor=None, max_valor=None, offset=None, limit=None,
+                       order_by=None, order_dir=None):
         try:
             query = self.session.query(Exame)
+            total = query.count()
             filtros = []
 
             if id_exame is not None:
@@ -43,7 +45,32 @@ class ExameRepository:
             if max_valor:
                 filtros.append(Exame.valor_exame <= max_valor)
 
-            return query.filter(and_(*filtros)).all()
+            query = query.filter(and_(*filtros))
+
+            campos_permitidos = {
+                "id_exame": Exame.id_exame,
+                "nome_exame": Exame.nome_exame,
+                "is_interno": Exame.is_interno,
+                "valor_exame": Exame.valor_exame
+            }
+
+            if order_by in campos_permitidos:
+                coluna = campos_permitidos[order_by]
+                if order_dir == "desc":
+                    coluna = coluna.desc()
+                else:
+                    coluna = coluna.asc()
+
+                query = query.order_by(coluna)
+
+            total_filtrado = query.count()
+            if offset is not None:
+                query = query.offset(offset)
+            if limit is not None:
+                query = query.limit(limit)
+
+            resultados = query.all()
+            return resultados, total, total_filtrado
         except Exception as e:
             raise e
 

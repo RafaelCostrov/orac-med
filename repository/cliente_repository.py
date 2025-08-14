@@ -25,9 +25,10 @@ class ClienteRepository:
         except Exception as e:
             raise e
 
-    def filtrar_clientes(self, id_cliente=None, nome_cliente=None, cnpj_cliente=None, tipo_cliente=None, exames_incluidos=None):
+    def filtrar_clientes(self, id_cliente=None, nome_cliente=None, cnpj_cliente=None, tipo_cliente=None, exames_incluidos=None, offset=None, limit=None, order_by=None, order_dir=None):
         try:
             query = self.session.query(Cliente)
+            total = query.count()
             filtros = []
 
             if id_cliente is not None:
@@ -51,7 +52,33 @@ class ClienteRepository:
                     .group_by(Cliente.id_cliente)\
                     .having(func.count(distinct(Exame.id_exame)) == len(exames_incluidos))
 
-            return query.filter(and_(*filtros)).options(joinedload(Cliente.exames_incluidos)).all()
+            query = query.filter(
+                and_(*filtros)).options(joinedload(Cliente.exames_incluidos))
+
+            campos_permitidos = {
+                "id_cliente": Cliente.id_cliente,
+                "nome_cliente": Cliente.nome_cliente,
+                "cnpj_cliente": Cliente.cnpj_cliente,
+                "tipo_cliente": Cliente.tipo_cliente
+            }
+
+            if order_by in campos_permitidos:
+                coluna = campos_permitidos[order_by]
+                if order_dir == "desc":
+                    coluna = coluna.desc()
+                else:
+                    coluna = coluna.asc()
+
+                query = query.order_by(coluna)
+
+            total_filtrado = query.count()
+            if offset is not None:
+                query = query.offset(offset)
+            if limit is not None:
+                query = query.limit(limit)
+
+            resultados = query.all()
+            return resultados, total, total_filtrado
         except Exception as e:
             raise e
 

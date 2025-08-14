@@ -1,9 +1,13 @@
 let paginaAtual = 1;
-let porPagina = 20;
+let porPaginaInput = document.getElementById('ipp')
+porPaginaInput.addEventListener("change", () => {
+    carregarAtendimentos({ pagina: 1, filtros: filtrosAtuais, porPagina: parseInt(porPaginaInput.value) })
+})
 let totalPaginas = 1;
 let filtrosAtuais = {};
 let orderByAtual = null;
 let orderDirAtual = 'asc';
+
 
 const $ = (s, ctx = document) => ctx.querySelector(s);
 function closeModal(id) {
@@ -34,9 +38,10 @@ async function carregarAtendimentos({ pagina = 1, filtros = {}, porPagina = 20 }
         ...filtros
     };
 
+
     try {
 
-        const resposta = await fetch("http://10.10.10.47:5000/atendimentos/filtrar-atendimentos", {
+        const resposta = await fetch("/atendimentos/filtrar-atendimentos", {
             method: "POST",
             headers: {
                 "Content-Type": "application/json"
@@ -88,13 +93,13 @@ async function carregarAtendimentos({ pagina = 1, filtros = {}, porPagina = 20 }
 
 document.getElementById("prev").addEventListener("click", () => {
     if (paginaAtual > 1) {
-        carregarAtendimentos({ filtros: filtrosAtuais, pagina: paginaAtual - 1 });
+        carregarAtendimentos({ filtros: filtrosAtuais, pagina: paginaAtual - 1, porPagina: parseInt(porPaginaInput.value) });
     }
 });
 
 document.getElementById("next").addEventListener("click", () => {
     if (paginaAtual < totalPaginas) {
-        carregarAtendimentos({ filtros: filtrosAtuais, pagina: paginaAtual + 1 });
+        carregarAtendimentos({ filtros: filtrosAtuais, pagina: paginaAtual + 1, porPagina: parseInt(porPaginaInput.value) });
     }
 });
 
@@ -119,7 +124,7 @@ function getFiltros() {
 
 document.getElementById("filtrosLimpar").addEventListener("click", () => {
     filtrosAtuais = {}
-    carregarAtendimentos({ pagina: paginaAtual, filtrosAtuais: {} })
+    carregarAtendimentos({ pagina: paginaAtual, filtrosAtuais: {}, porPagina: parseInt(porPaginaInput.value) })
 })
 
 document.getElementById("filtrosAplicar").addEventListener("click", () => {
@@ -155,7 +160,7 @@ document.getElementById("filtrosAplicar").addEventListener("click", () => {
             el.value = "";
         }
     });
-    carregarAtendimentos({ filtros: filtrosAtuais, pagina: 1 });
+    carregarAtendimentos({ filtros: filtrosAtuais, pagina: 1, porPagina: parseInt(porPaginaInput.value) });
     closeModal('modalFiltros');
 })
 

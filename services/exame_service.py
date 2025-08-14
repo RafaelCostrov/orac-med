@@ -22,13 +22,23 @@ class ExameService():
             lista.append(json_exame)
         return lista
 
-    def filtrar_exames(self, id_exame, nome_exame, is_interno, min_valor, max_valor):
-        exames_filtrados = self.repositorio.filtrar_exames(
+    def filtrar_exames(self, id_exame: int, nome_exame: str, is_interno: bool, min_valor: float, max_valor: float, por_pagina=50,
+                       pagina: int = 1, order_by: str = "nome_cliente", order_dir: str = "desc"):
+        if por_pagina is not None:
+            offset = (pagina - 1) * por_pagina
+        else:
+            offset = None
+
+        exames_filtrados, total, total_filtrado = self.repositorio.filtrar_exames(
             id_exame=id_exame,
             nome_exame=nome_exame,
             is_interno=is_interno,
             min_valor=min_valor,
-            max_valor=max_valor
+            max_valor=max_valor,
+            offset=offset,
+            limit=por_pagina,
+            order_by=order_by,
+            order_dir=order_dir
         )
         lista_filtrada = []
         for exame in exames_filtrados:
@@ -39,7 +49,11 @@ class ExameService():
                 "is_interno": exame.is_interno
             }
             lista_filtrada.append(json_exame)
-        return lista_filtrada
+        return {
+            "exames": lista_filtrada,
+            "total": total,
+            "total_filtrado": total_filtrado
+        }
 
     def remover_exame(self, id_exame):
         self.repositorio.remover_exame(id_exame=id_exame)
