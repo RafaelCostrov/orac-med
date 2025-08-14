@@ -756,44 +756,24 @@ td.num {
   text-align: right
 }
 
-/* ... (restante igual: modal, grid, responsivo) ... */
+/* === Overrides para igualar ao RELATÓRIO (header/menu/footer) === */
 
+/* Header dark e navegação */
+header{background:#242424}
+nav a{color:#fff}
+nav a:hover,nav a:focus{color:var(--orange)}
+.nome-usuario{color:var(--orange)} /* mantém o destaque laranja igual no relatório */
 
-/* === Overrides para igualar ao relatório (header/menu/footer) === */
+/* HR e textos do footer */
+hr.solid{border:0;border-top:1px solid rgb(75,75,75);margin:0}
+.texto-footer{margin-right:12px;color:rgb(75,75,75);}
 
-.container-footer {
-  width: 100%;
-  display: flex;
-  font-size: small;
-  color: rgb(75, 75, 75);
-  justify-content: space-between;
-  align-items: center;
-  font-weight: 500;
-}
-
-.container-footer div {
-  padding: 24px 5%;
-  display: flex;
-  gap: 30px;
-}
-
-.container-footer a {
-  cursor: pointer;
-  transition: all 0.3s ease;
-}
-
-.container-footer a:hover {
-  cursor: pointer;
-  color: var(--orange);
-}
-
-.container-footer img {
-  height: 28px;
-  transition: all 0.3s ease;
-}
-
-.container-footer img:hover {
-  transform: scale(1.05);
-}
+/* Footer do relatório (container com links e ícones) */
+.container-footer{width:100%;display:flex;font-size:small;color:rgb(75,75,75);justify-content:space-between;align-items:center;font-weight:500}
+.container-footer div{padding:24px 5%;display:flex;gap:30px}
+.container-footer a{cursor:pointer;transition:all .3s ease}
+.container-footer a:hover{color:var(--orange)}
+.container-footer img{height:28px;transition:all .3s ease}
+.container-footer img:hover{transform:scale(1.05)}
 
 /* ================== Responsivo ================== */
