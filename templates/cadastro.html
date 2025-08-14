@@ -4,7 +4,8 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>Cadastro - ORAC</title>
+  <link rel="icon" type="image/x-icon" href="{{url_for('static', filename='/img/monogram-verde-hq.png')}}">
+  <title>Cadastro - Orac</title>
 
   <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;500;600;700&display=swap" rel="stylesheet">
   <link rel="stylesheet" href="{{url_for('static', filename='/css/cadastro.css')}}" />
@@ -34,7 +35,7 @@
           </div>
         </div>
         <hr />
-        <a href="{{ url_for('conta') }}" class="menu-item" role="menuitem" id="btnMinhaConta">
+        <a href="{{url_for('conta')}}" class="menu-item" role="menuitem" id="btnMinhaConta">
           <svg viewBox="0 0 24 24" class="mi">
             <path
               d="M12 12c2.761 0 5-2.463 5-5.5S14.761 1 12 1 7 3.463 7 6.5 9.239 12 12 12zm0 2c-4.418 0-8 2.91-8 6.5V22h16v-1.5c0-3.59-3.582-6.5-8-6.5z"
