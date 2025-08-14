@@ -13,8 +13,8 @@ document.addEventListener('DOMContentLoaded', () => {
     btn.addEventListener('click', e => { e.stopPropagation(); menu.classList.contains('open') ? close() : open(); });
     document.addEventListener('click', e => { if (!menu.contains(e.target) && e.target !== btn) close(); });
     document.addEventListener('keydown', e => { if (e.key === 'Escape') close(); });
-    const goConta = $('#btnMinhaConta'); if (goConta) goConta.addEventListener('click', e => { e.preventDefault(); location.href = 'conta.html'; });
-    const sair = $('#btnSair'); if (sair) sair.addEventListener('click', e => { e.preventDefault(); location.href = 'login.html'; });
+    const goConta = $('#btnMinhaConta'); if (goConta) goConta.addEventListener('click', e => { e.preventDefault(); location.href = 'conta'; });
+    const sair = $('#btnSair'); if (sair) sair.addEventListener('click', e => { e.preventDefault(); location.href = 'login'; });
   })();
 
 

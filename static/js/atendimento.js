@@ -189,9 +189,9 @@ document.addEventListener('DOMContentLoaded', () => {
 });
 // Redirecionamento dos botões do menu do perfil
 document.getElementById('btnMinhaConta')?.addEventListener('click', () => {
-  window.location.href = 'conta.html';
+  window.location.href = 'conta';
 });
 
 document.getElementById('btnSair')?.addEventListener('click', () => {
-  window.location.href = 'login.html';
+  window.location.href = 'login';
 });

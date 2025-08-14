@@ -1,30 +1,12 @@
 let paginaAtual = 1;
 let porPaginaInput = document.getElementById("ipp")
 
-porPaginaInput.addEventListener("change", () => {
-    carregarClientes({ pagina: 1, filtros: filtrosAtuais, porPagina: parseInt(porPaginaInput.value) })
-})
 
 const $ = (s, ctx = document) => ctx.querySelector(s);
 let tipoLista = document.getElementById("tipoLista")
 let tipoCadastro = document.getElementById("cadTipo")
 
-tipoLista.addEventListener("change", () => {
-    switch (tipoLista.value) {
-        case "clientes":
-            filtrosAtuais = {}
-            carregarClientes({ pagina: 1, filtros: filtrosAtuais, porPagina: parseInt(porPaginaInput.value) });
-            break;
-        case "usuarios":
-            filtrosAtuais = {}
-            carregarUsuarios({ pagina: 1, filtros: filtrosAtuais, porPagina: parseInt(porPaginaInput.value) });
-            break;
-        case "exames":
-            filtrosAtuais = {}
-            carregarExames({ pagina: 1, filtros: filtrosAtuais, porPagina: parseInt(porPaginaInput.value) });
-            break;
-    }
-})
+
 
 let totalPaginas = 1;
 let filtrosAtuais = {};
@@ -33,6 +15,11 @@ let orderDirAtual = 'asc';
 
 function closeModal(id) { const m = $('#' + id); if (!m) return; m.setAttribute('aria-hidden', 'true'); }
 
+
+
+porPaginaInput.addEventListener("change", () => {
+    carregarClientesLista({ pagina: 1, filtros: filtrosAtuais, porPagina: parseInt(porPaginaInput.value) })
+})
 
 function formatarCNPJ(cnpj) {
     if (!cnpj) return "";
@@ -71,7 +58,6 @@ function validaCNPJ(cnpj) {
     return c
 }
 
-
 const tiposCliente = {
     cliente: "Cliente",
     credenciado: "Credenciado",
@@ -85,9 +71,35 @@ const tiposUsuario = {
     administrador: "Administrador"
 }
 
+function verificarCliqueHead() {
+    document.querySelectorAll("th[data-sort]").forEach(th => {
+        th.addEventListener("click", () => {
+            const campo = th.getAttribute("data-sort");
 
+            if (orderByAtual === campo) {
+                orderDirAtual = orderDirAtual === 'asc' ? 'desc' : 'asc';
+            } else {
+                orderByAtual = campo;
+                orderDirAtual = 'asc';
+            }
 
-async function carregarClientes({ pagina = 1, filtros = {}, porPagina = 20 } = {}) {
+            filtrosAtuais.order_by = orderByAtual;
+            filtrosAtuais.order_dir = orderDirAtual;
+
+            document.querySelectorAll("th[data-sort]").forEach(e => {
+                e.classList.remove('asc', 'desc');
+            });
+            th.classList.add(orderDirAtual);
+
+            console.log(orderByAtual)
+            console.log(orderDirAtual)
+
+            recarregarTipoLista({ filtros: filtrosAtuais, pagina: 1 });
+        });
+    });
+}
+
+async function carregarClientesLista({ pagina = 1, filtros = {}, porPagina = 20 } = {}) {
     const payload = {
         pagina: pagina,
         por_pagina: porPagina,
@@ -118,9 +130,13 @@ async function carregarClientes({ pagina = 1, filtros = {}, porPagina = 20 } = {
                 <th data-sort="nome_cliente" class="ordenavel">Cliente</th>
                 <th data-sort="cnpj_cliente" class="ordenavel">CNPJ</th>
                 <th data-sort="tipo_cliente" class="ordenavel">Tipo Cliente</th>
-                <th data-sort="exames_incluidos">Exames Inclusos</th>
+                <th >Exames Inclusos</th>
                 `
             thead.appendChild(trHead)
+            const thOrdenado = thead.querySelector(`th[data-sort="${orderByAtual}"]`);
+            if (thOrdenado) {
+                thOrdenado.classList.add(orderDirAtual);
+            }
             dados.clientes.forEach(cliente => {
                 const trBody = document.createElement("tr");
                 const cnpjFormatado = formatarCNPJ(cliente.cnpj_cliente) || cliente.cnpj_cliente
@@ -141,10 +157,12 @@ async function carregarClientes({ pagina = 1, filtros = {}, porPagina = 20 } = {
         }
     } catch (e) {
         console.log(e)
+    } finally {
+        verificarCliqueHead()
     }
 }
 
-async function carregarUsuarios({ pagina = 1, filtros = {}, porPagina = 20 } = {}) {
+async function carregarUsuariosLista({ pagina = 1, filtros = {}, porPagina = 20 } = {}) {
     const payload = {
         pagina: pagina,
         por_pagina: porPagina,
@@ -175,6 +193,10 @@ async function carregarUsuarios({ pagina = 1, filtros = {}, porPagina = 20 } = {
                 <th data-sort="role" class="ordenavel">Nível</th>
                 `
             thead.appendChild(trHead)
+            const thOrdenado = thead.querySelector(`th[data-sort="${orderByAtual}"]`);
+            if (thOrdenado) {
+                thOrdenado.classList.add(orderDirAtual);
+            }
             dados.usuarios.forEach(usuario => {
                 const trBody = document.createElement("tr");
                 const tipoUsuarioFormatado = tiposUsuario[usuario.role] || usuario.role;
@@ -192,10 +214,15 @@ async function carregarUsuarios({ pagina = 1, filtros = {}, porPagina = 20 } = {
         }
     } catch (e) {
         console.log(e)
+    } finally {
+        verificarCliqueHead()
+    } const thOrdenado = thead.querySelector(`th[data-sort="${orderByAtual}"]`);
+    if (thOrdenado) {
+        thOrdenado.classList.add(orderDirAtual);
     }
 }
 
-async function carregarExames({ pagina = 1, filtros = {}, porPagina = 20 } = {}) {
+async function carregarExamesLista({ pagina = 1, filtros = {}, porPagina = 20 } = {}) {
     const payload = {
         pagina: pagina,
         por_pagina: porPagina,
@@ -226,6 +253,10 @@ async function carregarExames({ pagina = 1, filtros = {}, porPagina = 20 } = {})
                 <th data-sort="valor_exame" class="ordenavel">Valor</th>
                 `
             thead.appendChild(trHead)
+            const thOrdenado = thead.querySelector(`th[data-sort="${orderByAtual}"]`);
+            if (thOrdenado) {
+                thOrdenado.classList.add(orderDirAtual);
+            }
             dados.exames.forEach(exame => {
                 const trBody = document.createElement("tr");
                 const valorFormatado = new Intl.NumberFormat("pt-BR", {
@@ -247,6 +278,49 @@ async function carregarExames({ pagina = 1, filtros = {}, porPagina = 20 } = {})
         }
     } catch (e) {
         console.log(e)
+    } finally {
+        verificarCliqueHead()
+        const thOrdenado = thead.querySelector(`th[data-sort="${orderByAtual}"]`);
+        if (thOrdenado) {
+            thOrdenado.classList.add(orderDirAtual);
+        }
+    }
+}
+
+tipoLista.addEventListener("change", () => {
+    switch (tipoLista.value) {
+        case "clientes":
+            filtrosAtuais = {}
+            carregarClientesLista({ pagina: 1, filtros: filtrosAtuais, porPagina: parseInt(porPaginaInput.value) });
+            break;
+        case "usuarios":
+            filtrosAtuais = {}
+            carregarUsuariosLista({ pagina: 1, filtros: filtrosAtuais, porPagina: parseInt(porPaginaInput.value) });
+            break;
+        case "exames":
+            filtrosAtuais = {}
+            carregarExamesLista({ pagina: 1, filtros: filtrosAtuais, porPagina: parseInt(porPaginaInput.value) });
+            break;
+    }
+})
+
+function recarregarTipoLista({ pagina = 1, filtros = filtrosAtuais, porPagina = parseInt(porPaginaInput.value) }) {
+    payload = {
+        pagina: pagina,
+        filtros: filtros,
+        porPagina: porPagina
+    }
+
+    switch (tipoLista.value) {
+        case "clientes":
+            carregarClientesLista(payload);
+            break;
+        case "usuarios":
+            carregarUsuariosLista(payload);
+            break;
+        case "exames":
+            carregarExamesLista(payload);
+            break;
     }
 }
 
@@ -254,13 +328,13 @@ document.getElementById("prev").addEventListener("click", () => {
     if (paginaAtual > 1) {
         switch (tipoLista.value) {
             case "clientes":
-                carregarClientes({ pagina: paginaAtual - 1, filtros: filtrosAtuais, porPagina: parseInt(porPaginaInput.value) });
+                carregarClientesLista({ pagina: paginaAtual - 1, filtros: filtrosAtuais, porPagina: parseInt(porPaginaInput.value) });
                 break;
             case "usuarios":
-                carregarUsuarios({ pagina: paginaAtual - 1, filtros: filtrosAtuais, porPagina: parseInt(porPaginaInput.value) });
+                carregarUsuariosLista({ pagina: paginaAtual - 1, filtros: filtrosAtuais, porPagina: parseInt(porPaginaInput.value) });
                 break;
             case "exames":
-                carregarExames({ pagina: paginaAtual - 1, filtros: filtrosAtuais, porPagina: parseInt(porPaginaInput.value) });
+                carregarExamesLista({ pagina: paginaAtual - 1, filtros: filtrosAtuais, porPagina: parseInt(porPaginaInput.value) });
                 break;
         }
     }
@@ -270,13 +344,13 @@ document.getElementById("next").addEventListener("click", () => {
     if (paginaAtual < totalPaginas) {
         switch (tipoLista.value) {
             case "clientes":
-                carregarClientes({ pagina: paginaAtual + 1, filtros: filtrosAtuais, porPagina: parseInt(porPaginaInput.value) });
+                carregarClientesLista({ pagina: paginaAtual + 1, filtros: filtrosAtuais, porPagina: parseInt(porPaginaInput.value) });
                 break;
             case "usuarios":
-                carregarUsuarios({ pagina: paginaAtual + 1, filtros: filtrosAtuais, porPagina: parseInt(porPaginaInput.value) });
+                carregarUsuariosLista({ pagina: paginaAtual + 1, filtros: filtrosAtuais, porPagina: parseInt(porPaginaInput.value) });
                 break;
             case "exames":
-                carregarExames({ pagina: paginaAtual + 1, filtros: filtrosAtuais, porPagina: parseInt(porPaginaInput.value) });
+                carregarExamesLista({ pagina: paginaAtual + 1, filtros: filtrosAtuais, porPagina: parseInt(porPaginaInput.value) });
                 break;
         }
     }
@@ -286,13 +360,13 @@ document.getElementById("filtrosLimparCad").addEventListener("click", () => {
     filtrosAtuais = {}
     switch (tipoLista.value) {
         case "clientes":
-            carregarClientes({ pagina: 1, filtros: filtrosAtuais, porPagina: parseInt(porPaginaInput.value) });
+            carregarClientesLista({ pagina: 1, filtros: filtrosAtuais, porPagina: parseInt(porPaginaInput.value) });
             break;
         case "usuarios":
-            carregarUsuarios({ pagina: 1, filtros: filtrosAtuais, porPagina: parseInt(porPaginaInput.value) });
+            carregarUsuariosLista({ pagina: 1, filtros: filtrosAtuais, porPagina: parseInt(porPaginaInput.value) });
             break;
         case "exames":
-            carregarExames({ pagina: 1, filtros: filtrosAtuais, porPagina: parseInt(porPaginaInput.value) });
+            carregarExamesLista({ pagina: 1, filtros: filtrosAtuais, porPagina: parseInt(porPaginaInput.value) });
             break;
     }
 })
@@ -362,13 +436,13 @@ document.getElementById("filtrosAplicarCad").addEventListener("click", () => {
 
     switch (tipoLista.value) {
         case "clientes":
-            carregarClientes({ pagina: 1, filtros: filtrosAtuais, porPagina: parseInt(porPaginaInput.value) });
+            carregarClientesLista({ pagina: 1, filtros: filtrosAtuais, porPagina: parseInt(porPaginaInput.value) });
             break;
         case "usuarios":
-            carregarUsuarios({ pagina: 1, filtros: filtrosAtuais, porPagina: parseInt(porPaginaInput.value) });
+            carregarUsuariosLista({ pagina: 1, filtros: filtrosAtuais, porPagina: parseInt(porPaginaInput.value) });
             break;
         case "exames":
-            carregarExames({ pagina: 1, filtros: filtrosAtuais, porPagina: parseInt(porPaginaInput.value) });
+            carregarExamesLista({ pagina: 1, filtros: filtrosAtuais, porPagina: parseInt(porPaginaInput.value) });
             break;
     }
 
@@ -397,7 +471,7 @@ document.getElementById("pesquisar_cnpj").addEventListener("click", async (event
             resposta = await requisicao.json()
             if (requisicao.ok) {
                 nome = resposta.nome;
-                inputNome = document.getElementById("nome_cliente")
+                let inputNome = document.getElementById("nome_cliente")
                 inputNome.value = nome
             }
             else {
@@ -413,9 +487,165 @@ document.getElementById("pesquisar_cnpj").addEventListener("click", async (event
     }
 })
 
+async function cadastrarCliente() {
+    let cnpj = document.getElementById("cnpj_cliente").value
+    let c = validaCNPJ(cnpj)
 
-async function cadastrarCliente(event) {
-    event.preventDefault();
+
+
+    if (c !== false) {
+        let nome = document.getElementById("nome_cliente").value
+        let tipo_cliente = document.getElementById("tipo_cliente").value
+        let ids_exames = [];
+        // const checkboxes = document.getElementById("exames-select").querySelectorAll('input[type="checkbox"]:checked');
+        // checkboxes.forEach(exame => {
+        //     ids_exames.push(parseInt(exame.value));
+        // });
+        let exames_inclusos = document.getElementById("exames-select").value
+        console.log(exames_inclusos)
+        ids_exames.push(parseInt(exames_inclusos))
+
+        if (!nome || !tipo_cliente || !c) {
+            alert("Preencha os campos obrigatórios")
+            return
+        }
+
+        try {
+            payload = {
+                nome_cliente: nome,
+                cnpj_cliente: c,
+                tipo_cliente: tipo_cliente,
+                exames_incluidos: ids_exames
+            }
+
+            let requisicao = await fetch("/clientes/cadastrar-cliente", {
+                method: "POST",
+                headers: {
+                    "Content-Type": "application/json"
+                },
+                body: JSON.stringify(payload)
+            })
+            resposta = await requisicao.json()
+
+            if (requisicao.ok) {
+                filtrosAtuais = {}
+                recarregarTipoLista()
+                closeModal("modalCadastro")
+                alert(resposta.mensagem)
+            }
+            else {
+                alert(resposta.erro)
+            }
+        }
+        catch (e) {
+            console.log(e)
+            console.log(resposta.erro ?? "Erro")
+        }
+    }
 }
 
-carregarClientes()
+async function cadastrarUsuario() {
+    let nome = document.getElementById("nome_usuario").value
+    let email = document.getElementById("email_usuario").value
+    let senha = document.getElementById("senha").value
+    let role = document.getElementById("role").value
+
+    console.log(`${nome} - ${email} - ${senha} - ${role}`)
+    if (!nome || !email || !senha || !role) {
+        alert("Preencha todos os campos")
+        return
+    }
+
+    try {
+        payload = {
+            nome_usuario: nome,
+            email_usuario: email,
+            senha: senha,
+            role: role
+        }
+
+        let requisicao = await fetch("/usuarios/cadastrar-usuario", {
+            method: "POST",
+            headers: {
+                "Content-Type": "application/json"
+            },
+            body: JSON.stringify(payload)
+        })
+        resposta = await requisicao.json()
+
+        if (requisicao.ok) {
+            filtrosAtuais = {}
+            recarregarTipoLista()
+            closeModal("modalCadastro")
+            alert(resposta.mensagem)
+        }
+        else {
+            alert(resposta.erro)
+        }
+    }
+    catch (e) {
+        console.log(e)
+        console.log(resposta.erro ?? "Erro")
+    }
+}
+
+async function cadastrarExame() {
+    let nome = document.getElementById("nome_exame").value
+    let is_interno = parseInt(document.getElementById("is_interno").value)
+    let valor = document.getElementById("valor_exame").value
+
+    console.log(`${nome} - ${is_interno} - ${valor}`)
+    if (!nome || !is_interno || !valor) {
+        alert("Preencha todos os campos")
+        return
+    }
+
+    try {
+        payload = {
+            nome_exame: nome,
+            is_interno: is_interno,
+            valor_exame: valor
+        }
+
+        let requisicao = await fetch("/exames/cadastrar-exame", {
+            method: "POST",
+            headers: {
+                "Content-Type": "application/json"
+            },
+            body: JSON.stringify(payload)
+        })
+        resposta = await requisicao.json()
+
+        if (requisicao.ok) {
+            filtrosAtuais = {}
+            recarregarTipoLista()
+            closeModal("modalCadastro")
+            alert(resposta.mensagem)
+        }
+        else {
+            alert(resposta.erro)
+        }
+    }
+    catch (e) {
+        console.log(e)
+        console.log(resposta.erro ?? "Erro")
+    }
+}
+
+document.getElementById("button-cadastro").addEventListener("click", async (event) => {
+    event.preventDefault()
+    switch (tipoCadastro.value) {
+        case "clientes":
+            cadastrarCliente();
+            break;
+        case "usuarios":
+            cadastrarUsuario();
+            break;
+        case "exames":
+            cadastrarExame();
+            break;
+    }
+})
+
+
+carregarClientesLista()

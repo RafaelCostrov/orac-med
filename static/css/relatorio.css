@@ -37,6 +37,30 @@ img {
 
 /* ================== Cores ================== */
 :root {
+
+  --verde-50: #ebf9e3;
+  --verde-100: #d5e7ce;
+  --verde-200: #accf9e;
+  --verde-300: #81b770;
+  --verde-400: #559f41;
+  --verde-500: #178700;
+  --verde-600: #1b6b0b;
+  --verde-700: #1a500f;
+  --verde-800: #17360f;
+  --verde-900: #121e0a;
+
+
+  --laranja-50: #fff1e5;
+  --laranja-100: #ffe9d3;
+  --laranja-200: #ffd3a8;
+  --laranja-300: #ffbd7e;
+  --laranja-400: #fea852;
+  --laranja-500: #f7921e;
+  --laranja-600: #c1731d;
+  --laranja-700: #8e561b;
+  --laranja-800: #5d3a16;
+  --laranja-900: #312010;
+
   --green-700: #2e7d32;
   --green-600: #2e7d32;
   --green-500: #43a047;
@@ -352,12 +376,12 @@ td {
 }
 
 thead th {
-  background: var(--green-700);
+  background: var(--laranja-500);
   position: sticky;
   top: 0;
   z-index: 1;
   padding: 12px 10px;
-  color: var(--orange);
+  color: var(--verde-700);
   font-weight: 700;
 }
 
@@ -408,7 +432,7 @@ th.ordenavel.asc::after {
   top: 50%;
   transform: translateY(-50%);
   font-size: 0.7em;
-  color: var(--orange);
+  color: var(--verde-700);
 }
 
 th.ordenavel.desc::after {
@@ -418,7 +442,7 @@ th.ordenavel.desc::after {
   top: 50%;
   transform: translateY(-50%);
   font-size: 0.7em;
-  color: var(--orange);
+  color: var(--verde-700);
 }
 
 tbody td {
@@ -438,7 +462,7 @@ tbody tr {
 }
 
 tbody tr:nth-child(even) {
-  background-color: #e7f6eb;
+  background-color: var(--laranja-50);
 }
 
 tbody tr:nth-child(odd) {
@@ -446,7 +470,7 @@ tbody tr:nth-child(odd) {
 }
 
 tbody tr:hover {
-  background: #fae7d0;
+  background: var(--verde-50);
 }
 
 /* ================== Paginação & Botões ================== */

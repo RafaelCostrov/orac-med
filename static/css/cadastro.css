@@ -37,6 +37,29 @@ img {
 
 /* Cores */
 :root {
+  --verde-50: #ebf9e3;
+  --verde-100: #d5e7ce;
+  --verde-200: #accf9e;
+  --verde-300: #81b770;
+  --verde-400: #559f41;
+  --verde-500: #178700;
+  --verde-600: #1b6b0b;
+  --verde-700: #1a500f;
+  --verde-800: #17360f;
+  --verde-900: #121e0a;
+
+
+  --laranja-50: #fff1e5;
+  --laranja-100: #ffe9d3;
+  --laranja-200: #ffd3a8;
+  --laranja-300: #ffbd7e;
+  --laranja-400: #fea852;
+  --laranja-500: #f7921e;
+  --laranja-600: #c1731d;
+  --laranja-700: #8e561b;
+  --laranja-800: #5d3a16;
+  --laranja-900: #312010;
+
   --green-700: #2e7d32;
   --green-600: #2e7d32;
   --green-500: #43a047;
@@ -222,7 +245,7 @@ main {
 
 /* Faixa verde */
 .faixa {
-  background: var(--green-700);
+  background: var(--verde-500);
   border-radius: 12px;
   padding: 10px 14px;
   display: flex;
@@ -308,38 +331,82 @@ main {
 
 table {
   width: 100%;
-  border-collapse: collapse
+  border-collapse: collapse;
+  table-layout: fixed;
 }
 
+th,
+td {
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+
 thead th {
-  background: #f7f7f7;
+  background: var(--laranja-500);
   position: sticky;
   top: 0;
   z-index: 1;
   text-align: left;
   padding: 12px 10px;
-  border-bottom: 1px solid var(--grey-300);
-  color: var(--grey-700);
-  font-weight: 700
+  color: var(--verde-700);
+  font-weight: 700;
 }
 
 thead th.num {
   text-align: right
 }
 
+thead th.ordenavel {
+  cursor: pointer;
+  padding-right: 10px;
+  position: sticky;
+}
+
+th.ordenavel.asc::after {
+  content: "▲";
+  position: absolute;
+  right: 10px;
+  top: 50%;
+  transform: translateY(-50%);
+  font-size: 0.7em;
+  color: var(--verde-700);
+}
+
+th.ordenavel.desc::after {
+  content: "▼";
+  position: absolute;
+  right: 10px;
+  top: 50%;
+  transform: translateY(-50%);
+  font-size: 0.7em;
+  color: var(--verde-700);
+}
+
+
 tbody td {
   padding: 12px 10px;
   border-bottom: 1px solid #eee;
   vertical-align: middle;
-  color: #2b2b2b
+  color: #2b2b2b;
+  cursor: pointer;
 }
 
-tbody td.num {
-  text-align: right
+tbody tr {
+  transition: all 0.3s ease;
+}
+
+tbody tr:nth-child(even) {
+  background-color: var(--laranja-50);
+}
+
+tbody tr:nth-child(odd) {
+  background-color: #fff;
 }
 
 tbody tr:hover {
-  background: #fcfcfc
+  background-color: var(--verde-50)
 }
 
 /* Ações na tabela */
@@ -759,21 +826,70 @@ td.num {
 /* === Overrides para igualar ao RELATÓRIO (header/menu/footer) === */
 
 /* Header dark e navegação */
-header{background:#242424}
-nav a{color:#fff}
-nav a:hover,nav a:focus{color:var(--orange)}
-.nome-usuario{color:var(--orange)} /* mantém o destaque laranja igual no relatório */
+header {
+  background: #242424
+}
+
+nav a {
+  color: #fff
+}
+
+nav a:hover,
+nav a:focus {
+  color: var(--orange)
+}
+
+.nome-usuario {
+  color: var(--orange)
+}
+
+/* mantém o destaque laranja igual no relatório */
 
 /* HR e textos do footer */
-hr.solid{border:0;border-top:1px solid rgb(75,75,75);margin:0}
-.texto-footer{margin-right:12px;color:rgb(75,75,75);}
+hr.solid {
+  border: 0;
+  border-top: 1px solid rgb(75, 75, 75);
+  margin: 0
+}
+
+.texto-footer {
+  margin-right: 12px;
+  color: rgb(75, 75, 75);
+}
 
 /* Footer do relatório (container com links e ícones) */
-.container-footer{width:100%;display:flex;font-size:small;color:rgb(75,75,75);justify-content:space-between;align-items:center;font-weight:500}
-.container-footer div{padding:24px 5%;display:flex;gap:30px}
-.container-footer a{cursor:pointer;transition:all .3s ease}
-.container-footer a:hover{color:var(--orange)}
-.container-footer img{height:28px;transition:all .3s ease}
-.container-footer img:hover{transform:scale(1.05)}
+.container-footer {
+  width: 100%;
+  display: flex;
+  font-size: small;
+  color: rgb(75, 75, 75);
+  justify-content: space-between;
+  align-items: center;
+  font-weight: 500
+}
+
+.container-footer div {
+  padding: 24px 5%;
+  display: flex;
+  gap: 30px
+}
+
+.container-footer a {
+  cursor: pointer;
+  transition: all .3s ease
+}
+
+.container-footer a:hover {
+  color: var(--orange)
+}
+
+.container-footer img {
+  height: 28px;
+  transition: all .3s ease
+}
+
+.container-footer img:hover {
+  transform: scale(1.05)
+}
 
 /* ================== Responsivo ================== */

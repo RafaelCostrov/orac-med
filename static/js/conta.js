@@ -1,11 +1,11 @@
 // ../js/conta.js 
 document.addEventListener('DOMContentLoaded', () => {
   // ===== Helpers =====
-  const $  = (s, ctx=document) => ctx.querySelector(s);
-  const $$ = (s, ctx=document) => [...ctx.querySelectorAll(s)];
+  const $ = (s, ctx = document) => ctx.querySelector(s);
+  const $$ = (s, ctx = document) => [...ctx.querySelectorAll(s)];
 
   // ===== Header: menu do avatar =====
-  const avatarBtn   = $('#avatarBtn');
+  const avatarBtn = $('#avatarBtn');
   const profileMenu = $('#profileMenu');
 
   if (avatarBtn && profileMenu) {
@@ -27,17 +27,17 @@ document.addEventListener('DOMContentLoaded', () => {
   const btnMinhaConta = $('#btnMinhaConta');
   if (btnMinhaConta) btnMinhaConta.style.display = 'none';
 
-  // "Sair" -> login.html
+  // "Sair" -> login
   const btnSair = $('#btnSair');
   if (btnSair) {
     btnSair.addEventListener('click', (e) => {
       e.preventDefault();
-      window.location.href = 'login.html';
+      window.location.href = 'login';
     });
   }
 
   // ===== Preview do avatar =====
-  const avatarInput   = $('#avatar-upload');
+  const avatarInput = $('#avatar-upload');
   const avatarPreview = $('#avatar-preview');
   if (avatarInput && avatarPreview) {
     avatarInput.addEventListener('change', () => {
@@ -51,26 +51,26 @@ document.addEventListener('DOMContentLoaded', () => {
 
   // ===== Modal Alterar Senha =====
   const openPwdBtn = $('#openChangePwd');
-  const modal      = $('#modalSenha');
-  const backdrop   = $('.modal__backdrop', modal);
-  const closeX     = $('[data-close]', modal);
-  const btnVoltar  = $('#btnCancelarSenha');
+  const modal = $('#modalSenha');
+  const backdrop = $('.modal__backdrop', modal);
+  const closeX = $('[data-close]', modal);
+  const btnVoltar = $('#btnCancelarSenha');
 
-  const formSenha   = $('#formSenha');
-  const pwdAtual    = $('#pwdAtual');
-  const pwdNova     = $('#pwdNova');
+  const formSenha = $('#formSenha');
+  const pwdAtual = $('#pwdAtual');
+  const pwdNova = $('#pwdNova');
   const pwdConfirma = $('#pwdConfirma');
-  const pwdBar      = $('#pwdBar');
-  const meterWrap   = $('.pwd-meter');
+  const pwdBar = $('#pwdBar');
+  const meterWrap = $('.pwd-meter');
 
   // estados visuais
-  const requisitosList   = $$('.requisitos li', modal);
-  const pwdNovaField     = pwdNova ? pwdNova.closest('.pwd-field') : null;
+  const requisitosList = $$('.requisitos li', modal);
+  const pwdNovaField = pwdNova ? pwdNova.closest('.pwd-field') : null;
   const pwdConfirmaField = pwdConfirma ? pwdConfirma.closest('.pwd-field') : null;
 
   // paths dos ícones info
   const INFO_DEFAULT = '../img/icons/info.png';
-  const INFO_GREEN   = '../img/icons/info-green.png';
+  const INFO_GREEN = '../img/icons/info-green.png';
 
   function lockScroll(lock) {
     document.documentElement.style.overflow = lock ? 'hidden' : '';
@@ -104,11 +104,11 @@ document.addEventListener('DOMContentLoaded', () => {
     });
   }
   if (openPwdBtn) openPwdBtn.addEventListener('click', openModal);
-  if (closeX)     closeX.addEventListener('click', closeModal);
-  if (btnVoltar)  btnVoltar.addEventListener('click', closeModal);
+  if (closeX) closeX.addEventListener('click', closeModal);
+  if (btnVoltar) btnVoltar.addEventListener('click', closeModal);
 
   // ===== Toggle "olho" =====
-  (function wireToggles(){
+  (function wireToggles() {
     const toggles = $$('.toggle-pass', modal);
     toggles.forEach(btn => {
       const targetSel = btn.getAttribute('data-target');
@@ -139,8 +139,8 @@ document.addEventListener('DOMContentLoaded', () => {
 
   function paintMeter(score) {
     if (!pwdBar) return;
-    const width  = [0, 20, 40, 60, 80, 100][score] + '%';
-    const color  = ['#d9534f','#d9534f','#f0ad4e','#ffc107','#4caf50','#2e7d32'][score];
+    const width = [0, 20, 40, 60, 80, 100][score] + '%';
+    const color = ['#d9534f', '#d9534f', '#f0ad4e', '#ffc107', '#4caf50', '#2e7d32'][score];
     pwdBar.style.width = width;
     pwdBar.style.background = color;
   }
@@ -164,9 +164,9 @@ document.addEventListener('DOMContentLoaded', () => {
     ];
 
     requisitosList.forEach((li, i) => {
-      const ok   = !!checks[i];
+      const ok = !!checks[i];
       const text = $('span', li) || li;
-      const img  = $('.info-ic', li); // <img class="info-ic" ...>
+      const img = $('.info-ic', li); // <img class="info-ic" ...>
 
       li.classList.toggle('ok', ok);
       text.style.color = ok ? 'var(--green-700)' : 'var(--grey-700)';
@@ -180,15 +180,15 @@ document.addEventListener('DOMContentLoaded', () => {
 
     // cadeados verdes em NOVA e CONFIRME quando TODAS as regras ok
     const allOk = checks.every(Boolean);
-    if (pwdNovaField)     pwdNovaField.classList.toggle('ok-all', allOk);
+    if (pwdNovaField) pwdNovaField.classList.toggle('ok-all', allOk);
     if (pwdConfirmaField) pwdConfirmaField.classList.toggle('ok-all', allOk);
 
     const box = $('#pwdErrorsBox');
     if (box) box.remove();
   }
 
-  if (pwdNova)     pwdNova.addEventListener('input', updateRequirements);
-  if (pwdAtual)    pwdAtual.addEventListener('input', updateRequirements);
+  if (pwdNova) pwdNova.addEventListener('input', updateRequirements);
+  if (pwdAtual) pwdAtual.addEventListener('input', updateRequirements);
   if (pwdConfirma) pwdConfirma.addEventListener('input', () => {
     const box = $('#pwdErrorsBox');
     if (box) box.remove();
@@ -197,13 +197,13 @@ document.addEventListener('DOMContentLoaded', () => {
   // ===== Validação final =====
   function validatePassword(newPwd, currentPwd, confirmPwd) {
     const errs = [];
-    if (!newPwd || newPwd.length < 8)  errs.push('Mínimo de 8 caracteres.');
-    if (!/[a-z]/.test(newPwd))         errs.push('Pelo menos 1 letra minúscula.');
-    if (!/[A-Z]/.test(newPwd))         errs.push('Pelo menos 1 letra maiúscula.');
-    if (!/\d/.test(newPwd))            errs.push('Pelo menos 1 número.');
-    if (!/[^A-Za-z0-9]/.test(newPwd))  errs.push('Pelo menos 1 caractere especial.');
+    if (!newPwd || newPwd.length < 8) errs.push('Mínimo de 8 caracteres.');
+    if (!/[a-z]/.test(newPwd)) errs.push('Pelo menos 1 letra minúscula.');
+    if (!/[A-Z]/.test(newPwd)) errs.push('Pelo menos 1 letra maiúscula.');
+    if (!/\d/.test(newPwd)) errs.push('Pelo menos 1 número.');
+    if (!/[^A-Za-z0-9]/.test(newPwd)) errs.push('Pelo menos 1 caractere especial.');
     if (currentPwd && newPwd === currentPwd) errs.push('A nova senha deve ser diferente da atual.');
-    if (newPwd !== confirmPwd)         errs.push('A confirmação não confere.');
+    if (newPwd !== confirmPwd) errs.push('A confirmação não confere.');
     return errs;
   }
 
@@ -225,8 +225,8 @@ document.addEventListener('DOMContentLoaded', () => {
 
     [pwdNovaField, pwdConfirmaField].forEach(f => f && f.classList.remove('ok-all'));
 
-    $$('.toggle-pass[aria-pressed="true"]', modal).forEach(btn=>{
-      btn.setAttribute('aria-pressed','false');
+    $$('.toggle-pass[aria-pressed="true"]', modal).forEach(btn => {
+      btn.setAttribute('aria-pressed', 'false');
     });
     [pwdAtual, pwdNova, pwdConfirma].forEach(inp => { if (inp) inp.type = 'password'; });
   }
@@ -246,8 +246,8 @@ document.addEventListener('DOMContentLoaded', () => {
       formSenha.appendChild(box);
     }
     if (box) {
-      box.innerHTML = `<ul style="padding-left:18px;margin:0;">${errs.map(e=>`<li>${e}</li>`).join('')}</ul>`;
-      box.scrollIntoView({behavior:'smooth', block:'nearest'});
+      box.innerHTML = `<ul style="padding-left:18px;margin:0;">${errs.map(e => `<li>${e}</li>`).join('')}</ul>`;
+      box.scrollIntoView({ behavior: 'smooth', block: 'nearest' });
     } else {
       alert(errs.join('\n'));
     }
@@ -257,9 +257,9 @@ document.addEventListener('DOMContentLoaded', () => {
   if (formSenha) {
     formSenha.addEventListener('submit', (e) => {
       e.preventDefault();
-      const current = (pwdAtual && pwdAtual.value)       || '';
-      const novo    = (pwdNova && pwdNova.value)         || '';
-      const conf    = (pwdConfirma && pwdConfirma.value) || '';
+      const current = (pwdAtual && pwdAtual.value) || '';
+      const novo = (pwdNova && pwdNova.value) || '';
+      const conf = (pwdConfirma && pwdConfirma.value) || '';
 
       const errs = validatePassword(novo, current, conf);
       if (errs.length) {

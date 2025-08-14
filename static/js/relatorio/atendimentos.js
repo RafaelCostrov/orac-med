@@ -38,7 +38,6 @@ async function carregarAtendimentos({ pagina = 1, filtros = {}, porPagina = 20 }
         ...filtros
     };
 
-
     try {
 
         const resposta = await fetch("/atendimentos/filtrar-atendimentos", {
@@ -103,8 +102,6 @@ document.getElementById("next").addEventListener("click", () => {
     }
 });
 
-
-
 function getFiltros() {
     return {
         data_min: document.getElementById("data_min").value || null,
@@ -114,13 +111,12 @@ function getFiltros() {
         colaborador: document.getElementById("colaborador").value || null,
         tipoCliente: document.getElementById("tipoCl").value || null,
         tipoAtendimento: document.getElementById("tipoAt").value || null,
-        exames: document.getElementById("exames").value || null,
+        exames: document.getElementById("exames-select").value || null,
         status: document.getElementById("status").value || null,
         valor_min: document.getElementById("valor_min").value || null,
         valor_max: document.getElementById("valor_max").value || null
     };
 }
-
 
 document.getElementById("filtrosLimpar").addEventListener("click", () => {
     filtrosAtuais = {}

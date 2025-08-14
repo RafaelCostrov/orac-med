@@ -6,6 +6,7 @@ from routes.usuario_routes import usuario_bp
 from routes.atendimento_routes import atendimento_bp
 
 app = Flask(__name__)
+CORS(app, origins=["http://orac:5000"])
 
 app.register_blueprint(exame_bp)
 app.register_blueprint(cliente_bp)

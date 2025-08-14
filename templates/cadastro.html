@@ -148,8 +148,9 @@
             <div class="fg cad-field" data-for="usuarios">
               <label>Perfil</label>
               <select id="role">
-                <option value="ADMIN">ADMIN</option>
-                <option value="OPERADOR">OPERADOR</option>
+                <option value="usuario">Usuário</option>
+                <option value="gestor">Gestor</option>
+                <option value="administrador">Administrador</option>
               </select>
             </div>
 
@@ -176,6 +177,12 @@
                 <option value="particular">Particular</option>
               </select>
             </div>
+            <div class="fg cad-field hidden" data-for="clientes">
+              <label for="exames">Exames Inclusos</label>
+              <select id="exames-select">
+                <option value="">Nenhum</option>
+              </select>
+            </div>
 
             <!-- ======= EXAMES ======= -->
             <div class="fg cad-field hidden" data-for="exames">
@@ -185,8 +192,8 @@
             <div class="fg cad-field hidden" data-for="exames">
               <label>Interno?</label>
               <select id="is_interno">
-                <option value="true">Sim</option>
-                <option value="false">Não</option>
+                <option value=1>Sim</option>
+                <option value=0>Não</option>
               </select>
             </div>
             <div class="fg cad-field hidden" data-for="exames">
@@ -199,7 +206,7 @@
       <div class="modal__footer">
         <button class="btn cinza" data-close="modalCadastro" type="button">Voltar</button>
         <button id="btnExcluirReg" class="btn vermelho" type="button" style="display:none">Excluir</button>
-        <button class="btn verde" form="formCadastro">Salvar</button>
+        <button class="btn verde" id="button-cadastro">Salvar</button>
       </div>
     </div>
   </div>
@@ -250,6 +257,8 @@
                 <option value="">Todos</option>
                 <option value="cliente">Cliente</option>
                 <option value="credenciado">Credenciado</option>
+                <option value="servico_prestado">Serviço Prestado</option>
+                <option value="particular">Particular</option>
               </select>
             </div>
 
@@ -307,6 +316,7 @@
 
   <script src="{{ url_for('static' ,filename='/js/cadastro.js')}}" defer></script>
   <script src="{{ url_for('static' ,filename='/js/cadastro/carregar.js')}}" defer></script>
+  <script src="{{url_for('static', filename='/js/relatorio/exames.js')}}" defer></script>
 </body>
 
 </html>
