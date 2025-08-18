@@ -1,11 +1,54 @@
-from flask import Blueprint, request, jsonify
+from flask import Blueprint, request, jsonify, session
 from services.usuario_service import UsuarioService
 from model.usuario import Usuario
-from db.db import Session
 
 usuario_bp = Blueprint('usuario', __name__, url_prefix="/usuarios")
 
 service = UsuarioService()
+
+
+@usuario_bp.route('/login', methods=['POST'])
+def login():
+    try:
+        data = request.get_json()
+        email_usuario = data.get('email_usuario')
+        senha = data.get('senha')
+        usuario = service.verificar_usuario(
+            email_usuario=email_usuario, senha=senha)
+        if usuario:
+            session['usuario'] = {
+                "id_usuario": usuario.id_usuario,
+                "nome_usuario": usuario.nome_usuario,
+                "email_usuario": usuario.email_usuario,
+                "role": usuario.role.__str__()
+            }
+            return jsonify({
+                "mensagem": "Usuário autenticado com sucesso!",
+                "usuario": session['usuario']
+            }), 200
+        else:
+            return jsonify({
+                "erro": "Email ou senha inválidos!"
+            }), 401
+    except Exception as e:
+        print(f"Erro: {e}")
+        return jsonify({
+            "erro": "Ocorreu um erro, tente novamente!"
+        }), 400
+
+
+@usuario_bp.route('/logout', methods=['POST'])
+def logout():
+    try:
+        session.pop('usuario', None)
+        return jsonify({
+            "mensagem": "Usuário deslogado com sucesso!"
+        }), 200
+    except Exception as e:
+        print(f"Erro: {e}")
+        return jsonify({
+            "erro": "Ocorreu um erro, tente novamente!"
+        }), 400
 
 
 @usuario_bp.route('/cadastrar-usuario', methods=['POST'])
@@ -20,9 +63,11 @@ def cadastrar_usuario():
         novo_usuario = Usuario(  # TODO Fazer autenticacao no service.
             nome_usuario=nome_usuario,
             email_usuario=email_usuario,
-            senha=senha,
             role=role,
         )
+
+        novo_usuario.setar_senha(senha)
+
         service.cadastrar_usuario(novo_usuario)
         return jsonify({
             "mensagem": f"Usuário cadastrado!"

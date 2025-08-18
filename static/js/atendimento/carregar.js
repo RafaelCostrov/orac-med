@@ -111,5 +111,7 @@ function mostrarExamesCliente(cliente) {
     });
 }
 
+
+
 carregarExames();
 carregarEmpresas();

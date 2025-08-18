@@ -1,11 +1,14 @@
-from flask import Flask, render_template
+from flask import Flask, render_template, session, redirect, url_for
+from functools import wraps
 from flask_cors import CORS
+from werkzeug.security import generate_password_hash, check_password_hash
 from routes.exame_routes import exame_bp
 from routes.cliente_routes import cliente_bp
 from routes.usuario_routes import usuario_bp
 from routes.atendimento_routes import atendimento_bp
 
 app = Flask(__name__)
+app.secret_key = "segredo"
 CORS(app, origins=["http://orac:5000"])
 
 app.register_blueprint(exame_bp)
@@ -14,22 +17,16 @@ app.register_blueprint(usuario_bp)
 app.register_blueprint(atendimento_bp)
 
 
+def login_required(f):
+    @wraps(f)
+    def decorated_function(*args, **kwargs):
+        if "usuario" not in session:
+            return redirect(url_for("login"))
+        return f(*args, **kwargs)
+    return decorated_function
+
+
 @app.route("/")
-def atendimento():
-    return render_template("atendimento.html")
-
-
-@app.route("/relatorio")
-def relatorio():
-    return render_template("relatorio.html")
-
-
-@app.route("/conta")
-def conta():
-    return render_template("conta.html")
-
-
-@app.route("/login")
 def login():
     return render_template("login.html")
 
@@ -39,9 +36,32 @@ def redefinir():
     return render_template("redefinir.html")
 
 
+@app.route("/atendimento")
+@login_required
+def atendimento():
+    usuario = session.get('usuario')
+    return render_template("atendimento.html", username=usuario['nome_usuario'], email=usuario['email_usuario'], role=usuario['role'])
+
+
+@app.route("/relatorio")
+@login_required
+def relatorio():
+    usuario = session.get('usuario')
+    return render_template("relatorio.html", username=usuario['nome_usuario'], email=usuario['email_usuario'], role=usuario['role'])
+
+
+@app.route("/conta")
+@login_required
+def conta():
+    usuario = session.get('usuario')
+    return render_template("conta.html", username=usuario['nome_usuario'], email=usuario['email_usuario'], role=usuario['role'])
+
+
 @app.route("/cadastro")
+@login_required
 def cadastro():
-    return render_template("cadastro.html")
+    usuario = session.get('usuario')
+    return render_template("cadastro.html", username=usuario['nome_usuario'], email=usuario['email_usuario'], role=usuario['role'])
 
 
 if __name__ == "__main__":

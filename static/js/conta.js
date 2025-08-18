@@ -28,13 +28,13 @@ document.addEventListener('DOMContentLoaded', () => {
   if (btnMinhaConta) btnMinhaConta.style.display = 'none';
 
   // "Sair" -> login
-  const btnSair = $('#btnSair');
-  if (btnSair) {
-    btnSair.addEventListener('click', (e) => {
-      e.preventDefault();
-      window.location.href = 'login';
-    });
-  }
+  // const btnSair = $('#btnSair');
+  // if (btnSair) {
+  //   btnSair.addEventListener('click', (e) => {
+  //     e.preventDefault();
+  //     window.location.href = 'login';
+  //   });
+  // }
 
   // ===== Preview do avatar =====
   const avatarInput = $('#avatar-upload');
@@ -69,8 +69,8 @@ document.addEventListener('DOMContentLoaded', () => {
   const pwdConfirmaField = pwdConfirma ? pwdConfirma.closest('.pwd-field') : null;
 
   // paths dos ícones info
-  const INFO_DEFAULT = '../img/icons/info.png';
-  const INFO_GREEN = '../img/icons/info-green.png';
+  const INFO_DEFAULT = '../static/img/icons/info.png';
+  const INFO_GREEN = '../static/img/icons/info-green.png';
 
   function lockScroll(lock) {
     document.documentElement.style.overflow = lock ? 'hidden' : '';

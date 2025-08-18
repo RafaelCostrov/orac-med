@@ -7,6 +7,14 @@ import json
 class UsuarioService():
     repositorio = UsuarioRepository()
 
+    def verificar_usuario(self, email_usuario: str, senha: str):
+        usuarios, _, _ = self.repositorio.filtrar_usuarios(
+            email_usuario=email_usuario)
+        usuario = usuarios[0] if usuarios else None
+        if usuario and usuario.checkar_senha(senha):
+            return usuario
+        return None
+
     def cadastrar_usuario(self, usuario: Usuario):
         self.repositorio.adicionar_usuario(usuario=usuario)
 

@@ -296,6 +296,6 @@ document.addEventListener('DOMContentLoaded', () => {
   const goConta = document.getElementById('btnMinhaConta');
   if (goConta) goConta.addEventListener('click', (e) => { e.preventDefault(); window.location.href = 'conta'; });
 
-  const sair = document.getElementById('btnSair');
-  if (sair) sair.addEventListener('click', (e) => { e.preventDefault(); window.location.href = 'login'; });
+  // const sair = document.getElementById('btnSair');
+  // if (sair) sair.addEventListener('click', (e) => { e.preventDefault(); window.location.href = 'login'; });
 })();

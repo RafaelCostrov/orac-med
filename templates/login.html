@@ -1,44 +1,33 @@
-<!DOCTYPE html>
-<html lang="pt-br">
+{% extends "baseLogin.html" %}
 
-<head>
-  <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <link rel="icon" type="image/x-icon" href="{{url_for('static', filename='/img/monogram-verde-hq.png')}}">
-  <title>Login Orac</title>
-  <link rel="stylesheet" href="../css/login.css" />
-  <script src="../js/login.js" defer></script>
-  <style>
-    @import url('https://fonts.googleapis.com/css2?family=Poppins:ital,wght@0,100;0,200;0,300;0,400;0,500;0,600;0,700;0,800;0,900;1,100;1,200;1,300;1,400;1,500;1,600;1,700;1,800;1,900&display=swap');
-  </style>
-</head>
+{% block body %}
 
-<body>
-  <div class="container">
-    <div class="card">
-      <img src="../img/Logo.png" alt="Logo" class="logo" />
-      <div class="input-group">
-        <input type="email" placeholder="E-mail" />
-        <span class="icon">
-          <img src="../img/icons/user.png" alt="Usuário" width="20" />
-        </span>
-      </div>
-      <div class="input-group">
-        <input type="password" placeholder="Senha" id="password" />
-        <span class="icon" onclick="togglePassword()">
-          <img src="../img/icons/hide.png" alt="Mostrar senha" id="eyeIcon" width="20" />
-        </span>
-      </div>
-      <button class="btn">Entrar</button>
-      <p class="forgot">
-        <a class="forgot-text" href="redefinir.html">Esqueceu a senha?</a>
-      </p>
+
+<div class="container">
+  <form class="card">
+    <img src=" {{url_for('static', filename='/img/Logo.png')}}" alt="Logo" class="logo" />
+    <div class="input-group">
+      <input type="email" placeholder="E-mail" id="email_usuario" />
+      <span class="icon">
+        <img src=" {{url_for('static', filename='/img/icons/user.png')}}" alt="Usuário" width="20" />
+      </span>
     </div>
-  </div>
-</body>
+    <div class="input-group">
+      <input type="password" placeholder="Senha" id="senha" />
+      <span class="icon" onclick="togglePassword()">
+        <img src="{{url_for('static', filename='/img/icons/hide.png')}}" alt="Mostrar senha" id="eyeIcon" width="20" />
+      </span>
+    </div>
+    <button class="btn" id="button-login" value="login">Entrar</button>
+    <p class="forgot">
+      <a class="forgot-text" href="{{url_for('redefinir')}}">Esqueceu a senha?</a>
+    </p>
+  </form>
+</div>
 
-<style>
-  @import url('https://fonts.googleapis.com/css2?family=Poppins:ital,wght@0,100;0,200;0,300;0,400;0,500;0,600;0,700;0,800;0,900;1,100;1,200;1,300;1,400;1,500;1,600;1,700;1,800;1,900&display=swap');
-</style>
+{% endblock body %}
 
-</html>
+{% block scripts %}
+<script src="{{ url_for('static', filename='js/login.js') }}" defer></script>
+<script src="{{ url_for('static', filename='js/login/realizar_login.js') }}" defer></script>
+{% endblock scripts %}
