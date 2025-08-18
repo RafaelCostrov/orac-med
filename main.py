@@ -1,7 +1,6 @@
 from flask import Flask, render_template, session, redirect, url_for
 from functools import wraps
 from flask_cors import CORS
-from werkzeug.security import generate_password_hash, check_password_hash
 from routes.exame_routes import exame_bp
 from routes.cliente_routes import cliente_bp
 from routes.usuario_routes import usuario_bp
@@ -40,28 +39,41 @@ def redefinir():
 @login_required
 def atendimento():
     usuario = session.get('usuario')
-    return render_template("atendimento.html", username=usuario['nome_usuario'], email=usuario['email_usuario'], role=usuario['role'])
+    id = usuario.get('foto_url', '')
+    link = f"https://lh3.googleusercontent.com/d/{id}" if id else ''
+    print(usuario)
+    return render_template("atendimento.html", id_usuario=usuario['id_usuario'], username=usuario['nome_usuario'],
+                           email=usuario['email_usuario'], role=usuario['role'], link=link)
 
 
 @app.route("/relatorio")
 @login_required
 def relatorio():
     usuario = session.get('usuario')
-    return render_template("relatorio.html", username=usuario['nome_usuario'], email=usuario['email_usuario'], role=usuario['role'])
+    id = usuario.get('foto_url', '')
+    link = f"https://lh3.googleusercontent.com/d/{id}" if id else ''
+    return render_template("relatorio.html", id_usuario=usuario['id_usuario'], username=usuario['nome_usuario'], email=usuario['email_usuario'], role=usuario['role'],
+                           link=link)
 
 
 @app.route("/conta")
 @login_required
 def conta():
     usuario = session.get('usuario')
-    return render_template("conta.html", username=usuario['nome_usuario'], email=usuario['email_usuario'], role=usuario['role'])
+    id = usuario.get('foto_url', '')
+    link = f"https://lh3.googleusercontent.com/d/{id}" if id else ''
+    return render_template("conta.html", id_usuario=usuario['id_usuario'], username=usuario['nome_usuario'], email=usuario['email_usuario'], role=usuario['role'],
+                           link=link)
 
 
 @app.route("/cadastro")
 @login_required
 def cadastro():
     usuario = session.get('usuario')
-    return render_template("cadastro.html", username=usuario['nome_usuario'], email=usuario['email_usuario'], role=usuario['role'])
+    id = usuario.get('foto_url', '')
+    link = f"https://lh3.googleusercontent.com/d/{id}" if id else ''
+    return render_template("cadastro.html", id_usuario=usuario['id_usuario'], username=usuario['nome_usuario'], email=usuario['email_usuario'], role=usuario['role'],
+                           link=link)
 
 
 if __name__ == "__main__":

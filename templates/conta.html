@@ -13,22 +13,28 @@
   <form id="form-conta" autocomplete="off" class="conta-form">
     <!-- Foto de Perfil -->
     <div class="avatar-box">
-      <label for="avatar-upload">
-        <img id="avatar-preview" src="{{url_for('static', filename='/img/perfil1.png')}}" alt="Foto de perfil" />
+      <label for="foto">
+        <img id="avatar-preview" src="{{link}}" alt="Foto de perfil" data-foto="{{link}}" />
       </label>
-      <input type="file" id="avatar-upload" accept="image/*" hidden />
+      <input type="file" id="foto" accept="image/*" hidden />
+    </div>
+
+    <!-- Nome -->
+    <div class="form-group">
+      <label for="nome">ID usuário</label>
+      <input type="text" id="id_usuario" data-id="{{ id_usuario }}" disabled required />
     </div>
 
     <!-- Nome -->
     <div class="form-group">
       <label for="nome">Nome completo</label>
-      <input type="text" id="nome" placeholder="Digite seu nome" required />
+      <input type="text" id="nome" placeholder="Digite seu nome" data-username="{{ username }}" disabled required />
     </div>
 
     <!-- E-mail (somente leitura) -->
     <div class="form-group">
       <label for="email">E-mail</label>
-      <input type="email" id="email" value="eduardo@email.com" readonly />
+      <input type="email" id="email" placeholder="E-mail" data-email="{{ email }}" disabled required />
     </div>
 
     <!-- Segurança -->
@@ -46,7 +52,10 @@
     </section>
 
     <!-- Botão salvar (dados da conta) -->
-    <button type="submit" class="btn-salvar">Salvar alterações</button>
+    <div class="form-buttons">
+      <button type="submit" class="btn-cancelar disabled" id="cancelar" disabled>Cancelar</button>
+      <button type="submit" class="btn-salvar" id="editar">Editar</button>
+    </div>
   </form>
 </main>
 
@@ -90,29 +99,11 @@
                   aria-hidden="true">
                 <span>Pelo menos 1 caractere especial</span>
               </li>
-              <li>
-                <img src="{{url_for('static', filename='/img/icons/info.png')}}" class="info-ic" alt=""
-                  aria-hidden="true">
-                <span>Ser diferente da senha atual</span>
-              </li>
             </ul>
           </aside>
 
           <!-- Form Senha -->
           <form id="formSenha" class="pwd-form" autocomplete="off">
-            <div class="form-row">
-              <label for="pwdAtual">Senha atual</label>
-              <div class="pwd-field">
-                <img class="icon-left" src="{{url_for('static', filename='/img/icons/cadeado.png')}}" alt=""
-                  aria-hidden="true">
-                <input id="pwdAtual" type="password" autocomplete="current-password" />
-                <button type="button" class="toggle-pass" aria-label="Mostrar senha" aria-pressed="false"
-                  data-target="#pwdAtual">
-                  <img class="eye eye-open" src="{{url_for('static', filename='/img/icons/view.png')}}" alt="">
-                  <img class="eye eye-closed" src="{{url_for('static', filename='/img/icons/hide.png')}}" alt="">
-                </button>
-              </div>
-            </div>
 
             <div class="form-row">
               <label for="pwdNova">Nova senha</label>
@@ -150,16 +141,21 @@
 
       <div class="modal__footer">
         <button class="btn cinza" id="btnCancelarSenha" type="button">Voltar</button>
-        <button class="btn verde" form="formSenha" type="submit">Alterar Senha</button>
+        <button class="btn verde" form="formSenha" id="salvarSenha" type="submit">Alterar Senha</button>
       </div>
     </div>
   </div>
+</div>
+
+<div id="loading-overlay" class="uk-position-fixed uk-position-cover uk-flex uk-flex-center uk-flex-middle"
+  style="background: rgba(0,0,0,0.5); display: none; z-index: 9999;">
+  <div uk-spinner="ratio: 3"></div>
 </div>
 
 
 {% endblock body %}
 
 {% block scripts %}
-<script src="{{url_for('static', filename='/js/core.js')}}" defer></script>
 <script src="{{url_for('static', filename='/js/conta.js')}} " defer></script>
+<script src="{{url_for('static', filename='/js/conta/conta.js')}} " defer></script>
 {% endblock scripts %}

@@ -1,6 +1,8 @@
 from model.usuario import Usuario
 from repository.usuario_repository import UsuarioRepository
 from enums.tipos_usuario import TiposUsuario
+from services.google_services.envio_drive import salvar_drive, remover_drive
+import os
 import json
 
 
@@ -15,8 +17,25 @@ class UsuarioService():
             return usuario
         return None
 
-    def cadastrar_usuario(self, usuario: Usuario):
-        self.repositorio.adicionar_usuario(usuario=usuario)
+    def cadastrar_usuario(self, nome_usuario: str,  email_usuario: str, role: TiposUsuario, senha: str, foto: str = None):
+        usuario = Usuario(
+            nome_usuario=nome_usuario,
+            email_usuario=email_usuario,
+            role=role
+        )
+
+        if foto:
+            nome_arquivo = foto.filename
+            os.makedirs("services\\temp_uploads", exist_ok=True)
+            temp_path = os.path.join("services\\temp_uploads", nome_arquivo)
+            foto.save(temp_path)
+            foto_url = salvar_drive(
+                temp_path, usuario.email_usuario, usuario.nome_usuario)
+            usuario.foto_url = foto_url
+            os.remove(temp_path)
+
+        usuario.setar_senha(senha)
+        self.repositorio.salvar(usuario=usuario)
 
     def listar_todos_usuarios(self):
         usuarios = self.repositorio.listar_todos_usuarios()
@@ -66,11 +85,42 @@ class UsuarioService():
     def remover_usuario(self, id_usuario):
         self.repositorio.remover_usuario(id_usuario=id_usuario)
 
-    def atualizar_usuario(self, id_usuario, nome_usuario, email_usuario, role):
-        usuario_atualizado = self.repositorio.atualizar_usuario(
-            id_usuario=id_usuario,
-            nome_usuario=nome_usuario,
-            email_usuario=email_usuario,
-            role=role
-        )
-        return usuario_atualizado
+    def atualizar_usuario(self, id_usuario, nome_usuario, email_usuario, senha, role, foto):
+        usuario = self.repositorio.filtrar_por_id(id_usuario)
+
+        if not usuario:
+            raise Exception("Usuário não encontrado")
+
+        if nome_usuario and nome_usuario.strip():
+            usuario.nome_usuario = nome_usuario
+
+        if email_usuario and email_usuario.strip():
+            usuario.email_usuario = email_usuario
+
+        if role:
+            usuario.role = role
+
+        if senha and senha.strip():
+            usuario.setar_senha(senha)
+
+        if foto:
+            if usuario.foto_url:
+                remover_drive(usuario.foto_url)
+            nome_arquivo = foto.filename
+            os.makedirs("services\\temp_uploads", exist_ok=True)
+            temp_path = os.path.join("services\\temp_uploads", nome_arquivo)
+            foto.save(temp_path)
+            foto_url = salvar_drive(
+                temp_path, usuario.email_usuario, usuario.nome_usuario)
+            usuario.foto_url = foto_url
+            os.remove(temp_path)
+
+        self.repositorio.salvar(usuario)
+
+        return {
+            "id_usuario": usuario.id_usuario,
+            "nome_usuario": usuario.nome_usuario,
+            "email_usuario": usuario.email_usuario,
+            "role": usuario.role.__str__(),
+            "foto_url": usuario.foto_url
+        }

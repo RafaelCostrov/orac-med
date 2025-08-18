@@ -12,6 +12,7 @@ class Usuario(Base):
     email_usuario = Column(String(100), unique=True, nullable=False)
     senha = Column(String(200))
     role = Column(Enum(TiposUsuario))
+    foto_url = Column(String(200), nullable=True)
 
     def setar_senha(self, senha):
         self.senha = generate_password_hash(senha)

@@ -29,11 +29,11 @@
             <span class="nome-usuario">{{username}}</span>
             <button id="avatarBtn" class="avatar-btn" aria-haspopup="true" aria-expanded="false"
                 aria-controls="profileMenu">
-                <img src="{{ url_for('static' ,filename='/img/perfil1.png')}}" alt="Abrir menu do usuário" />
+                <img src="{{ link }}" alt="Abrir menu do usuário" />
             </button>
             <div id="profileMenu" class="profile-menu" role="menu" aria-hidden="true">
                 <div class="profile-header">
-                    <img src="{{ url_for('static' ,filename='/img/perfil1.png')}}" alt="" class="thumb" />
+                    <img src="{{ link }}" alt="" class="thumb" />
                     <div class="who">
                         <strong>{{username}}</strong>
                         <small>{{email}}</small>
@@ -62,11 +62,9 @@
 
 <body>
     {% block body %}
-
-
     {% endblock body %}
 </body>
-<!-- Rodapé -->
+
 <footer>
     <hr class="solid">
     <div class="container-footer">

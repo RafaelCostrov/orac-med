@@ -615,6 +615,7 @@ async function cadastrarUsuario() {
     let email = document.getElementById("email_usuario").value
     let senha = document.getElementById("senha").value
     let role = document.getElementById("role").value
+    let foto = document.getElementById("foto").files[0];
 
     if (!nome || !email || !senha || !role) {
         UIkit.notification({
@@ -627,19 +628,18 @@ async function cadastrarUsuario() {
     }
 
     try {
-        payload = {
-            nome_usuario: nome,
-            email_usuario: email,
-            senha: senha,
-            role: role
+        const formData = new FormData();
+        formData.append("nome_usuario", nome);
+        formData.append("email_usuario", email);
+        formData.append("senha", senha);
+        formData.append("role", role);
+        if (foto) {
+            formData.append("foto", foto);
         }
 
         let requisicao = await fetch("/usuarios/cadastrar-usuario", {
             method: "POST",
-            headers: {
-                "Content-Type": "application/json"
-            },
-            body: JSON.stringify(payload)
+            body: formData
         })
         resposta = await requisicao.json()
 

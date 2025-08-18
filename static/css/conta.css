@@ -61,6 +61,12 @@ input::placeholder {
   color: var(--grey-500)
 }
 
+input:disabled,
+select:disabled {
+  background: var(--grey-200);
+  color: var(--grey-600);
+}
+
 input:focus,
 select:focus {
   outline: none;
@@ -112,6 +118,15 @@ select:focus {
 }
 
 /* Botões */
+
+.form-buttons {
+  display: flex;
+  gap: 16px;
+  width: 100%;
+  max-width: 720px;
+  justify-content: center;
+}
+
 .btn-salvar {
   background-color: var(--green-500);
   color: #fff;
@@ -127,6 +142,28 @@ select:focus {
 .btn-salvar:hover {
   background-color: var(--green-700);
   color: var(--orange)
+}
+
+.btn-cancelar {
+  background-color: red;
+  color: #fff;
+  font-weight: 600;
+  padding: 14px 24px;
+  border: none;
+  border-radius: 8px;
+  font-size: 16px;
+  cursor: pointer;
+  transition: background-color .25s, color .25s, box-shadow .25s
+}
+
+.btn-cancelar:hover {
+  background-color: darkred;
+}
+
+.btn-cancelar.disabled {
+  background-color: #ccc;
+  color: #666;
+  pointer-events: none
 }
 
 /* genéricos p/ modal */

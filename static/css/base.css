@@ -343,13 +343,13 @@ footer img {
     z-index: 9999 !important;
 }
 
+
 .uk-notification-message {
     border-radius: 12px;
     font-family: "Poppins", sans-serif;
     box-shadow: 0px 4px 12px rgba(0, 0, 0, 0.2);
     align-items: center;
-    font-size: 12px;
-    max-height: 40px;
+    max-height: 60px;
     display: flex;
     align-items: center;
     justify-content: center;

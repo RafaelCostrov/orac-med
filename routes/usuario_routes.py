@@ -20,7 +20,8 @@ def login():
                 "id_usuario": usuario.id_usuario,
                 "nome_usuario": usuario.nome_usuario,
                 "email_usuario": usuario.email_usuario,
-                "role": usuario.role.__str__()
+                "role": usuario.role.__str__(),
+                "foto_url": usuario.foto_url if usuario.foto_url else None
             }
             return jsonify({
                 "mensagem": "Usuário autenticado com sucesso!",
@@ -54,23 +55,24 @@ def logout():
 @usuario_bp.route('/cadastrar-usuario', methods=['POST'])
 def cadastrar_usuario():
     try:
-        data = request.get_json()
+        data = request.form
         nome_usuario = data.get('nome_usuario')
         email_usuario = data.get('email_usuario')
         senha = data.get('senha')
         role = data.get('role')
+        foto = request.files.get('foto')
 
-        novo_usuario = Usuario(  # TODO Fazer autenticacao no service.
+        novo_usuario = service.cadastrar_usuario(
             nome_usuario=nome_usuario,
             email_usuario=email_usuario,
             role=role,
+            senha=senha,
+            foto=foto if foto else None
         )
 
-        novo_usuario.setar_senha(senha)
-
-        service.cadastrar_usuario(novo_usuario)
         return jsonify({
-            "mensagem": f"Usuário cadastrado!"
+            "mensagem": f"Usuário cadastrado!",
+            **novo_usuario
         }), 200
     except Exception as e:
         print(f"Erro: {e}")
@@ -147,20 +149,28 @@ def remover_usuario():
 @usuario_bp.route('/atualizar-usuario', methods=['PUT'])
 def atualizar_usuario():
     try:
-        data = request.get_json()
+        data = request.form
         id_usuario = data.get('id_usuario')
         nome_usuario = data.get('nome_usuario')
         email_usuario = data.get('email_usuario')
+        senha = data.get('senha')
         role = data.get('role')
+        foto = request.files.get('foto')
+        role = data.get('role')
+
         usuario_atualizado = service.atualizar_usuario(
             id_usuario=id_usuario,
             nome_usuario=nome_usuario,
             email_usuario=email_usuario,
+            senha=senha,
             role=role,
+            foto=foto if foto else None
         )
+        session["usuario"] = usuario_atualizado
+
         return ({
             "mensagem": "Usuário atualizado com sucesso!",
-            "usuario_atualizado": usuario_atualizado
+            **usuario_atualizado
         }), 200
     except Exception as e:
         print(f"Erro: {e}")

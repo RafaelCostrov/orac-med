@@ -37,17 +37,17 @@ document.addEventListener('DOMContentLoaded', () => {
   // }
 
   // ===== Preview do avatar =====
-  const avatarInput = $('#avatar-upload');
-  const avatarPreview = $('#avatar-preview');
-  if (avatarInput && avatarPreview) {
-    avatarInput.addEventListener('change', () => {
-      const f = avatarInput.files && avatarInput.files[0];
-      if (!f) return;
-      const url = URL.createObjectURL(f);
-      avatarPreview.src = url;
-      avatarPreview.onload = () => URL.revokeObjectURL(url);
-    });
-  }
+  // const avatarInput = $('#avatar-upload');
+  // const avatarPreview = $('#avatar-preview');
+  // if (avatarInput && avatarPreview) {
+  //   avatarInput.addEventListener('change', () => {
+  //     const f = avatarInput.files && avatarInput.files[0];
+  //     if (!f) return;
+  //     const url = URL.createObjectURL(f);
+  //     avatarPreview.src = url;
+  //     avatarPreview.onload = () => URL.revokeObjectURL(url);
+  //   });
+  // }
 
   // ===== Modal Alterar Senha =====
   const openPwdBtn = $('#openChangePwd');
@@ -269,17 +269,17 @@ document.addEventListener('DOMContentLoaded', () => {
 
       const submitBtn = $('button[form="formSenha"][type="submit"]', modal);
       if (submitBtn) {
-        submitBtn.disabled = true;
-        const old = submitBtn.textContent;
-        submitBtn.textContent = 'Salvando...';
+        // submitBtn.disabled = true;
+        // const old = submitBtn.textContent;
+        // submitBtn.textContent = 'Salvando...';
         setTimeout(() => {
-          submitBtn.disabled = false;
-          submitBtn.textContent = old;
-          alert('Senha alterada com sucesso!');
+          // submitBtn.disabled = false;
+          // submitBtn.textContent = old;
+          // alert('Senha alterada com sucesso!');
           closeModal();
         }, 800);
       } else {
-        alert('Senha alterada com sucesso!');
+        // alert('Senha alterada com sucesso!');
         closeModal();
       }
     });
