@@ -6,7 +6,13 @@ const $ = (s, ctx = document) => ctx.querySelector(s);
 let tipoLista = document.getElementById("tipoLista")
 let tipoCadastro = document.getElementById("cadTipo")
 
+function mostrarLoading() {
+    document.getElementById("loading-overlay").style.display = "flex";
+}
 
+function esconderLoading() {
+    document.getElementById("loading-overlay").style.display = "none";
+}
 
 let totalPaginas = 1;
 let filtrosAtuais = {};
@@ -69,6 +75,29 @@ const tiposUsuario = {
     usuario: "Usuario",
     gestor: "Gestor",
     administrador: "Administrador"
+}
+
+async function carregarExamesSelect(examesInclusos = []) {
+    const request = await fetch("/exames/listar-exames");
+    const resposta = await request.json();
+    const exames = resposta.exames;
+
+    const examesUl = document.getElementById("modal-exames-cliente-tr");
+    examesUl.innerHTML = "";
+
+    exames.forEach(exame => {
+        const option = document.createElement("option");
+        option.value = exame.id_exame;
+        option.textContent = `${exame.id_exame} - ${exame.nome_exame}`;
+        if (examesInclusos.includes(exame.id_exame)) {
+            option.selected = true;
+        }
+        examesUl.appendChild(option);
+    });
+
+    if (typeof examesUl.loadOptions === "function") {
+        examesUl.loadOptions();
+    }
 }
 
 function verificarCliqueHead() {
@@ -142,6 +171,8 @@ async function carregarClientesLista({ pagina = 1, filtros = {}, porPagina = 20 
                 trBody.dataset.cnpj = formatarCNPJ(cliente.cnpj_cliente) || cliente.cnpj_cliente;
                 trBody.dataset.tipo = tiposCliente[cliente.tipo_cliente] || cliente.tipo_cliente;
                 trBody.dataset.exames = cliente.exames_incluidos?.map(e => e.nome_exame).join(", ") || "-";
+                let exames_lista = [];
+                cliente.exames_incluidos?.forEach(e => exames_lista.push(e.id_exame))
 
                 trBody.innerHTML = `
                     <td title="${cliente.id_cliente}">${cliente.id_cliente}</td>
@@ -154,15 +185,13 @@ async function carregarClientesLista({ pagina = 1, filtros = {}, porPagina = 20 
                 const modalNomeCliente = document.getElementById("modal-nome-cliente-tr");
                 const modalCnpjCliente = document.getElementById("modal-cnpj-cliente-tr");
                 const modalTipoCliente = document.getElementById("modal-tipo-cliente-tr");
-                const modalExamesCliente = document.getElementById("modal-exames-cliente-tr");
                 trBody.addEventListener("click", () => {
                     modalIdCliente.textContent = `${trBody.dataset.id} - ${trBody.dataset.nome}`
                     modalNomeCliente.value = trBody.dataset.nome;
                     modalCnpjCliente.value = trBody.dataset.cnpj;
                     modalTipoCliente.value = trBody.dataset.tipo;
-                    modalExamesCliente.value = trBody.dataset.exames;
+                    carregarExamesSelect(exames_lista);
                 });
-
                 tbody.appendChild(trBody)
             });
             paginaAtual = pagina;
@@ -741,7 +770,209 @@ document.getElementById("button-cadastro").addEventListener("click", async (even
     }
 })
 
+async function salvarAlteracaoCliente() {
+    try {
+        mostrarLoading();
+        let id_cliente = parseInt(document.getElementById("modal-id-cliente-tr").textContent.split(" - ")[0]);
+        let nome_cliente = document.getElementById("modal-nome-cliente-tr").value;
+        let cnpj_cliente = document.getElementById("modal-cnpj-cliente-tr").value;
+        let tipo_cliente = document.getElementById("modal-tipo-cliente-tr").value;
+        let exames_cliente = document.getElementById("modal-exames-cliente-tr");
 
+        console.log(Array.from(exames_cliente.selectedOptions).map(option => parseInt(option.value)));
+        let lista_exames = Array.from(exames_cliente.selectedOptions).map(option => parseInt(option.value)
+        )
+
+
+        if (!nome_cliente || !cnpj_cliente || !tipo_cliente) {
+            UIkit.notification({
+                message: "Preencha todos os campos obrigatórios ❌",
+                status: 'danger',
+                pos: 'top-center',
+                timeout: 5000
+            });
+            return;
+        }
+
+        const tipoMap = {
+            "cliente": "Cliente",
+            "credenciado": "Credenciado",
+            "servico_prestado": "Serviço Prestado",
+            "particular": "Particular"
+        };
+        let tipo_cliente_valido = tipoMap[tipo_cliente.toLowerCase()];
+        let c = validaCNPJ(cnpj_cliente);
+
+        let payload = {
+            id_cliente: id_cliente,
+            nome_cliente: nome_cliente,
+            cnpj_cliente: c ? c : "",
+            tipo_cliente: tipo_cliente_valido,
+            exames_incluidos: lista_exames ? lista_exames : null
+        }
+
+        const requisicao = await fetch("/clientes/atualizar-cliente", {
+            method: "PUT",
+            headers: {
+                "Content-Type": "application/json"
+            },
+            body: JSON.stringify(payload)
+        })
+
+        const resposta = await requisicao.json();
+        if (requisicao.ok) {
+            filtrosAtuais = {};
+            recarregarTipoLista({});
+            UIkit.notification({
+                message: resposta.mensagem || "Cliente atualizado ✅",
+                status: 'success',
+                pos: 'top-center',
+                timeout: 3000
+            });
+            cancelarEdicaoCliente();
+            UIkit.modal("#cliente-modal").hide();
+        }
+        else {
+            UIkit.notification({
+                message: resposta.erro || "Erro ao atualizar cliente ❌",
+                status: 'danger',
+                pos: 'top-center',
+                timeout: 5000
+            });
+            console.log(resposta.erro);
+        }
+    }
+    catch (erro) {
+        console.log(erro);
+    }
+    finally {
+        esconderLoading();
+    }
+}
+
+async function excluirCliente() {
+    let id_cliente = parseInt(document.getElementById("modal-id-cliente-tr").textContent.split(" - ")[0]);
+    let nome_cliente = document.getElementById("modal-id-cliente-tr").textContent.split(" - ")[1];
+    let div = document.getElementsByClassName("exclusao-texto")[0];
+    div.innerHTML = "";
+
+    let texto = document.createElement("p");
+    texto.textContent = `Você tem certeza que deseja excluir? Esta ação não pode ser desfeita.`;
+    div.appendChild(texto);
+
+    let cliente = document.createElement("p");
+    cliente.textContent = `ID: ${id_cliente} - Nome: ${nome_cliente}`;
+    div.appendChild(cliente);
+
+    let buttonCancelar = document.getElementById("cancelar-exclusao");
+    let buttonExcluir = document.getElementById("confirmar-exclusao");
+
+    buttonCancelar.setAttribute("uk-toggle", "target: #cliente-modal")
+    buttonExcluir.addEventListener("click", async () => {
+        try {
+            mostrarLoading();
+
+            payload = {
+                id_cliente: id_cliente
+            }
+
+            const requisicao = await fetch(`/clientes/remover-cliente`, {
+                method: "DELETE",
+                headers: {
+                    "Content-Type": "application/json"
+                },
+                body: JSON.stringify(payload),
+
+            });
+
+            const resposta = await requisicao.json();
+            if (requisicao.ok) {
+                filtrosAtuais = {}
+                recarregarTipoLista({})
+                UIkit.notification({
+                    message: resposta.mensagem || "Cliente excluído ✅",
+                    status: 'success',
+                    pos: 'top-center',
+                    timeout: 3000
+                });
+                UIkit.modal("#confirmacao-modal").hide();
+            }
+            else {
+                UIkit.notification({
+                    message: resposta.erro || "Erro ao excluir cliente ❌",
+                    status: 'danger',
+                    pos: 'top-center',
+                    timeout: 5000
+                })
+            }
+        } catch (e) {
+            console.log(e)
+        } finally {
+            esconderLoading();
+        }
+    });
+}
+
+function cancelarEdicaoCliente() {
+    let id_cliente = parseInt(document.getElementById("modal-id-cliente-tr").textContent.split(" - ")[0]);
+    let tr = document.querySelector(`tr[data-id='${id_cliente}']`);
+
+    let nome_cliente = document.getElementById("modal-nome-cliente-tr");
+    let cnpj_cliente = document.getElementById("modal-cnpj-cliente-tr");
+    let tipo_cliente = document.getElementById("modal-tipo-cliente-tr");
+    let exames_cliente = document.querySelector(".multiselect-dropdown");
+
+    nome_cliente.value = tr.dataset.nome;
+    cnpj_cliente.value = tr.dataset.cnpj;
+    tipo_cliente.value = tr.dataset.tipo;
+    exames_cliente.value = tr.dataset.exames;
+
+
+    nome_cliente.disabled = true;
+    cnpj_cliente.disabled = true;
+    tipo_cliente.disabled = true;
+    exames_cliente.classList.add("desabilitado");
+
+    let buttonEditar = document.getElementById("button-editar-cliente");
+    let buttonCancelar = document.getElementById("button-excluir-cliente");
+
+    buttonEditar.removeEventListener("click", salvarAlteracaoCliente);
+    buttonEditar.addEventListener("click", habilitarInputsCliente);
+    buttonEditar.textContent = "Editar";
+
+    buttonCancelar.setAttribute("uk-toggle", "target: #cliente-modal")
+    buttonCancelar.removeEventListener("click", cancelarEdicaoCliente);
+    buttonCancelar.addEventListener("click", excluirCliente)
+    buttonCancelar.textContent = "Excluir";
+}
+
+function habilitarInputsCliente(event) {
+    event.preventDefault();
+    let buttonEditar = document.getElementById("button-editar-cliente");
+    let buttonCancelar = document.getElementById("button-excluir-cliente");
+
+    let nome_cliente = document.getElementById("modal-nome-cliente-tr");
+    let cnpj_cliente = document.getElementById("modal-cnpj-cliente-tr");
+    let tipo_cliente = document.getElementById("modal-tipo-cliente-tr");
+    let exames_cliente = document.querySelector(".desabilitado");
+
+    nome_cliente.disabled = false;
+    cnpj_cliente.disabled = false;
+    tipo_cliente.disabled = false;
+    exames_cliente.classList.remove("desabilitado");
+
+
+
+    buttonEditar.addEventListener("click", salvarAlteracaoCliente);
+    buttonEditar.textContent = "Salvar";
+
+    buttonCancelar.removeAttribute("uk-toggle");
+    buttonCancelar.addEventListener("click", cancelarEdicaoCliente);
+    buttonCancelar.textContent = "Cancelar";
+}
+
+document.getElementById("button-editar-cliente").addEventListener("click", (params) => habilitarInputsCliente(params));
+document.getElementById("button-excluir-cliente").addEventListener("click", (params) => excluirCliente(params));
 
 
 carregarClientesLista()

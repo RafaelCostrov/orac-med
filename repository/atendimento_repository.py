@@ -5,7 +5,6 @@ from model.cliente import Cliente
 from model.atendimento import Atendimento
 from db.db import Session
 from datetime import datetime
-from flask import jsonify
 
 
 class AtendimentoRepository:

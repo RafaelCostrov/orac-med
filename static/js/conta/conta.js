@@ -21,7 +21,6 @@ function esconderLoading() {
     document.getElementById("loading-overlay").style.display = "none";
 }
 
-
 async function colocarInputs() {
     nome.value = nome.dataset.username;
     email.value = email.dataset.email;

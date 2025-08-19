@@ -193,7 +193,7 @@ document.getElementById("exportXls").addEventListener("click", async () => {
 
     try {
 
-        const resposta = await fetch("http://10.10.10.47:5000/atendimentos/exportar-atendimentos-xls", {
+        const resposta = await fetch("/atendimentos/exportar-atendimentos-xls", {
             method: "POST",
             headers: {
                 "Content-Type": "application/json"
@@ -235,7 +235,7 @@ document.getElementById("exportTxt").addEventListener("click", async () => {
 
     try {
 
-        const resposta = await fetch("http://10.10.10.47:5000/atendimentos/exportar-atendimentos-txt", {
+        const resposta = await fetch("/atendimentos/exportar-atendimentos-txt", {
             method: "POST",
             headers: {
                 "Content-Type": "application/json"

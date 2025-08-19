@@ -92,7 +92,7 @@ def remover_cliente():
         id_cliente = data.get('id_cliente')
 
         service.remover_cliente(id_cliente=id_cliente)
-        return ({
+        return jsonify({
             "mensagem": "Cliente removido com sucesso!"
         }), 200
     except Exception as e:
@@ -119,7 +119,7 @@ def atualizar_cliente():
             tipo_cliente=tipo_cliente,
             exames_incluidos=exames_incluidos
         )
-        return ({
+        return jsonify({
             "mensagem": "Atendimento atualizado com sucesso!",
             "cliente": atendimento_atualizado
         }), 200

@@ -479,79 +479,6 @@ textarea:focus {
 }
 
 
-/* Modal UIkit */
-
-
-#cliente-modal {
-  margin: 0;
-  padding: 0;
-}
-
-.modal-body {
-  border-radius: 15px;
-  margin: 0;
-  padding: 0;
-}
-
-.modal-body h2 {
-  font-family: "Poppins", sans-serif;
-  margin-bottom: 0;
-}
-
-.modal-body hr {
-  margin: 0;
-}
-
-.modal-container {
-  display: flex;
-  flex-direction: column;
-  gap: 24px;
-}
-
-.cliente-modal-div {
-  display: grid;
-  grid-template-columns: repeat(2, 1fr);
-  grid-template-rows: auto auto;
-  gap: 15px;
-}
-
-
-.cliente-modal-div .div1 {
-  grid-column: span 2 / span 2;
-}
-
-.cliente-modal-div .div2 {
-  grid-column: span 2 / span 2;
-  grid-column-start: 3;
-}
-
-.cliente-modal-div .div3 {
-  grid-column: span 2 / span 2;
-  grid-row-start: 2;
-}
-
-.cliente-modal-div .div4 {
-  grid-column: span 2 / span 2;
-  grid-column-start: 3;
-  grid-row-start: 2;
-}
-
-.cliente-input-label {
-  display: flex;
-  flex-direction: column;
-  gap: 8px;
-}
-
-.cliente-modal-footer {
-  display: flex;
-  gap: 12px;
-  align-items: end;
-  justify-content: end;
-  width: 100%;
-}
-
-/* Modal UIkit */
-
 /* Responsivo pq o pai é bigas */
 @media (max-width:1200px) {
   .filtros-grid {
@@ -601,7 +528,16 @@ textarea:focus {
   }
 }
 
-/* ... (cabeçalho e base idênticos ao anterior) ... */
+.desabilitado {
+    background-color: var(--grey-200);
+    cursor: not-allowed;
+}
+
+.exclusao-modal-footer {
+  display: flex;
+  gap: 10px;
+  justify-content: center
+}
 
 /* Ações na tabela */
 .acoes {
