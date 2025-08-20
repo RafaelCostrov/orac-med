@@ -166,10 +166,43 @@ def atualizar_usuario():
             role=role,
             foto=foto if foto else None
         )
-        session["usuario"] = usuario_atualizado
+        # session["usuario"] = usuario_atualizado
 
         return ({
             "mensagem": "Usuário atualizado com sucesso!",
+            **usuario_atualizado
+        }), 200
+    except Exception as e:
+        print(f"Erro: {e}")
+        return jsonify({
+            "erro": "Ocorreu um erro, tente novamente!"
+        }), 400
+
+
+@usuario_bp.route('/atualizar-conta', methods=['PUT'])
+def atualizar_conta():
+    try:
+        data = request.form
+        id_usuario = data.get('id_usuario')
+        nome_usuario = data.get('nome_usuario')
+        email_usuario = data.get('email_usuario')
+        senha = data.get('senha')
+        role = data.get('role')
+        foto = request.files.get('foto')
+        role = data.get('role')
+
+        usuario_atualizado = service.atualizar_usuario(
+            id_usuario=id_usuario,
+            nome_usuario=nome_usuario,
+            email_usuario=email_usuario,
+            senha=senha,
+            role=role,
+            foto=foto if foto else None
+        )
+        session["usuario"] = usuario_atualizado
+
+        return ({
+            "mensagem": "Conta com sucesso!",
             **usuario_atualizado
         }), 200
     except Exception as e:

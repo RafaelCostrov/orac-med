@@ -77,9 +77,8 @@ class UsuarioRepository:
         except Exception as e:
             raise e
 
-    def remover_usuario(self, id_usuario):
+    def remover_usuario(self, usuario_a_remover):
         try:
-            usuario_a_remover = self.filtrar_por_id(id_usuario=id_usuario)
             self.session.delete(usuario_a_remover)
             self.session.commit()
         except Exception as e:

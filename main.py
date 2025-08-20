@@ -41,7 +41,6 @@ def atendimento():
     usuario = session.get('usuario')
     id = usuario.get('foto_url', '')
     link = f"https://lh3.googleusercontent.com/d/{id}" if id else ''
-    print(usuario)
     return render_template("atendimento.html", id_usuario=usuario['id_usuario'], username=usuario['nome_usuario'],
                            email=usuario['email_usuario'], role=usuario['role'], link=link)
 
@@ -77,4 +76,4 @@ def cadastro():
 
 
 if __name__ == "__main__":
-    app.run(host="0.0.0.0", port=5000, debug=True)
+    app.run(host="0.0.0.0", port=5005, debug=True)

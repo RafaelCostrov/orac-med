@@ -112,13 +112,29 @@ class AtendimentoService():
         lista_filtrada = []
         for atendimento in atendimentos_filtrados:
             exames = []
-            for exame in atendimento.exames_atendimento or []:
+            exames_atendimento = atendimento.exames_atendimento
+            if not exames_atendimento:
                 json_exame = {
-                    "nome_exame": exame.nome_exame if exame else "Exame removido",
-                    "valor_exame": exame.valor_exame if exame else 0,
-                    "is_interno": exame.is_interno if exame else False
+                    "nome_exame": "Exame removido",
+                    "valor_exame": 0,
+                    "is_interno": False
                 }
                 exames.append(json_exame)
+            else:
+                for exame in exames_atendimento:
+                    if exame:
+                        json_exame = {
+                            "nome_exame": exame.nome_exame,
+                            "valor_exame": exame.valor_exame,
+                            "is_interno": exame.is_interno
+                        }
+                    else:
+                        json_exame = {
+                            "nome_exame": "Exame removido",
+                            "valor_exame": 0,
+                            "is_interno": False
+                        }
+                    exames.append(json_exame)
             if atendimento.cliente_atendimento:
                 json_cliente = {
                     "id_cliente": atendimento.cliente_atendimento.id_cliente,

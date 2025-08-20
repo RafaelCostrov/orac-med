@@ -136,9 +136,9 @@ nav a:focus {
 }
 
 .avatar-btn {
-    background: transparent;
+    background: white;
+    padding: 0.5px;
     border: 0;
-    padding: 0;
     cursor: pointer;
     line-height: 0;
     border-radius: 50%;
@@ -154,7 +154,7 @@ nav a:focus {
 
 .avatar-btn:hover img,
 .avatar-btn:focus img {
-    box-shadow: 0 0 0 2px #fff, 0 0 0 3px var(--orange);
+    box-shadow: 0 0 0 2px var(--orange);
     outline: none;
 }
 
@@ -410,7 +410,7 @@ footer img {
 
 .cliente-input-label input:disabled, select:disabled {
     background-color: var(--grey-200);
-    cursor: none;
+    color: var(--grey-500);
 }
 
 /* Modal UIkit */

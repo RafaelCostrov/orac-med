@@ -64,6 +64,18 @@ function validaCNPJ(cnpj) {
     return c
 }
 
+function unformatBRL(valorFormatado) {
+    if (!valorFormatado) return 0;
+
+    return parseFloat(
+        valorFormatado
+            .replace("R$", "")
+            .replace(/\./g, "")
+            .replace(",", ".")
+            .trim()
+    ).toFixed(2) || 0;
+}
+
 const tiposCliente = {
     cliente: "Cliente",
     credenciado: "Credenciado",
@@ -75,29 +87,6 @@ const tiposUsuario = {
     usuario: "Usuario",
     gestor: "Gestor",
     administrador: "Administrador"
-}
-
-async function carregarExamesSelect(examesInclusos = []) {
-    const request = await fetch("/exames/listar-exames");
-    const resposta = await request.json();
-    const exames = resposta.exames;
-
-    const examesUl = document.getElementById("modal-exames-cliente-tr");
-    examesUl.innerHTML = "";
-
-    exames.forEach(exame => {
-        const option = document.createElement("option");
-        option.value = exame.id_exame;
-        option.textContent = `${exame.id_exame} - ${exame.nome_exame}`;
-        if (examesInclusos.includes(exame.id_exame)) {
-            option.selected = true;
-        }
-        examesUl.appendChild(option);
-    });
-
-    if (typeof examesUl.loadOptions === "function") {
-        examesUl.loadOptions();
-    }
 }
 
 function verificarCliqueHead() {
@@ -640,23 +629,24 @@ async function cadastrarCliente() {
 }
 
 async function cadastrarUsuario() {
-    let nome = document.getElementById("nome_usuario").value
-    let email = document.getElementById("email_usuario").value
-    let senha = document.getElementById("senha").value
-    let role = document.getElementById("role").value
-    let foto = document.getElementById("foto").files[0];
-
-    if (!nome || !email || !senha || !role) {
-        UIkit.notification({
-            message: "Preencha todos os campos! ❌",
-            status: 'danger',
-            pos: 'top-center',
-            timeout: 5000
-        })
-        return
-    }
-
     try {
+        mostrarLoading();
+        let nome = document.getElementById("nome_usuario").value
+        let email = document.getElementById("email_usuario").value
+        let senha = document.getElementById("senha").value
+        let role = document.getElementById("role").value
+        let foto = document.getElementById("foto").files[0];
+
+        if (!nome || !email || !senha || !role) {
+            UIkit.notification({
+                message: "Preencha todos os campos! ❌",
+                status: 'danger',
+                pos: 'top-center',
+                timeout: 5000
+            })
+            return
+        }
+
         const formData = new FormData();
         formData.append("nome_usuario", nome);
         formData.append("email_usuario", email);
@@ -695,6 +685,9 @@ async function cadastrarUsuario() {
     catch (e) {
         console.log(e)
         console.log(resposta.erro ?? "Erro")
+    }
+    finally {
+        esconderLoading();
     }
 }
 
@@ -770,6 +763,30 @@ document.getElementById("button-cadastro").addEventListener("click", async (even
     }
 })
 
+async function carregarExamesSelect(examesInclusos = []) {
+    const request = await fetch("/exames/listar-exames");
+    const resposta = await request.json();
+    const exames = resposta.exames;
+
+    const examesUl = document.getElementById("modal-exames-cliente-tr");
+    examesUl.innerHTML = "";
+
+    exames.forEach(exame => {
+        const option = document.createElement("option");
+        option.value = exame.id_exame;
+        option.textContent = `${exame.id_exame} - ${exame.nome_exame}`;
+        if (examesInclusos.includes(exame.id_exame)) {
+            option.selected = true;
+        }
+        examesUl.appendChild(option);
+    });
+
+    if (typeof examesUl.loadOptions === "function") {
+        examesUl.loadOptions();
+    }
+}
+
+//Cliente Att
 async function salvarAlteracaoCliente() {
     try {
         mostrarLoading();
@@ -779,7 +796,6 @@ async function salvarAlteracaoCliente() {
         let tipo_cliente = document.getElementById("modal-tipo-cliente-tr").value;
         let exames_cliente = document.getElementById("modal-exames-cliente-tr");
 
-        console.log(Array.from(exames_cliente.selectedOptions).map(option => parseInt(option.value)));
         let lista_exames = Array.from(exames_cliente.selectedOptions).map(option => parseInt(option.value)
         )
 
@@ -861,7 +877,7 @@ async function excluirCliente() {
     div.appendChild(texto);
 
     let cliente = document.createElement("p");
-    cliente.textContent = `ID: ${id_cliente} - Nome: ${nome_cliente}`;
+    cliente.innerHTML = `Cliente:<br> ID: ${id_cliente} - Nome: ${nome_cliente}`;
     div.appendChild(cliente);
 
     let buttonCancelar = document.getElementById("cancelar-exclusao");
@@ -962,7 +978,7 @@ function habilitarInputsCliente(event) {
     exames_cliente.classList.remove("desabilitado");
 
 
-
+    buttonEditar.removeEventListener("click", habilitarInputsCliente)
     buttonEditar.addEventListener("click", salvarAlteracaoCliente);
     buttonEditar.textContent = "Salvar";
 
@@ -971,8 +987,400 @@ function habilitarInputsCliente(event) {
     buttonCancelar.textContent = "Cancelar";
 }
 
+//Exame Att
+async function salvarAlteracaoExame() {
+    try {
+        mostrarLoading();
+        let id_exame = parseInt(document.getElementById("modal-id-exame-tr").textContent.split(" - ")[0]);
+        let nome_exame = document.getElementById("modal-nome-exame-tr").value;
+        let is_interno_exame = document.getElementById("modal-is_interno-exame-tr").value;
+        let valor = document.getElementById("modal-valor-exame-tr").value;
+
+
+        if (!nome_exame || !is_interno_exame || !valor) {
+            UIkit.notification({
+                message: "Preencha todos os campos obrigatórios ❌",
+                status: 'danger',
+                pos: 'top-center',
+                timeout: 5000
+            });
+            return;
+        }
+
+        const tipoMap = {
+            "Sim": "1",
+            "Não": "0",
+        };
+        console.log(is_interno_exame)
+        let is_interno_valido = parseInt(tipoMap[is_interno_exame]);
+
+        let payload = {
+            id_exame: id_exame,
+            nome_exame: nome_exame,
+            valor_exame: parseFloat(valor),
+            is_interno: is_interno_valido,
+        }
+
+        console.log(payload)
+        const requisicao = await fetch("/exames/atualizar-exame", {
+            method: "PUT",
+            headers: {
+                "Content-Type": "application/json"
+            },
+            body: JSON.stringify(payload)
+        })
+
+        const resposta = await requisicao.json();
+        if (requisicao.ok) {
+            filtrosAtuais = {};
+            recarregarTipoLista({});
+            UIkit.notification({
+                message: resposta.mensagem || "Exame atualizado ✅",
+                status: 'success',
+                pos: 'top-center',
+                timeout: 3000
+            });
+            cancelarEdicaoExame();
+            UIkit.modal("#exame-modal").hide();
+        }
+        else {
+            UIkit.notification({
+                message: resposta.erro || "Erro ao atualizar exame ❌",
+                status: 'danger',
+                pos: 'top-center',
+                timeout: 5000
+            });
+            console.log(resposta.erro);
+        }
+    }
+    catch (erro) {
+        console.log(erro);
+    }
+    finally {
+        esconderLoading();
+    }
+}
+
+async function excluirExame() {
+    let id_exame = parseInt(document.getElementById("modal-id-exame-tr").textContent.split(" - ")[0]);
+    let nome_exame = document.getElementById("modal-id-exame-tr").textContent.split(" - ")[1];
+    let div = document.getElementsByClassName("exclusao-texto")[0];
+    div.innerHTML = "";
+
+    let texto = document.createElement("p");
+    texto.textContent = `Você tem certeza que deseja excluir? Esta ação não pode ser desfeita.`;
+    div.appendChild(texto);
+
+    let exame = document.createElement("p");
+    exame.innerHTML = `Exame:<br> ID: ${id_exame} - Nome: ${nome_exame}`;
+    div.appendChild(exame);
+
+    let buttonCancelar = document.getElementById("cancelar-exclusao");
+    let buttonExcluir = document.getElementById("confirmar-exclusao");
+
+    buttonCancelar.setAttribute("uk-toggle", "target: #cliente-modal")
+    buttonExcluir.addEventListener("click", async () => {
+        try {
+            mostrarLoading();
+
+            payload = {
+                id_exame: id_exame
+            }
+
+            const requisicao = await fetch(`/exames/remover-exame`, {
+                method: "DELETE",
+                headers: {
+                    "Content-Type": "application/json"
+                },
+                body: JSON.stringify(payload),
+
+            });
+
+            const resposta = await requisicao.json();
+            if (requisicao.ok) {
+                filtrosAtuais = {}
+                recarregarTipoLista({})
+                UIkit.notification({
+                    message: resposta.mensagem || "Exame excluído ✅",
+                    status: 'success',
+                    pos: 'top-center',
+                    timeout: 3000
+                });
+                UIkit.modal("#confirmacao-modal").hide();
+            }
+            else {
+                UIkit.notification({
+                    message: resposta.erro || "Erro ao excluir exame ❌",
+                    status: 'danger',
+                    pos: 'top-center',
+                    timeout: 5000
+                })
+            }
+        } catch (e) {
+            console.log(e)
+        } finally {
+            esconderLoading();
+        }
+    });
+}
+
+function cancelarEdicaoExame() {
+    let id_exame = parseInt(document.getElementById("modal-id-exame-tr").textContent.split(" - ")[0]);
+    let tr = document.querySelector(`tr[data-id='${id_exame}']`);
+
+    let nome_exame = document.getElementById("modal-nome-exame-tr");
+    let is_interno_exame = document.getElementById("modal-is_interno-exame-tr");
+    let valor_exame = document.getElementById("modal-valor-exame-tr");
+
+    nome_exame.value = tr.dataset.nome;
+    is_interno_exame.value = tr.dataset.is_interno;
+    valor_exame.value = unformatBRL(tr.dataset.valor);
+
+
+    nome_exame.disabled = true;
+    is_interno_exame.disabled = true;
+    valor_exame.disabled = true;
+
+    let buttonEditar = document.getElementById("button-editar-exame");
+    let buttonCancelar = document.getElementById("button-excluir-exame");
+
+    buttonEditar.removeEventListener("click", salvarAlteracaoExame);
+    buttonEditar.addEventListener("click", habilitarInputsExame);
+    buttonEditar.textContent = "Editar";
+
+    buttonCancelar.setAttribute("uk-toggle", "target: #exame-modal")
+    buttonCancelar.removeEventListener("click", cancelarEdicaoExame);
+    buttonCancelar.addEventListener("click", excluirExame)
+    buttonCancelar.textContent = "Excluir";
+}
+
+function habilitarInputsExame(event) {
+    event.preventDefault();
+    let buttonEditar = document.getElementById("button-editar-exame");
+    let buttonCancelar = document.getElementById("button-excluir-exame");
+
+    let nome_exame = document.getElementById("modal-nome-exame-tr");
+    let is_interno_exame = document.getElementById("modal-is_interno-exame-tr");
+    let valor_exame = document.getElementById("modal-valor-exame-tr");
+
+    nome_exame.disabled = false;
+    is_interno_exame.disabled = false;
+    valor_exame.disabled = false;
+
+
+    buttonEditar.addEventListener("click", salvarAlteracaoExame);
+    buttonEditar.textContent = "Salvar";
+
+    buttonCancelar.removeAttribute("uk-toggle");
+    buttonCancelar.addEventListener("click", cancelarEdicaoExame);
+    buttonCancelar.textContent = "Cancelar";
+}
+
+//Usuario Att
+async function salvarAlteracaoUsuario() {
+    try {
+        mostrarLoading();
+        let id_usuario = parseInt(document.getElementById("modal-id-usuario-tr").textContent.split(" - ")[0]);
+        console.log(id_usuario)
+        let nome_usuario = document.getElementById("modal-nome-usuario-tr").value;
+        let email_usuario = document.getElementById("modal-email-usuario-tr").value;
+        let tipo_usuario = document.getElementById("modal-tipo-usuario-tr").value;
+        // let senha_usuario = document.getElementById("modal-senha-usuario-tr").value;
+        let foto = document.getElementById("modal-foto-usuario-tr").files[0];
+
+        if (!nome_usuario || !email_usuario || !tipo_usuario) {
+            UIkit.notification({
+                message: "Preencha todos os campos obrigatórios ❌",
+                status: 'danger',
+                pos: 'top-center',
+                timeout: 5000
+            });
+            return;
+        }
+
+        const tipoMap = {
+            "usuario": "Usuario",
+            "gestor": "Gestor",
+            "administrador": "Administrador",
+        };
+        let tipo_usuario_valido = tipoMap[tipo_usuario.toLowerCase()];
+
+        let formData = new FormData();
+        formData.append("id_usuario", id_usuario);
+        formData.append("nome_usuario", nome_usuario);
+        formData.append("email_usuario", email_usuario);
+        // formData.append("senha", senha_usuario);
+        formData.append("role", tipo_usuario_valido);
+        if (foto) {
+            formData.append("foto", foto)
+        }
+
+        console.log(formData)
+        let requisicao = await fetch("/usuarios/atualizar-usuario", {
+            method: "PUT",
+            body: formData
+        })
+
+        let resposta = await requisicao.json();
+        if (requisicao.ok) {
+            filtrosAtuais = {};
+            recarregarTipoLista({});
+            UIkit.notification({
+                message: resposta.mensagem || "Usuário atualizado ✅",
+                status: 'success',
+                pos: 'top-center',
+                timeout: 3000
+            });
+            cancelarEdicaoUsuario();
+            UIkit.modal("#usuario-modal").hide();
+        }
+        else {
+            UIkit.notification({
+                message: resposta.erro || "Erro ao atualizar usuario ❌",
+                status: 'danger',
+                pos: 'top-center',
+                timeout: 5000
+            });
+            console.log(resposta.erro);
+        }
+    }
+    catch (erro) {
+        console.log(erro);
+    }
+    finally {
+        esconderLoading();
+    }
+}
+
+async function excluirUsuario() {
+    let id_usuario = parseInt(document.getElementById("modal-id-usuario-tr").textContent.split(" - ")[0]);
+    let nome_usuario = document.getElementById("modal-id-usuario-tr").textContent.split(" - ")[1];
+    let div = document.getElementsByClassName("exclusao-texto")[0];
+    div.innerHTML = "";
+
+    let texto = document.createElement("p");
+    texto.textContent = `Você tem certeza que deseja excluir? Esta ação não pode ser desfeita.`;
+    div.appendChild(texto);
+
+    let usuario = document.createElement("p");
+    usuario.innerHTML = `Usuário:<br> ID: ${id_usuario} - Nome: ${nome_usuario}`;
+    div.appendChild(usuario);
+
+    let buttonCancelar = document.getElementById("cancelar-exclusao");
+    let buttonExcluir = document.getElementById("confirmar-exclusao");
+
+    buttonCancelar.setAttribute("uk-toggle", "target: #cliente-modal")
+    buttonExcluir.addEventListener("click", async () => {
+        try {
+            mostrarLoading();
+
+            payload = {
+                id_usuario: id_usuario
+            }
+
+            const requisicao = await fetch(`/usuarios/remover-usuario`, {
+                method: "DELETE",
+                headers: {
+                    "Content-Type": "application/json"
+                },
+                body: JSON.stringify(payload),
+
+            });
+
+            const resposta = await requisicao.json();
+            if (requisicao.ok) {
+                filtrosAtuais = {}
+                recarregarTipoLista({})
+                UIkit.notification({
+                    message: resposta.mensagem || "Usuário excluído ✅",
+                    status: 'success',
+                    pos: 'top-center',
+                    timeout: 3000
+                });
+                UIkit.modal("#confirmacao-modal").hide();
+            }
+            else {
+                UIkit.notification({
+                    message: resposta.erro || "Erro ao excluir usuário ❌",
+                    status: 'danger',
+                    pos: 'top-center',
+                    timeout: 5000
+                })
+            }
+        } catch (e) {
+            console.log(e)
+        } finally {
+            esconderLoading();
+        }
+    });
+}
+
+function cancelarEdicaoUsuario() {
+    let id_usuario = parseInt(document.getElementById("modal-id-usuario-tr").textContent.split(" - ")[0]);
+    let tr = document.querySelector(`tr[data-id='${id_usuario}']`);
+
+    let nome_usuario = document.getElementById("modal-nome-usuario-tr");
+    let email_usuario = document.getElementById("modal-email-usuario-tr");
+    let tipo_usuario = document.getElementById("modal-tipo-usuario-tr");
+    // let senha_usuario = document.getElementById("modal-senha-usuario-tr");
+    let foto = document.getElementById("modal-foto-usuario-tr");
+
+    nome_usuario.value = tr.dataset.nome;
+    email_usuario.value = tr.dataset.email;
+    tipo_usuario.value = tr.dataset.tipo;
+
+
+    nome_usuario.disabled = true;
+    email_usuario.disabled = true;
+    tipo_usuario.disabled = true;
+    // senha_usuario.disabled = true;
+    foto.disabled = true;
+
+    let buttonEditar = document.getElementById("button-editar-usuario");
+    let buttonCancelar = document.getElementById("button-excluir-usuario");
+
+    buttonEditar.removeEventListener("click", salvarAlteracaoUsuario);
+    buttonEditar.addEventListener("click", habilitarInputsUsuario);
+    buttonEditar.textContent = "Editar";
+
+    buttonCancelar.setAttribute("uk-toggle", "target: #usuario-modal")
+    buttonCancelar.removeEventListener("click", cancelarEdicaoUsuario);
+    buttonCancelar.addEventListener("click", excluirUsuario)
+    buttonCancelar.textContent = "Excluir";
+}
+
+function habilitarInputsUsuario(event) {
+    event.preventDefault();
+    let buttonEditar = document.getElementById("button-editar-usuario");
+    let buttonCancelar = document.getElementById("button-excluir-usuario");
+
+    let nome_usuario = document.getElementById("modal-nome-usuario-tr");
+    let tipo_usuario = document.getElementById("modal-tipo-usuario-tr");
+    let email_usuario = document.getElementById("modal-email-usuario-tr");
+    let foto = document.getElementById("modal-foto-usuario-tr");
+    // let senha_usuario = document.getElementById("modal-senha-usuario-tr");
+    nome_usuario.disabled = false;
+    tipo_usuario.disabled = false;
+    email_usuario.disabled = false;
+    foto.disabled = false;
+    // senha_usuario.disabled = false;
+
+
+
+    buttonEditar.addEventListener("click", salvarAlteracaoUsuario);
+    buttonEditar.textContent = "Salvar";
+
+    buttonCancelar.removeAttribute("uk-toggle");
+    buttonCancelar.addEventListener("click", cancelarEdicaoUsuario);
+    buttonCancelar.textContent = "Cancelar";
+}
+
 document.getElementById("button-editar-cliente").addEventListener("click", (params) => habilitarInputsCliente(params));
 document.getElementById("button-excluir-cliente").addEventListener("click", (params) => excluirCliente(params));
+document.getElementById("button-editar-exame").addEventListener("click", (params) => habilitarInputsExame(params));
+document.getElementById("button-excluir-exame").addEventListener("click", (params) => excluirExame(params));
+document.getElementById("button-editar-usuario").addEventListener("click", (params) => habilitarInputsUsuario(params));
+document.getElementById("button-excluir-usuario").addEventListener("click", (params) => excluirUsuario(params));
 
 
 carregarClientesLista()

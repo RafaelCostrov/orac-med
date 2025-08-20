@@ -530,7 +530,11 @@ textarea:focus {
 
 .desabilitado {
     background-color: var(--grey-200);
-    cursor: not-allowed;
+    pointer-events: none;
+}
+
+#modal-foto-usuario-tr {
+  max-width: 300px
 }
 
 .exclusao-modal-footer {

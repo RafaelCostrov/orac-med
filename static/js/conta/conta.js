@@ -85,7 +85,7 @@ async function salvarAlteracao(params) {
         senha ? formData.append("senha", senha) : null;
         foto.files[0] ? formData.append("foto", foto.files[0]) : null;
 
-        const requisicao = await fetch("/usuarios/atualizar-usuario", {
+        const requisicao = await fetch("/usuarios/atualizar-conta", {
             method: "PUT",
             body: formData
         });

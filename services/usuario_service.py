@@ -17,14 +17,14 @@ class UsuarioService():
             return usuario
         return None
 
-    def cadastrar_usuario(self, nome_usuario: str,  email_usuario: str, role: TiposUsuario, senha: str, foto: str = None):
+    def cadastrar_usuario(self, nome_usuario: str,  email_usuario: str, role: TiposUsuario, senha: str, foto=None):
         usuario = Usuario(
             nome_usuario=nome_usuario,
             email_usuario=email_usuario,
             role=role
         )
 
-        if foto:
+        if foto is not None:
             nome_arquivo = foto.filename
             os.makedirs("services\\temp_uploads", exist_ok=True)
             temp_path = os.path.join("services\\temp_uploads", nome_arquivo)
@@ -36,6 +36,14 @@ class UsuarioService():
 
         usuario.setar_senha(senha)
         self.repositorio.salvar(usuario=usuario)
+
+        return {
+            "id_usuario": usuario.id_usuario,
+            "nome_usuario": usuario.nome_usuario,
+            "email_usuario": usuario.email_usuario,
+            "role": usuario.role.__str__(),
+            "foto_url": usuario.foto_url if usuario.foto_url else None
+        }
 
     def listar_todos_usuarios(self):
         usuarios = self.repositorio.listar_todos_usuarios()
@@ -83,11 +91,18 @@ class UsuarioService():
         }
 
     def remover_usuario(self, id_usuario):
-        self.repositorio.remover_usuario(id_usuario=id_usuario)
+        usuario_a_remover = self.repositorio.filtrar_por_id(
+            id_usuario=id_usuario)
+        if not usuario_a_remover:
+            raise Exception("Usuário não encontrado")
+        if usuario_a_remover.foto_url is not None:
+            remover_drive(usuario_a_remover.foto_url)
+        self.repositorio.remover_usuario(usuario_a_remover=usuario_a_remover)
 
     def atualizar_usuario(self, id_usuario, nome_usuario, email_usuario, senha, role, foto):
-        usuario = self.repositorio.filtrar_por_id(id_usuario)
-
+        print(id_usuario)
+        usuario = self.repositorio.filtrar_por_id(id_usuario=id_usuario)
+        print(usuario)
         if not usuario:
             raise Exception("Usuário não encontrado")
 

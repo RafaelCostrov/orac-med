@@ -276,10 +276,6 @@
             <option value="Particular">Particular</option>
           </select>
         </div>
-        <!-- <div class="cliente-input-label">
-          <label for="modal-exames-cliente-tr">Exames</label>
-          <input id="modal-exames-cliente-tr" name="modal-exames-cliente-tr" class="div4" disabled></input>
-        </div> -->
         <div class="cliente-input-label">
           <label for="modal-exames-cliente-tr">Exames</label>
           <select multiple multiselect-search="true" multiselect-select-all="true"
@@ -305,25 +301,29 @@
       <div class="cliente-modal-div">
         <div class="cliente-input-label">
           <label for="modal-nome-usuario-tr">Nome</label>
-          <input id="modal-nome-usuario-tr" type="text" name="modal-nome-usuario-tr" class="div1"></input>
+          <input id="modal-nome-usuario-tr" type="text" name="modal-nome-usuario-tr" class="div1" disabled></input>
         </div>
         <div class="cliente-input-label">
-          <label for="modal-tipo-usuario-tr">Tipo de Usuário</label>
-          <input id="modal-tipo-usuario-tr" type="text" name="modal-tipo-usuario-tr" class="div2"></input>
+          <label for="modal-tipo-usuario-tr">Perfil</label>
+          <select id="modal-tipo-usuario-tr" name="modal-tipo-usuario-tr" class="div2" disabled>
+            <option value="Usuario">Usuario</option>
+            <option value="Gestor">Gestor</option>
+            <option value="Administrador">Administrador</option>
+          </select>
         </div>
         <div class="cliente-input-label">
           <label for="modal-email-usuario-tr">Email</label>
-          <input id="modal-email-usuario-tr" type="email" name="modal-email-usuario-tr" class="div3"></input>
+          <input id="modal-email-usuario-tr" type="email" name="modal-email-usuario-tr" class="div3" disabled></input>
         </div>
         <div class="cliente-input-label">
-          <label for="modal-senha-usuario-tr">Senha</label>
-          <input id="modal-senha-usuario-tr" type="password" placeholder="Nova Senha" name="modal-senha-usuario-tr"
-            class="div3"></input>
+          <label for="modal-foto-usuario-tr">Foto</label>
+          <input id="modal-foto-usuario-tr" type="file" name="modal-foto-usuario-tr" class="div4" accept="image/*"
+            placeholder="Foto do usuário" disabled></input>
         </div>
       </div>
       <div class="cliente-modal-footer">
-        <button class="uk-modal-close btn vermelho">Excluir</button>
-        <button class="uk-modal-close btn verde">Atualizar</button>
+        <button class="btn vermelho" id="button-excluir-usuario" uk-toggle="target: #confirmacao-modal">Excluir</button>
+        <button class="btn verde" id="button-editar-usuario">Editar</button>
       </div>
     </div>
   </div>
@@ -339,20 +339,23 @@
       <div class="cliente-modal-div">
         <div class="cliente-input-label">
           <label for="modal-nome-exame-tr">Nome</label>
-          <input id="modal-nome-exame-tr" type="text" name="modal-nome-exame-tr" class="div1"></input>
+          <input id="modal-nome-exame-tr" type="text" name="modal-nome-exame-tr" class="div1" disabled></input>
         </div>
         <div class="cliente-input-label">
           <label for="modal-is_interno-exame-tr">Interno</label>
-          <input id="modal-is_interno-exame-tr" name="modal-is_interno-exame-tr" class="div2"></input>
+          <select id="modal-is_interno-exame-tr" name="modal-is_interno-exame-tr" class="div2" disabled>
+            <option value="Sim">Sim</option>
+            <option value="Não">Não</option>
+          </select>
         </div>
         <div class="cliente-input-label">
           <label for="modal-valor-exame-tr">Valor</label>
-          <input id="modal-valor-exame-tr" type="number" name="modal-valor-exame-tr" class="div3"></input>
+          <input id="modal-valor-exame-tr" type="number" name="modal-valor-exame-tr" class="div3" disabled></input>
         </div>
       </div>
       <div class="cliente-modal-footer">
-        <button class="uk-modal-close btn vermelho">Excluir</button>
-        <button class="uk-modal-close btn verde">Atualizar</button>
+        <button class="btn vermelho" id="button-excluir-exame" uk-toggle="target: #confirmacao-modal">Excluir</button>
+        <button class="btn verde" id="button-editar-exame">Editar</button>
       </div>
     </div>
   </div>
