@@ -77,13 +77,7 @@ async function carregarAtendimentos({ pagina = 1, filtros = {}, porPagina = 20 }
             paginaAtual = pagina;
             filtros ? totalPaginas = Math.ceil(dados.total_filtrado / porPagina) : totalPaginas = Math.ceil(dados.total / porPagina)
             document.getElementById("pinfo").textContent = `Página ${paginaAtual} de ${totalPaginas}`;
-            document.getElementById("count").textContent = dados.total_filtrado ?? 0;
             document.getElementById("expCount").textContent = dados.total_filtrado ?? 0;
-            const valorTotalFormatado = new Intl.NumberFormat("pt-BR", {
-                style: "currency",
-                currency: "BRL"
-            }).format(dados.valor_total ?? 0);
-            document.getElementById("total").textContent = valorTotalFormatado;
         }
     } catch (e) {
         console.log(e)
@@ -214,7 +208,7 @@ document.getElementById("exportXls").addEventListener("click", async () => {
         const hora = pad(agora.getHours());
         const minuto = pad(agora.getMinutes());
         const segundo = pad(agora.getSeconds());
-        const nome_excel = `atendimentos_${hora}-${minuto}-${segundo}.xlsx`;
+        const nome_excel = `Atendimentos_${hora}-${minuto}-${segundo}.xlsx`;
 
         a.download = nome_excel;
         document.body.appendChild(a);

@@ -32,8 +32,8 @@
       <button id="btnFiltro" class="icon-btn" title="Filtros">
         <img src=" {{ url_for('static' ,filename='/img/icons/icon-filtro.png')}}" alt="Filtros">
       </button>
-      <button id="btnImprimir" class="icon-btn" title="Imprimir">
-        <img src=" {{ url_for('static' ,filename='/img/icons/icon-impressora.png')}}" alt="Imprimir">
+      <button id="btnExportar" class="icon-btn" title="Exportar" uk-toggle="target: #exportar-modal">
+        <img src=" {{ url_for('static' ,filename='/img/icons/icon-exportar.png')}}" alt="Exportar">
       </button>
       <button id="btnNovo" class="icon-btn" title="Novo cadastro">
         <img src=" {{ url_for('static' ,filename='/img/icons/icon-plus.png')}}" alt="Novo">
@@ -371,10 +371,31 @@
       <div class="exclusao-modal-div">
         <div class="exclusao-texto">
         </div>
-        <div class="exclusao-modal-footer">
-          <button class="btn cinza" id="cancelar-exclusao">Cancelar</button>
-          <button class="btn vermelho" id="confirmar-exclusao">Excluir</button>
-        </div>
+      </div>
+      <div class="exclusao-modal-footer">
+        <button class="btn cinza" id="cancelar-exclusao">Cancelar</button>
+        <button class="btn vermelho" id="confirmar-exclusao">Excluir</button>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- Modal Confirmação exclusão -->
+<div id="exportar-modal" uk-modal>
+  <div class="uk-modal-dialog uk-margin-auto-vertical uk-modal-body modal-body">
+    <div class="modal-container">
+      <button class="uk-modal-close-default" type="button" uk-close></button>
+      <h2 class="uk-modal-title">O que deseja exportar?</h2>
+      <hr>
+      <div class="exportar-modal-div">
+        <button id="exportXls" class="export-tile" aria-label="Exportar CSV">
+          <img src="{{url_for('static', filename='/img/icons/xls-file.png')}}" alt="">
+          <span>Excel</span>
+        </button>
+        <button id="exportTxt" class="export-tile" aria-label="Exportar TXT">
+          <img src="{{url_for('static', filename='/img/icons/txt-file.png')}}" alt="">
+          <span>TXT</span>
+        </button>
       </div>
     </div>
   </div>

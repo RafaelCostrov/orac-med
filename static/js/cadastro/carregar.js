@@ -1375,6 +1375,292 @@ function habilitarInputsUsuario(event) {
     buttonCancelar.textContent = "Cancelar";
 }
 
+function exportarTxtTipoLista({ filtros = filtrosAtuais }) {
+    payload = {
+        filtros: filtros
+    }
+
+    switch (tipoLista.value) {
+        case "clientes":
+            exportarTxtCliente(payload);
+            break;
+        case "usuarios":
+            exportarTxtUsuario(payload);
+            break;
+        case "exames":
+            exportarTxtExame(payload);
+            break;
+    }
+}
+
+function exportarXlsTipoLista({ filtros = filtrosAtuais }) {
+    payload = {
+        filtros: filtros
+    }
+
+    switch (tipoLista.value) {
+        case "clientes":
+            exportarXlsCliente(payload);
+            break;
+        case "usuarios":
+            exportarXlsUsuario(payload);
+            break;
+        case "exames":
+            exportarXlsExame(payload);
+            break;
+    }
+}
+
+async function exportarXlsCliente({ filtros = filtrosAtuais }) {
+    const payload = {
+        ...filtros
+    };
+
+    console.log(payload)
+    try {
+
+        const resposta = await fetch("/clientes/exportar-clientes-xls", {
+            method: "POST",
+            headers: {
+                "Content-Type": "application/json"
+            },
+            body: JSON.stringify(payload)
+        });
+
+        const blob = await resposta.blob();
+        const url = window.URL.createObjectURL(blob);
+
+        const a = document.createElement('a');
+        a.href = url;
+
+
+        const agora = new Date();
+        const pad = (num) => num.toString().padStart(2, '0');
+        const hora = pad(agora.getHours());
+        const minuto = pad(agora.getMinutes());
+        const segundo = pad(agora.getSeconds());
+        const nome_excel = `Clientes_${hora}-${minuto}-${segundo}.xlsx`;
+
+        a.download = nome_excel;
+        document.body.appendChild(a);
+        a.click();
+        a.remove();
+        window.URL.revokeObjectURL(url);
+
+    } catch (e) {
+        console.log(e)
+    }
+}
+
+async function exportarTxtCliente({ filtros = {} }) {
+    const payload = {
+        ...filtros
+    };
+
+    try {
+
+        const resposta = await fetch("/clientes/exportar-clientes-txt", {
+            method: "POST",
+            headers: {
+                "Content-Type": "application/json"
+            },
+            body: JSON.stringify(payload)
+        });
+
+
+        const blob = await resposta.blob();
+        const url = window.URL.createObjectURL(blob);
+
+        const a = document.createElement('a');
+        a.href = url;
+
+
+        const agora = new Date();
+        const pad = (num) => num.toString().padStart(2, '0');
+        const hora = pad(agora.getHours());
+        const minuto = pad(agora.getMinutes());
+        const segundo = pad(agora.getSeconds());
+        const nome_txt = `Clientes_${hora}-${minuto}-${segundo}.txt`;
+
+        a.download = nome_txt;
+        document.body.appendChild(a);
+        a.click();
+        a.remove();
+        window.URL.revokeObjectURL(url);
+
+    } catch (e) {
+        console.log(e)
+    }
+}
+
+async function exportarXlsExame({ filtros = filtrosAtuais }) {
+    const payload = {
+        ...filtros
+    };
+
+    console.log(payload)
+    try {
+
+        const resposta = await fetch("/exames/exportar-exames-xls", {
+            method: "POST",
+            headers: {
+                "Content-Type": "application/json"
+            },
+            body: JSON.stringify(payload)
+        });
+
+        const blob = await resposta.blob();
+        const url = window.URL.createObjectURL(blob);
+
+        const a = document.createElement('a');
+        a.href = url;
+
+
+        const agora = new Date();
+        const pad = (num) => num.toString().padStart(2, '0');
+        const hora = pad(agora.getHours());
+        const minuto = pad(agora.getMinutes());
+        const segundo = pad(agora.getSeconds());
+        const nome_excel = `Exames_${hora}-${minuto}-${segundo}.xlsx`;
+
+        a.download = nome_excel;
+        document.body.appendChild(a);
+        a.click();
+        a.remove();
+        window.URL.revokeObjectURL(url);
+
+    } catch (e) {
+        console.log(e)
+    }
+}
+
+async function exportarTxtExame({ filtros = {} }) {
+    const payload = {
+        ...filtros
+    };
+
+    try {
+
+        const resposta = await fetch("/exames/exportar-exames-txt", {
+            method: "POST",
+            headers: {
+                "Content-Type": "application/json"
+            },
+            body: JSON.stringify(payload)
+        });
+
+
+        const blob = await resposta.blob();
+        const url = window.URL.createObjectURL(blob);
+
+        const a = document.createElement('a');
+        a.href = url;
+
+
+        const agora = new Date();
+        const pad = (num) => num.toString().padStart(2, '0');
+        const hora = pad(agora.getHours());
+        const minuto = pad(agora.getMinutes());
+        const segundo = pad(agora.getSeconds());
+        const nome_txt = `Exames_${hora}-${minuto}-${segundo}.txt`;
+
+        a.download = nome_txt;
+        document.body.appendChild(a);
+        a.click();
+        a.remove();
+        window.URL.revokeObjectURL(url);
+
+    } catch (e) {
+        console.log(e)
+    }
+
+}
+
+async function exportarXlsUsuario({ filtros = filtrosAtuais }) {
+    const payload = {
+        ...filtros
+    };
+
+    console.log(payload)
+    try {
+
+        const resposta = await fetch("/usuarios/exportar-usuarios-xls", {
+            method: "POST",
+            headers: {
+                "Content-Type": "application/json"
+            },
+            body: JSON.stringify(payload)
+        });
+
+        const blob = await resposta.blob();
+        const url = window.URL.createObjectURL(blob);
+
+        const a = document.createElement('a');
+        a.href = url;
+
+
+        const agora = new Date();
+        const pad = (num) => num.toString().padStart(2, '0');
+        const hora = pad(agora.getHours());
+        const minuto = pad(agora.getMinutes());
+        const segundo = pad(agora.getSeconds());
+        const nome_excel = `Usuarios_${hora}-${minuto}-${segundo}.xlsx`;
+
+        a.download = nome_excel;
+        document.body.appendChild(a);
+        a.click();
+        a.remove();
+        window.URL.revokeObjectURL(url);
+
+    } catch (e) {
+        console.log(e)
+    }
+}
+
+async function exportarTxtUsuario({ filtros = filtrosAtuais }) {
+    const payload = {
+        ...filtros
+    };
+
+    console.log(payload)
+    try {
+
+        const resposta = await fetch("/usuarios/exportar-usuarios-txt", {
+            method: "POST",
+            headers: {
+                "Content-Type": "application/json"
+            },
+            body: JSON.stringify(payload)
+        });
+
+        const blob = await resposta.blob();
+        const url = window.URL.createObjectURL(blob);
+
+        const a = document.createElement('a');
+        a.href = url;
+
+
+        const agora = new Date();
+        const pad = (num) => num.toString().padStart(2, '0');
+        const hora = pad(agora.getHours());
+        const minuto = pad(agora.getMinutes());
+        const segundo = pad(agora.getSeconds());
+        const nome_txt = `Usuarios_${hora}-${minuto}-${segundo}.txt`;
+
+        a.download = nome_txt;
+        document.body.appendChild(a);
+        a.click();
+        a.remove();
+        window.URL.revokeObjectURL(url);
+
+    } catch (e) {
+        console.log(e)
+    }
+}
+
+
+document.getElementById("exportXls").addEventListener("click", () => exportarXlsTipoLista({ filtros: filtrosAtuais }))
+document.getElementById("exportTxt").addEventListener("click", () => exportarTxtTipoLista({ filtros: filtrosAtuais }))
 document.getElementById("button-editar-cliente").addEventListener("click", (params) => habilitarInputsCliente(params));
 document.getElementById("button-excluir-cliente").addEventListener("click", (params) => excluirCliente(params));
 document.getElementById("button-editar-exame").addEventListener("click", (params) => habilitarInputsExame(params));

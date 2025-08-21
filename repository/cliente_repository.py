@@ -25,7 +25,8 @@ class ClienteRepository:
         except Exception as e:
             raise e
 
-    def filtrar_clientes(self, id_cliente=None, nome_cliente=None, cnpj_cliente=None, tipo_cliente=None, exames_incluidos=None, offset=None, limit=None, order_by=None, order_dir=None):
+    def filtrar_clientes(self, id_cliente=None, nome_cliente=None, cnpj_cliente=None, tipo_cliente=None, exames_incluidos=None, offset=None,
+                         limit=None, order_by=None, order_dir=None):
         try:
             query = self.session.query(Cliente)
             total = query.count()

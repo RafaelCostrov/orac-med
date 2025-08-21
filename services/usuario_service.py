@@ -3,7 +3,8 @@ from repository.usuario_repository import UsuarioRepository
 from enums.tipos_usuario import TiposUsuario
 from services.google_services.envio_drive import salvar_drive, remover_drive
 import os
-import json
+import pandas as pd
+from io import BytesIO
 
 
 class UsuarioService():
@@ -139,3 +140,80 @@ class UsuarioService():
             "role": usuario.role.__str__(),
             "foto_url": usuario.foto_url
         }
+
+    def exportar_excel(self, id_usuario: int, nome_usuario: str,  email_usuario: str, role: TiposUsuario):
+
+        usuarios_filtrados = self.filtrar_usuarios(
+            id_usuario=id_usuario,
+            nome_usuario=nome_usuario,
+            email_usuario=email_usuario,
+            role=role,
+            por_pagina=None
+        )
+
+        linhas = []
+        for usuario in usuarios_filtrados.get("usuarios"):
+            linha = {**usuario}
+            linhas.append(linha)
+
+        novos_cabecalhos = {
+            "id_usuario": "ID Usuario",
+            "nome_usuario": "Nome",
+            "email_usuario": "Email",
+            "role": "Nível de Acesso"
+        }
+
+        map_role = {
+            "usuario": "Usuário",
+            "gestor": "Gestor",
+            "administrador": "Administrador",
+        }
+
+        df = pd.DataFrame(linhas)
+        df["role"] = df["role"].map(
+            map_role)
+        df.rename(columns=novos_cabecalhos, inplace=True)
+        output = BytesIO()
+        with pd.ExcelWriter(output, engine="xlsxwriter") as writer:
+            df.to_excel(writer, sheet_name='Atendimentos', index=False)
+        output.seek(0)
+
+        return output
+
+    def exportar_txt(self, id_usuario: int, nome_usuario: str,  email_usuario: str, role: TiposUsuario):
+
+        usuarios_filtrados = self.filtrar_usuarios(
+            id_usuario=id_usuario,
+            nome_usuario=nome_usuario,
+            email_usuario=email_usuario,
+            role=role,
+            por_pagina=None
+        )
+
+        linhas = []
+        for usuario in usuarios_filtrados.get("usuarios"):
+            linha = {**usuario}
+            linhas.append(linha)
+
+        novos_cabecalhos = {
+            "id_usuario": "ID Usuario",
+            "nome_usuario": "Nome",
+            "email_usuario": "Email",
+            "role": "Nível de Acesso"
+        }
+
+        map_role = {
+            "usuario": "Usuário",
+            "gestor": "Gestor",
+            "administrador": "Administrador",
+        }
+
+        df = pd.DataFrame(linhas)
+        df["role"] = df["role"].map(
+            map_role)
+        df.rename(columns=novos_cabecalhos, inplace=True)
+        output = BytesIO()
+        df.to_csv(output, sep="\t", index=False, encoding="utf-8")
+        output.seek(0)
+
+        return output

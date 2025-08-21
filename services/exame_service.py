@@ -1,6 +1,8 @@
 from model.exame import Exame
 from repository.exame_repository import ExameRepository
 import json
+import pandas as pd
+from io import BytesIO
 
 
 class ExameService():
@@ -66,3 +68,80 @@ class ExameService():
             valor_exame=valor_exame
         )
         return exame_atualizado
+
+    def exportar_excel(self, id_exame: int, nome_exame: str, is_interno: bool, min_valor: float, max_valor: float):
+
+        exames_filtrados = self.filtrar_exames(
+            id_exame=id_exame,
+            nome_exame=nome_exame,
+            is_interno=is_interno,
+            min_valor=min_valor,
+            max_valor=max_valor,
+            por_pagina=None
+        )
+
+        linhas = []
+        for exame in exames_filtrados.get("exames"):
+            linha = {**exame}
+            linhas.append(linha)
+
+        novos_cabecalhos = {
+            "id_exame": "ID Exame",
+            "nome_exame": "Nome",
+            "is_interno": "Interno",
+            "valor_exame": "Valor Exame"
+        }
+
+        map_interno = {
+            False: "Não",
+            True: "Sim"
+        }
+
+        df = pd.DataFrame(linhas)
+        df["is_interno"] = df["is_interno"].map(
+            map_interno)
+        df.rename(columns=novos_cabecalhos, inplace=True)
+        output = BytesIO()
+        with pd.ExcelWriter(output, engine="xlsxwriter") as writer:
+            df.to_excel(writer, sheet_name='Atendimentos', index=False)
+        output.seek(0)
+
+        return output
+
+    def exportar_txt(self, id_exame: int, nome_exame: str, is_interno: bool, min_valor: float, max_valor: float):
+
+        exames_filtrados = self.filtrar_exames(
+            id_exame=id_exame,
+            nome_exame=nome_exame,
+            is_interno=is_interno,
+            min_valor=min_valor,
+            max_valor=max_valor,
+            por_pagina=None
+        )
+
+        linhas = []
+        for exame in exames_filtrados.get("exames"):
+            linha = {**exame}
+            linhas.append(linha)
+
+        novos_cabecalhos = {
+            "id_exame": "ID Exame",
+            "nome_exame": "Nome",
+            "is_interno": "Interno",
+            "valor_exame": "Valor Exame"
+        }
+
+        map_interno = {
+            False: "Não",
+            True: "Sim"
+        }
+
+        df = pd.DataFrame(linhas)
+        df["is_interno"] = df["is_interno"].map(
+            map_interno)
+        df.rename(columns=novos_cabecalhos, inplace=True)
+        output = BytesIO()
+        df.to_csv(output, sep="\t", index=False, encoding="utf-8")
+        output.seek(0)
+
+        return output

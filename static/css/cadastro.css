@@ -543,6 +543,12 @@ textarea:focus {
   justify-content: center
 }
 
+.exportar-modal-div{
+  display: flex;
+  gap:72px;
+  justify-content: center;
+}
+
 /* Ações na tabela */
 .acoes {
   display: flex;

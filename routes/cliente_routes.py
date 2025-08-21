@@ -1,7 +1,6 @@
-from flask import Blueprint, request, jsonify
+from flask import Blueprint, request, jsonify, send_file
 from services.cliente_service import ClienteService
-from model.cliente import Cliente
-from db.db import Session
+from datetime import datetime
 
 cliente_bp = Blueprint('cliente', __name__, url_prefix='/clientes')
 
@@ -143,6 +142,78 @@ def buscar_cnpj():
         return ({
                 "nome": nome
                 }), 200
+    except Exception as e:
+        print(f"Erro: {e}")
+        return jsonify({
+            "erro": "Ocorreu um erro, tente novamente!"
+        }), 400
+
+
+@cliente_bp.route('/exportar-clientes-xls', methods=['POST'])
+def exportar_excel():
+    try:
+        data = request.get_json()
+        id_cliente = data.get('id_cliente')
+        nome_cliente = data.get('nome_cliente')
+        cnpj_cliente = data.get('cnpj_cliente')
+        tipo_cliente = data.get('tipo_cliente')
+        exames_incluidos = data.get('exames_incluidos')
+
+        arquivo = service.exportar_excel(
+            id_cliente=id_cliente,
+            nome_cliente=nome_cliente,
+            cnpj_cliente=cnpj_cliente,
+            tipo_cliente=tipo_cliente,
+            exames_incluidos=exames_incluidos
+        )
+
+        agora = datetime.now()
+        hora = agora.strftime("%H-%M-%S")
+        nome_excel = f"Clientes_{hora}.xlsx"
+
+        return send_file(
+            arquivo,
+            download_name=nome_excel,
+            as_attachment=True,
+            mimetype="application/vnd.openxmlformats-officedocument.spreadsheetml.sheet"
+        )
+
+    except Exception as e:
+        print(f"Erro: {e}")
+        return jsonify({
+            "erro": "Ocorreu um erro, tente novamente!"
+        }), 400
+
+
+@cliente_bp.route('/exportar-clientes-txt', methods=['POST'])
+def exportar_txt():
+    try:
+        data = request.get_json()
+        id_cliente = data.get('id_cliente')
+        nome_cliente = data.get('nome_cliente')
+        cnpj_cliente = data.get('cnpj_cliente')
+        tipo_cliente = data.get('tipo_cliente')
+        exames_incluidos = data.get('exames_incluidos')
+
+        arquivo = service.exportar_txt(
+            id_cliente=id_cliente,
+            nome_cliente=nome_cliente,
+            cnpj_cliente=cnpj_cliente,
+            tipo_cliente=tipo_cliente,
+            exames_incluidos=exames_incluidos
+        )
+
+        agora = datetime.now()
+        hora = agora.strftime("%H-%M-%S")
+        nome_txt = f"Clientes_{hora}.txt"
+
+        return send_file(
+            arquivo,
+            download_name=nome_txt,
+            as_attachment=True,
+            mimetype="text/plain"
+        )
+
     except Exception as e:
         print(f"Erro: {e}")
         return jsonify({

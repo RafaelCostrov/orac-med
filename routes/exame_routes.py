@@ -1,7 +1,8 @@
-from flask import Blueprint, request, jsonify
+from flask import Blueprint, request, jsonify, send_file
 from services.exame_service import ExameService
 from model.exame import Exame
 from db.db import Session
+from datetime import datetime
 
 exame_bp = Blueprint('exame', __name__, url_prefix="/exames")
 
@@ -119,6 +120,78 @@ def atualizar_exame():
             "mensagem": "Exame atualizado com sucesso!",
             "exame_atualizado": exame_atualizado
         }), 200
+    except Exception as e:
+        print(f"Erro: {e}")
+        return jsonify({
+            "erro": "Ocorreu um erro, tente novamente!"
+        }), 400
+
+
+@exame_bp.route('/exportar-exames-xls', methods=['POST'])
+def exportar_excel():
+    try:
+        data = request.get_json()
+        id_exame = data.get('id_exame')
+        nome_exame = data.get('nome_exame')
+        is_interno = data.get('is_interno')
+        min_valor = data.get('min_valor')
+        max_valor = data.get('max_valor')
+
+        arquivo = service.exportar_excel(
+            id_exame=id_exame,
+            nome_exame=nome_exame,
+            is_interno=is_interno,
+            min_valor=min_valor,
+            max_valor=max_valor,
+        )
+
+        agora = datetime.now()
+        hora = agora.strftime("%H-%M-%S")
+        nome_excel = f"Exames_{hora}.xlsx"
+
+        return send_file(
+            arquivo,
+            download_name=nome_excel,
+            as_attachment=True,
+            mimetype="application/vnd.openxmlformats-officedocument.spreadsheetml.sheet"
+        )
+
+    except Exception as e:
+        print(f"Erro: {e}")
+        return jsonify({
+            "erro": "Ocorreu um erro, tente novamente!"
+        }), 400
+
+
+@exame_bp.route('/exportar-exames-txt', methods=['POST'])
+def exportar_txt():
+    try:
+        data = request.get_json()
+        id_exame = data.get('id_exame')
+        nome_exame = data.get('nome_exame')
+        is_interno = data.get('is_interno')
+        min_valor = data.get('min_valor')
+        max_valor = data.get('max_valor')
+
+        arquivo = service.exportar_txt(
+            id_exame=id_exame,
+            nome_exame=nome_exame,
+            is_interno=is_interno,
+            min_valor=min_valor,
+            max_valor=max_valor,
+        )
+
+        agora = datetime.now()
+        hora = agora.strftime("%H-%M-%S")
+        nome_txt = f"Exames_{hora}.txt"
+
+        return send_file(
+            arquivo,
+            download_name=nome_txt,
+            as_attachment=True,
+            mimetype="text/plain"
+        )
+
     except Exception as e:
         print(f"Erro: {e}")
         return jsonify({

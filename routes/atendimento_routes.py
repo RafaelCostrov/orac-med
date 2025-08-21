@@ -193,7 +193,7 @@ def exportar_excel():
 
         agora = datetime.now()
         hora = agora.strftime("%H-%M-%S")
-        nome_excel = f"atendimentos_{hora}.xlsx"
+        nome_excel = f"Atendimentos_{hora}.xlsx"
 
         return send_file(
             arquivo,
@@ -243,7 +243,7 @@ def exportar_txt():
 
         agora = datetime.now()
         hora = agora.strftime("%H-%M-%S")
-        nome_txt = f"atendimentos_{hora}.txt"
+        nome_txt = f"Atendimentos_{hora}.txt"
 
         return send_file(
             arquivo,

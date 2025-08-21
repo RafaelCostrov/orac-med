@@ -187,7 +187,7 @@ document.addEventListener('DOMContentLoaded', () => {
     openModal('modalFiltrosCad');
   });
 
-  btnImprimir.addEventListener('click', () => window.print());
+  // btnImprimir.addEventListener('click', () => window.print());
 
   tipoLista.addEventListener('change', () => {
     tipoAtual = tipoLista.value;

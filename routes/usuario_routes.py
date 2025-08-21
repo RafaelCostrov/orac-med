@@ -1,6 +1,6 @@
-from flask import Blueprint, request, jsonify, session
+from flask import Blueprint, request, jsonify, session, send_file
 from services.usuario_service import UsuarioService
-from model.usuario import Usuario
+from datetime import datetime
 
 usuario_bp = Blueprint('usuario', __name__, url_prefix="/usuarios")
 
@@ -205,6 +205,74 @@ def atualizar_conta():
             "mensagem": "Conta com sucesso!",
             **usuario_atualizado
         }), 200
+    except Exception as e:
+        print(f"Erro: {e}")
+        return jsonify({
+            "erro": "Ocorreu um erro, tente novamente!"
+        }), 400
+
+
+@usuario_bp.route('/exportar-usuarios-xls', methods=['POST'])
+def exportar_excel():
+    try:
+        data = request.get_json()
+        id_usuario = data.get('id_usuario')
+        nome_usuario = data.get('nome_usuario')
+        email_usuario = data.get('email_usuario')
+        role = data.get('role')
+
+        arquivo = service.exportar_excel(
+            id_usuario=id_usuario,
+            nome_usuario=nome_usuario,
+            email_usuario=email_usuario,
+            role=role,
+        )
+
+        agora = datetime.now()
+        hora = agora.strftime("%H-%M-%S")
+        nome_excel = f"Usuarios_{hora}.xlsx"
+
+        return send_file(
+            arquivo,
+            download_name=nome_excel,
+            as_attachment=True,
+            mimetype="application/vnd.openxmlformats-officedocument.spreadsheetml.sheet"
+        )
+
+    except Exception as e:
+        print(f"Erro: {e}")
+        return jsonify({
+            "erro": "Ocorreu um erro, tente novamente!"
+        }), 400
+
+
+@usuario_bp.route('/exportar-usuarios-txt', methods=['POST'])
+def exportar_txt():
+    try:
+        data = request.get_json()
+        id_usuario = data.get('id_usuario')
+        nome_usuario = data.get('nome_usuario')
+        email_usuario = data.get('email_usuario')
+        role = data.get('role')
+
+        arquivo = service.exportar_txt(
+            id_usuario=id_usuario,
+            nome_usuario=nome_usuario,
+            email_usuario=email_usuario,
+            role=role,
+        )
+
+        agora = datetime.now()
+        hora = agora.strftime("%H-%M-%S")
+        nome_txt = f"Usuarios_{hora}.txt"
+
+        return send_file(
+            arquivo,
+            download_name=nome_txt,
+            as_attachment=True,
+            mimetype="text/plain"
+        )
+
     except Exception as e:
         print(f"Erro: {e}")
         return jsonify({
