@@ -5,7 +5,7 @@ from google.oauth2 import service_account
 from googleapiclient.discovery import build
 from email.mime.text import MIMEText
 from email.mime.multipart import MIMEMultipart
-
+from email.utils import formataddr
 
 load_dotenv()
 base_dir = os.path.dirname(os.path.abspath(__file__))
@@ -30,7 +30,7 @@ def carregar_template(nome_usuario, nova_senha):
 def criar_email(email_usuario, nome_usuario, nova_senha):
     email = MIMEMultipart()
     email['to'] = email_usuario
-    email['from'] = EMAIL_USER
+    email['from'] = formataddr(("Suporte Orac Medicina", EMAIL_USER))
     email['subject'] = "Sua nova senha do Orac Med ⚕️"
     email.attach(MIMEText(carregar_template(
         nome_usuario=nome_usuario, nova_senha=nova_senha), 'html'))
