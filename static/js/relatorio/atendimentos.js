@@ -180,7 +180,6 @@ document.querySelectorAll("th[data-sort]").forEach(th => {
 });
 
 document.getElementById("exportXls").addEventListener("click", async () => {
-    console.log(filtrosAtuais)
     const payload = {
         filtrosAtuais
     };

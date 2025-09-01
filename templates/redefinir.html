@@ -11,9 +11,9 @@
       Preencha o seu e-mail abaixo para receber um e-mail com o novo acesso.
     </p>
     <div class="input-group">
-      <input type="email" placeholder="E-mail" />
+      <input type="email" id="emailInput" placeholder="E-mail" />
     </div>
-    <button class="btn">Enviar</button>
+    <button id="redefinir" class="btn">Enviar</button>
     <p class="forgot">
       <a href="{{url_for('login')}}">Voltar ao login</a>
     </p>
@@ -21,5 +21,9 @@
   </div>
 </div>
 
-
 {% endblock body %}
+
+
+{% block scripts %}
+<script src="{{url_for('static', filename='js/redefinir/redefinir.js')}}"></script>
+{% endblock scripts %}

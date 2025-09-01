@@ -2,7 +2,10 @@ from model.usuario import Usuario
 from repository.usuario_repository import UsuarioRepository
 from enums.tipos_usuario import TiposUsuario
 from services.google_services.envio_drive import salvar_drive, remover_drive
+from services.google_services.envio_email import enviar
 import os
+import random
+import string
 import pandas as pd
 from io import BytesIO
 
@@ -101,9 +104,7 @@ class UsuarioService():
         self.repositorio.remover_usuario(usuario_a_remover=usuario_a_remover)
 
     def atualizar_usuario(self, id_usuario, nome_usuario, email_usuario, senha, role, foto):
-        print(id_usuario)
         usuario = self.repositorio.filtrar_por_id(id_usuario=id_usuario)
-        print(usuario)
         if not usuario:
             raise Exception("Usuário não encontrado")
 
@@ -140,6 +141,30 @@ class UsuarioService():
             "role": usuario.role.__str__(),
             "foto_url": usuario.foto_url
         }
+
+    def gerar_senha(self):
+        letras_maiusculas = random.choice(string.ascii_uppercase)
+        letras_minusculas = random.choice(string.ascii_lowercase)
+        numeros = random.choice(string.digits)
+        especiais = random.choice("!@#$%&?")
+        todos = string.ascii_letters + string.digits + "!@#$%&?"
+        restante = ''.join(random.choice(todos) for _ in range(8))
+        senha = letras_maiusculas + letras_minusculas + numeros + especiais + restante
+        senha = ''.join(random.sample(senha, len(senha)))
+        return senha
+
+    def resetar_senha(self, email_usuario: str):
+        usuario = self.repositorio.filtrar_por_email(
+            email_usuario=email_usuario)
+        if not usuario:
+            raise Exception("Usuário não encontrado")
+        nova_senha = self.gerar_senha()
+        self.atualizar_usuario(id_usuario=usuario.id_usuario, nome_usuario=None,
+                               email_usuario=None, role=None, foto=None, senha=nova_senha)
+        email_enviado = enviar(email_usuario=email_usuario,
+                               nome_usuario=usuario.nome_usuario, nova_senha=nova_senha)
+
+        return email_enviado
 
     def exportar_excel(self, id_usuario: int, nome_usuario: str,  email_usuario: str, role: TiposUsuario):
 

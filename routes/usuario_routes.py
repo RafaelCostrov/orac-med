@@ -38,6 +38,25 @@ def login():
         }), 400
 
 
+@usuario_bp.route('/resetar-senha', methods=['POST'])
+def resetar_senha():
+    try:
+        data = request.get_json()
+        print(data)
+        email_usuario = data.get('email_usuario')
+        email_enviado = service.resetar_senha(
+            email_usuario=email_usuario
+        )
+        return jsonify({
+            "mensagem": f"Nova senha enviada no email '{email_enviado}'"
+        }), 200
+    except Exception as e:
+        print(f"Erro: {e}")
+        return jsonify({
+            "erro": "Ocorreu um erro, tente novamente!"
+        }), 400
+
+
 @usuario_bp.route('/logout', methods=['POST'])
 def logout():
     try:

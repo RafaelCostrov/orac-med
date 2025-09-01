@@ -77,6 +77,14 @@ class UsuarioRepository:
         except Exception as e:
             raise e
 
+    def filtrar_por_email(self, email_usuario):
+        try:
+            usuario = self.session.query(Usuario).filter(
+                Usuario.email_usuario == email_usuario).first()
+            return usuario
+        except Exception as e:
+            raise e
+
     def remover_usuario(self, usuario_a_remover):
         try:
             self.session.delete(usuario_a_remover)
