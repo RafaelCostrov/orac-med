@@ -89,10 +89,13 @@ def cadastrar_usuario():
             foto=foto if foto else None
         )
 
+        if "Email já cadastrado" in novo_usuario.get("erro", ""):
+            return jsonify(novo_usuario), 400
+
         return jsonify({
             "mensagem": f"Usuário cadastrado!",
             **novo_usuario
-        }), 200
+        }), 201
     except Exception as e:
         print(f"Erro: {e}")
         return jsonify({

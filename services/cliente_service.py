@@ -12,6 +12,15 @@ class ClienteService():
     repositorio_exame = ExameRepository()
 
     def cadastrar_cliente(self, nome_cliente: str, cnpj_cliente: str, tipo_cliente: TiposCliente, exames_incluidos: list[int]):
+
+        cliente_cnpj = self.repositorio.filtrar_por_cnpj(
+            cnpj_cliente=cnpj_cliente)
+
+        if cliente_cnpj:
+            return {
+                "erro": "CNPJ já cadastrado."
+            }
+
         exames = []
         for exame_id in exames_incluidos:
             exame = self.repositorio_exame.filtrar_por_id(exame_id)

@@ -28,7 +28,7 @@ def cadastrar_atendimento():
         )
         return jsonify({
             "mensagem": f"Atendimento cadastrado!"
-        }), 200
+        }), 201
     except Exception as e:
         print(f"Erro: {e}")
         return jsonify({

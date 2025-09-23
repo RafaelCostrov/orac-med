@@ -26,7 +26,7 @@ def cadastrar_exame():
         service.cadastrar_exame(novo_exame)
         return jsonify({
             "mensagem": f"Exame cadastrado!"
-        }), 200
+        }), 201
     except Exception as e:
         print(f"Erro: {e}")
         return jsonify({

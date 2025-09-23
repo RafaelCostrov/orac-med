@@ -92,6 +92,15 @@ class ClienteRepository:
         except Exception as e:
             raise e
 
+    def filtrar_por_cnpj(self, cnpj_cliente):
+        try:
+            cliente = self.session.query(Cliente)\
+                .options(joinedload(Cliente.exames_incluidos))\
+                .filter(Cliente.cnpj_cliente == cnpj_cliente).first()
+            return cliente
+        except Exception as e:
+            raise e
+
     def remover_cliente(self, id_cliente):
         try:
             cliente_a_remover = self.filtrar_por_id(id_cliente=id_cliente)

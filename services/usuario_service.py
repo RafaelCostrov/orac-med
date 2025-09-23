@@ -22,6 +22,15 @@ class UsuarioService():
         return None
 
     def cadastrar_usuario(self, nome_usuario: str,  email_usuario: str, role: TiposUsuario, senha: str, foto=None):
+
+        usuario_email = self.repositorio.filtrar_por_email(
+            email_usuario=email_usuario)
+
+        if usuario_email:
+            return {
+                "erro": "Email já cadastrado."
+            }
+
         usuario = Usuario(
             nome_usuario=nome_usuario,
             email_usuario=email_usuario,
