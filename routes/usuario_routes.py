@@ -224,7 +224,7 @@ def atualizar_conta():
         session["usuario"] = usuario_atualizado
 
         return ({
-            "mensagem": "Conta com sucesso!",
+            "mensagem": "Conta atualizada com sucesso!",
             **usuario_atualizado
         }), 200
     except Exception as e:

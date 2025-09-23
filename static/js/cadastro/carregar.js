@@ -1358,12 +1358,10 @@ function habilitarInputsUsuario(event) {
     let tipo_usuario = document.getElementById("modal-tipo-usuario-tr");
     let email_usuario = document.getElementById("modal-email-usuario-tr");
     let foto = document.getElementById("modal-foto-usuario-tr");
-    // let senha_usuario = document.getElementById("modal-senha-usuario-tr");
     nome_usuario.disabled = false;
     tipo_usuario.disabled = false;
     email_usuario.disabled = false;
     foto.disabled = false;
-    // senha_usuario.disabled = false;
 
 
 
