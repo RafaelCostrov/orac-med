@@ -121,6 +121,7 @@ nav a:focus {
   min-width: 0
 }
 
+
 .nome-usuario {
   font-weight: 700;
   color: var(--orange);
@@ -891,5 +892,3 @@ hr.solid {
 .container-footer img:hover {
   transform: scale(1.05)
 }
-
-/* ================== Responsivo ================== */
