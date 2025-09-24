@@ -7,7 +7,7 @@ class UsuarioRepository:
     def __init__(self):
         self.session = Session
 
-    def adicionar_usuario(self, usuario: Usuario):
+    def salvar(self, usuario: Usuario):
         try:
             self.session.add(usuario)
             self.session.commit()
@@ -77,34 +77,17 @@ class UsuarioRepository:
         except Exception as e:
             raise e
 
-    def remover_usuario(self, id_usuario):
+    def filtrar_por_email(self, email_usuario):
         try:
-            usuario_a_remover = self.filtrar_por_id(id_usuario=id_usuario)
-            self.session.delete(usuario_a_remover)
-            self.session.commit()
+            usuario = self.session.query(Usuario).filter(
+                Usuario.email_usuario == email_usuario).first()
+            return usuario
         except Exception as e:
             raise e
 
-    def atualizar_usuario(self, id_usuario, nome_usuario, email_usuario, role):
+    def remover_usuario(self, usuario_a_remover):
         try:
-            usuario_a_atualizar = self.filtrar_por_id(id_usuario=id_usuario)
-
-            if nome_usuario is not None and nome_usuario != "":
-                usuario_a_atualizar.nome_usuario = nome_usuario
-
-            if email_usuario is not None and email_usuario != "":
-                usuario_a_atualizar.email_usuario = email_usuario
-
-            if role is not None and role != "":
-                usuario_a_atualizar.role = role
-
+            self.session.delete(usuario_a_remover)
             self.session.commit()
-            return {
-                "id_usuario": usuario_a_atualizar.id_usuario,
-                "nome_usuario": usuario_a_atualizar.nome_usuario,
-                "email_usuario": usuario_a_atualizar.email_usuario,
-                "role": usuario_a_atualizar.role.__str__(),
-            }
         except Exception as e:
-            self.session.rollback()
             raise e

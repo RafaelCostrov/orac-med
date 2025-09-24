@@ -14,7 +14,7 @@ document.addEventListener('DOMContentLoaded', () => {
     document.addEventListener('click', e => { if (!menu.contains(e.target) && e.target !== btn) close(); });
     document.addEventListener('keydown', e => { if (e.key === 'Escape') close(); });
     const goConta = $('#btnMinhaConta'); if (goConta) goConta.addEventListener('click', e => { e.preventDefault(); location.href = 'conta'; });
-    const sair = $('#btnSair'); if (sair) sair.addEventListener('click', e => { e.preventDefault(); location.href = 'login'; });
+    // const sair = $('#btnSair'); if (sair) sair.addEventListener('click', e => { e.preventDefault(); location.href = 'login'; });
   })();
 
 
@@ -187,7 +187,7 @@ document.addEventListener('DOMContentLoaded', () => {
     openModal('modalFiltrosCad');
   });
 
-  btnImprimir.addEventListener('click', () => window.print());
+  // btnImprimir.addEventListener('click', () => window.print());
 
   tipoLista.addEventListener('change', () => {
     tipoAtual = tipoLista.value;

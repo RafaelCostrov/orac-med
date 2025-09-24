@@ -28,26 +28,26 @@ document.addEventListener('DOMContentLoaded', () => {
   if (btnMinhaConta) btnMinhaConta.style.display = 'none';
 
   // "Sair" -> login
-  const btnSair = $('#btnSair');
-  if (btnSair) {
-    btnSair.addEventListener('click', (e) => {
-      e.preventDefault();
-      window.location.href = 'login';
-    });
-  }
+  // const btnSair = $('#btnSair');
+  // if (btnSair) {
+  //   btnSair.addEventListener('click', (e) => {
+  //     e.preventDefault();
+  //     window.location.href = 'login';
+  //   });
+  // }
 
   // ===== Preview do avatar =====
-  const avatarInput = $('#avatar-upload');
-  const avatarPreview = $('#avatar-preview');
-  if (avatarInput && avatarPreview) {
-    avatarInput.addEventListener('change', () => {
-      const f = avatarInput.files && avatarInput.files[0];
-      if (!f) return;
-      const url = URL.createObjectURL(f);
-      avatarPreview.src = url;
-      avatarPreview.onload = () => URL.revokeObjectURL(url);
-    });
-  }
+  // const avatarInput = $('#avatar-upload');
+  // const avatarPreview = $('#avatar-preview');
+  // if (avatarInput && avatarPreview) {
+  //   avatarInput.addEventListener('change', () => {
+  //     const f = avatarInput.files && avatarInput.files[0];
+  //     if (!f) return;
+  //     const url = URL.createObjectURL(f);
+  //     avatarPreview.src = url;
+  //     avatarPreview.onload = () => URL.revokeObjectURL(url);
+  //   });
+  // }
 
   // ===== Modal Alterar Senha =====
   const openPwdBtn = $('#openChangePwd');
@@ -69,8 +69,8 @@ document.addEventListener('DOMContentLoaded', () => {
   const pwdConfirmaField = pwdConfirma ? pwdConfirma.closest('.pwd-field') : null;
 
   // paths dos ícones info
-  const INFO_DEFAULT = '../img/icons/info.png';
-  const INFO_GREEN = '../img/icons/info-green.png';
+  const INFO_DEFAULT = '../static/img/icons/info.png';
+  const INFO_GREEN = '../static/img/icons/info-green.png';
 
   function lockScroll(lock) {
     document.documentElement.style.overflow = lock ? 'hidden' : '';
@@ -269,17 +269,17 @@ document.addEventListener('DOMContentLoaded', () => {
 
       const submitBtn = $('button[form="formSenha"][type="submit"]', modal);
       if (submitBtn) {
-        submitBtn.disabled = true;
-        const old = submitBtn.textContent;
-        submitBtn.textContent = 'Salvando...';
+        // submitBtn.disabled = true;
+        // const old = submitBtn.textContent;
+        // submitBtn.textContent = 'Salvando...';
         setTimeout(() => {
-          submitBtn.disabled = false;
-          submitBtn.textContent = old;
-          alert('Senha alterada com sucesso!');
+          // submitBtn.disabled = false;
+          // submitBtn.textContent = old;
+          // alert('Senha alterada com sucesso!');
           closeModal();
         }, 800);
       } else {
-        alert('Senha alterada com sucesso!');
+        // alert('Senha alterada com sucesso!');
         closeModal();
       }
     });

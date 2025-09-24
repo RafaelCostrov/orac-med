@@ -6,7 +6,13 @@ const $ = (s, ctx = document) => ctx.querySelector(s);
 let tipoLista = document.getElementById("tipoLista")
 let tipoCadastro = document.getElementById("cadTipo")
 
+function mostrarLoading() {
+    document.getElementById("loading-overlay").style.display = "flex";
+}
 
+function esconderLoading() {
+    document.getElementById("loading-overlay").style.display = "none";
+}
 
 let totalPaginas = 1;
 let filtrosAtuais = {};
@@ -58,6 +64,18 @@ function validaCNPJ(cnpj) {
     return c
 }
 
+function unformatBRL(valorFormatado) {
+    if (!valorFormatado) return 0;
+
+    return parseFloat(
+        valorFormatado
+            .replace("R$", "")
+            .replace(/\./g, "")
+            .replace(",", ".")
+            .trim()
+    ).toFixed(2) || 0;
+}
+
 const tiposCliente = {
     cliente: "Cliente",
     credenciado: "Credenciado",
@@ -90,10 +108,6 @@ function verificarCliqueHead() {
                 e.classList.remove('asc', 'desc');
             });
             th.classList.add(orderDirAtual);
-
-            console.log(orderByAtual)
-            console.log(orderDirAtual)
-
             recarregarTipoLista({ filtros: filtrosAtuais, pagina: 1 });
         });
     });
@@ -108,6 +122,7 @@ async function carregarClientesLista({ pagina = 1, filtros = {}, porPagina = 20 
 
 
 
+    const thead = document.querySelector("#tblCad thead");
     try {
         const resposta = await fetch("/clientes/filtrar-clientes", {
             method: "POST",
@@ -120,7 +135,6 @@ async function carregarClientesLista({ pagina = 1, filtros = {}, porPagina = 20 
         const dados = await resposta.json();
 
         if (resposta.ok) {
-            const thead = document.querySelector("#tblCad thead");
             thead.innerHTML = "";
             const tbody = document.querySelector("#tblCad tbody");
             tbody.innerHTML = "";
@@ -139,16 +153,34 @@ async function carregarClientesLista({ pagina = 1, filtros = {}, porPagina = 20 
             }
             dados.clientes.forEach(cliente => {
                 const trBody = document.createElement("tr");
-                const cnpjFormatado = formatarCNPJ(cliente.cnpj_cliente) || cliente.cnpj_cliente
-                const tipoClienteFormatado = tiposCliente[cliente.tipo_cliente] || cliente.tipo_cliente;
-                const nomesExames = cliente.exames_incluidos?.map(e => e.nome_exame).join(", ") || "-";
+                trBody.setAttribute("uk-toggle", "target: #cliente-modal")
+
+                trBody.dataset.id = cliente.id_cliente;
+                trBody.dataset.nome = cliente.nome_cliente;
+                trBody.dataset.cnpj = formatarCNPJ(cliente.cnpj_cliente) || cliente.cnpj_cliente;
+                trBody.dataset.tipo = tiposCliente[cliente.tipo_cliente] || cliente.tipo_cliente;
+                trBody.dataset.exames = cliente.exames_incluidos?.map(e => e.nome_exame).join(", ") || "-";
+                let exames_lista = [];
+                cliente.exames_incluidos?.forEach(e => exames_lista.push(e.id_exame))
+
                 trBody.innerHTML = `
                     <td title="${cliente.id_cliente}">${cliente.id_cliente}</td>
                     <td title="${cliente.nome_cliente}">${cliente.nome_cliente}</td>
-                    <td title="${cnpjFormatado}">${cnpjFormatado}</td>
-                    <td title="${tipoClienteFormatado}">${tipoClienteFormatado}</td>
-                    <td title="${nomesExames}">${nomesExames}</td>
+                    <td title="${trBody.dataset.cnpj}">${trBody.dataset.cnpj}</td>
+                    <td title="${trBody.dataset.tipo}">${trBody.dataset.tipo}</td>
+                    <td title="${trBody.dataset.exames}">${trBody.dataset.exames}</td>
                 `;
+                const modalIdCliente = document.getElementById("modal-id-cliente-tr")
+                const modalNomeCliente = document.getElementById("modal-nome-cliente-tr");
+                const modalCnpjCliente = document.getElementById("modal-cnpj-cliente-tr");
+                const modalTipoCliente = document.getElementById("modal-tipo-cliente-tr");
+                trBody.addEventListener("click", () => {
+                    modalIdCliente.textContent = `${trBody.dataset.id} - ${trBody.dataset.nome}`
+                    modalNomeCliente.value = trBody.dataset.nome;
+                    modalCnpjCliente.value = trBody.dataset.cnpj;
+                    modalTipoCliente.value = trBody.dataset.tipo;
+                    carregarExamesSelect(exames_lista);
+                });
                 tbody.appendChild(trBody)
             });
             paginaAtual = pagina;
@@ -169,6 +201,7 @@ async function carregarUsuariosLista({ pagina = 1, filtros = {}, porPagina = 20 
         ...filtros
     };
 
+    const thead = document.querySelector("#tblCad thead");
     try {
         const resposta = await fetch("/usuarios/filtrar-usuarios", {
             method: "POST",
@@ -179,9 +212,8 @@ async function carregarUsuariosLista({ pagina = 1, filtros = {}, porPagina = 20 
         });
 
         const dados = await resposta.json();
-
         if (resposta.ok) {
-            const thead = document.querySelector("#tblCad thead");
+
             thead.innerHTML = "";
             const tbody = document.querySelector("#tblCad tbody");
             tbody.innerHTML = "";
@@ -199,13 +231,29 @@ async function carregarUsuariosLista({ pagina = 1, filtros = {}, porPagina = 20 
             }
             dados.usuarios.forEach(usuario => {
                 const trBody = document.createElement("tr");
-                const tipoUsuarioFormatado = tiposUsuario[usuario.role] || usuario.role;
+                trBody.setAttribute("uk-toggle", "target: #usuario-modal")
+
+                trBody.dataset.id = usuario.id_usuario;
+                trBody.dataset.nome = usuario.nome_usuario;
+                trBody.dataset.email = usuario.email_usuario;
+                trBody.dataset.tipo = tiposUsuario[usuario.role] || usuario.role;
+
                 trBody.innerHTML = `
                     <td title="${usuario.id_usuario}">${usuario.id_usuario}</td>
                     <td title="${usuario.nome_usuario}">${usuario.nome_usuario}</td>
                     <td title="${usuario.email_usuario}">${usuario.email_usuario}</td>
-                    <td title="${tipoUsuarioFormatado}">${tipoUsuarioFormatado}</td>
+                    <td title="${trBody.dataset.tipo}">${trBody.dataset.tipo}</td>
                 `;
+                const modalIdUsuario = document.getElementById("modal-id-usuario-tr");
+                const modalNomeUsuario = document.getElementById("modal-nome-usuario-tr");
+                const modalEmailUsuario = document.getElementById("modal-email-usuario-tr");
+                const modalTipoUsuario = document.getElementById("modal-tipo-usuario-tr");
+                trBody.addEventListener("click", () => {
+                    modalIdUsuario.textContent = `${trBody.dataset.id} - ${trBody.dataset.nome}`;
+                    modalNomeUsuario.value = trBody.dataset.nome;
+                    modalEmailUsuario.value = trBody.dataset.email;
+                    modalTipoUsuario.value = trBody.dataset.tipo;
+                });
                 tbody.appendChild(trBody)
             });
             paginaAtual = pagina;
@@ -229,6 +277,7 @@ async function carregarExamesLista({ pagina = 1, filtros = {}, porPagina = 20 } 
         ...filtros
     };
 
+    const thead = document.querySelector("#tblCad thead");
     try {
         const resposta = await fetch("/exames/filtrar-exames", {
             method: "POST",
@@ -241,7 +290,6 @@ async function carregarExamesLista({ pagina = 1, filtros = {}, porPagina = 20 } 
         const dados = await resposta.json();
 
         if (resposta.ok) {
-            const thead = document.querySelector("#tblCad thead");
             thead.innerHTML = "";
             const tbody = document.querySelector("#tblCad tbody");
             tbody.innerHTML = "";
@@ -259,17 +307,32 @@ async function carregarExamesLista({ pagina = 1, filtros = {}, porPagina = 20 } 
             }
             dados.exames.forEach(exame => {
                 const trBody = document.createElement("tr");
-                const valorFormatado = new Intl.NumberFormat("pt-BR", {
+                trBody.setAttribute("uk-toggle", "target: #exame-modal")
+
+                trBody.dataset.id = exame.id_exame;
+                trBody.dataset.nome = exame.nome_exame;
+                trBody.dataset.valor = new Intl.NumberFormat("pt-BR", {
                     style: "currency",
                     currency: "BRL"
                 }).format(exame.valor_exame ?? 0);
-                const interno = exame.is_interno == true ? "Sim" : "Não"
+                trBody.dataset.is_interno = exame.is_interno == true ? "Sim" : "Não";
+
                 trBody.innerHTML = `
                     <td title="${exame.id_exame}">${exame.id_exame}</td>
                     <td title="${exame.nome_exame}">${exame.nome_exame}</td>
-                    <td title="${interno}">${interno}</td>
-                    <td title="${valorFormatado}">${valorFormatado}</td>
+                    <td title="${trBody.dataset.is_interno}">${trBody.dataset.is_interno}</td>
+                    <td title="${trBody.dataset.valor}">${trBody.dataset.valor}</td>
                 `;
+                const modalIdExame = document.getElementById("modal-id-exame-tr");
+                const modalNomeExame = document.getElementById("modal-nome-exame-tr");
+                const modalIsInternoExame = document.getElementById("modal-is_interno-exame-tr");
+                const modalValorExame = document.getElementById("modal-valor-exame-tr");
+                trBody.addEventListener("click", () => {
+                    modalIdExame.textContent = `${trBody.dataset.id} - ${trBody.dataset.nome}`;
+                    modalNomeExame.value = trBody.dataset.nome;
+                    modalIsInternoExame.value = trBody.dataset.is_interno;
+                    modalValorExame.value = exame.valor_exame.toFixed(2);
+                });
                 tbody.appendChild(trBody)
             });
             paginaAtual = pagina;
@@ -386,8 +449,6 @@ function getFiltros() {
             }
             break;
         case "usuarios":
-
-            console.log(document.getElementById("nome_usuario_filtro").value)
             resultado = {
                 nome_usuario: document.getElementById("nome_usuario_filtro").value || null,
                 email_usuario: document.getElementById("email_usuario_filtro").value || null,
@@ -475,11 +536,21 @@ document.getElementById("pesquisar_cnpj").addEventListener("click", async (event
                 inputNome.value = nome
             }
             else {
-                alert("Erro")
+                UIkit.notification({
+                    message: "Erro ❌",
+                    status: 'danger',
+                    pos: 'top-center',
+                    timeout: 5000
+                })
             }
         }
         else {
-            alert("CNPJ inválido!")
+            UIkit.notification({
+                message: "CNPJ inválido ❌",
+                status: 'danger',
+                pos: 'top-center',
+                timeout: 5000
+            })
         }
     }
     catch (e) {
@@ -491,8 +562,6 @@ async function cadastrarCliente() {
     let cnpj = document.getElementById("cnpj_cliente").value
     let c = validaCNPJ(cnpj)
 
-
-
     if (c !== false) {
         let nome = document.getElementById("nome_cliente").value
         let tipo_cliente = document.getElementById("tipo_cliente").value
@@ -502,11 +571,15 @@ async function cadastrarCliente() {
         //     ids_exames.push(parseInt(exame.value));
         // });
         let exames_inclusos = document.getElementById("exames-select").value
-        console.log(exames_inclusos)
         ids_exames.push(parseInt(exames_inclusos))
 
         if (!nome || !tipo_cliente || !c) {
-            alert("Preencha os campos obrigatórios")
+            UIkit.notification({
+                message: "Preencha os campos obrigatórios ❌",
+                status: 'danger',
+                pos: 'top-center',
+                timeout: 5000
+            })
             return
         }
 
@@ -529,12 +602,23 @@ async function cadastrarCliente() {
 
             if (requisicao.ok) {
                 filtrosAtuais = {}
-                recarregarTipoLista()
+                recarregarTipoLista({})
+                UIkit.notification({
+                    message: "Cliente Cadastrado ✅",
+                    status: 'success',
+                    pos: 'top-center',
+                    timeout: 3000
+                });
                 closeModal("modalCadastro")
-                alert(resposta.mensagem)
+
             }
             else {
-                alert(resposta.erro)
+                UIkit.notification({
+                    message: resposta.erro,
+                    status: 'danger',
+                    pos: 'top-center',
+                    timeout: 5000
+                })
             }
         }
         catch (e) {
@@ -545,47 +629,65 @@ async function cadastrarCliente() {
 }
 
 async function cadastrarUsuario() {
-    let nome = document.getElementById("nome_usuario").value
-    let email = document.getElementById("email_usuario").value
-    let senha = document.getElementById("senha").value
-    let role = document.getElementById("role").value
-
-    console.log(`${nome} - ${email} - ${senha} - ${role}`)
-    if (!nome || !email || !senha || !role) {
-        alert("Preencha todos os campos")
-        return
-    }
-
     try {
-        payload = {
-            nome_usuario: nome,
-            email_usuario: email,
-            senha: senha,
-            role: role
+        mostrarLoading();
+        let nome = document.getElementById("nome_usuario").value
+        let email = document.getElementById("email_usuario").value
+        let senha = document.getElementById("senha").value
+        let role = document.getElementById("role").value
+        let foto = document.getElementById("foto").files[0];
+
+        if (!nome || !email || !senha || !role) {
+            UIkit.notification({
+                message: "Preencha todos os campos! ❌",
+                status: 'danger',
+                pos: 'top-center',
+                timeout: 5000
+            })
+            return
+        }
+
+        const formData = new FormData();
+        formData.append("nome_usuario", nome);
+        formData.append("email_usuario", email);
+        formData.append("senha", senha);
+        formData.append("role", role);
+        if (foto) {
+            formData.append("foto", foto);
         }
 
         let requisicao = await fetch("/usuarios/cadastrar-usuario", {
             method: "POST",
-            headers: {
-                "Content-Type": "application/json"
-            },
-            body: JSON.stringify(payload)
+            body: formData
         })
         resposta = await requisicao.json()
 
         if (requisicao.ok) {
             filtrosAtuais = {}
-            recarregarTipoLista()
+            recarregarTipoLista({})
+            UIkit.notification({
+                message: "Cliente Cadastrado ✅",
+                status: 'success',
+                pos: 'top-center',
+                timeout: 3000
+            });
             closeModal("modalCadastro")
-            alert(resposta.mensagem)
         }
         else {
-            alert(resposta.erro)
+            UIkit.notification({
+                message: resposta.erro + " ❌",
+                status: 'danger',
+                pos: 'top-center',
+                timeout: 5000
+            })
         }
     }
     catch (e) {
         console.log(e)
         console.log(resposta.erro ?? "Erro")
+    }
+    finally {
+        esconderLoading();
     }
 }
 
@@ -594,9 +696,13 @@ async function cadastrarExame() {
     let is_interno = parseInt(document.getElementById("is_interno").value)
     let valor = document.getElementById("valor_exame").value
 
-    console.log(`${nome} - ${is_interno} - ${valor}`)
     if (!nome || !is_interno || !valor) {
-        alert("Preencha todos os campos")
+        UIkit.notification({
+            message: "Prencha todos os campos ❌",
+            status: 'danger',
+            pos: 'top-center',
+            timeout: 5000
+        })
         return
     }
 
@@ -618,12 +724,22 @@ async function cadastrarExame() {
 
         if (requisicao.ok) {
             filtrosAtuais = {}
-            recarregarTipoLista()
+            recarregarTipoLista({})
+            UIkit.notification({
+                message: "Cliente Cadastrado ✅",
+                status: 'success',
+                pos: 'top-center',
+                timeout: 3000
+            });
             closeModal("modalCadastro")
-            alert(resposta.mensagem)
         }
         else {
-            alert(resposta.erro)
+            UIkit.notification({
+                message: resposta.erro + " ❌",
+                status: 'danger',
+                pos: 'top-center',
+                timeout: 5000
+            })
         }
     }
     catch (e) {
@@ -646,6 +762,909 @@ document.getElementById("button-cadastro").addEventListener("click", async (even
             break;
     }
 })
+
+async function carregarExamesSelect(examesInclusos = []) {
+    const request = await fetch("/exames/listar-exames");
+    const resposta = await request.json();
+    const exames = resposta.exames;
+
+    const examesUl = document.getElementById("modal-exames-cliente-tr");
+    examesUl.innerHTML = "";
+
+    exames.forEach(exame => {
+        const option = document.createElement("option");
+        option.value = exame.id_exame;
+        option.textContent = `${exame.id_exame} - ${exame.nome_exame}`;
+        if (examesInclusos.includes(exame.id_exame)) {
+            option.selected = true;
+        }
+        examesUl.appendChild(option);
+    });
+
+    if (typeof examesUl.loadOptions === "function") {
+        examesUl.loadOptions();
+    }
+}
+
+//Cliente Att
+async function salvarAlteracaoCliente() {
+    try {
+        mostrarLoading();
+        let id_cliente = parseInt(document.getElementById("modal-id-cliente-tr").textContent.split(" - ")[0]);
+        let nome_cliente = document.getElementById("modal-nome-cliente-tr").value;
+        let cnpj_cliente = document.getElementById("modal-cnpj-cliente-tr").value;
+        let tipo_cliente = document.getElementById("modal-tipo-cliente-tr").value;
+        let exames_cliente = document.getElementById("modal-exames-cliente-tr");
+
+        let lista_exames = Array.from(exames_cliente.selectedOptions).map(option => parseInt(option.value)
+        )
+
+
+        if (!nome_cliente || !cnpj_cliente || !tipo_cliente) {
+            UIkit.notification({
+                message: "Preencha todos os campos obrigatórios ❌",
+                status: 'danger',
+                pos: 'top-center',
+                timeout: 5000
+            });
+            return;
+        }
+
+        const tipoMap = {
+            "cliente": "Cliente",
+            "credenciado": "Credenciado",
+            "servico_prestado": "Serviço Prestado",
+            "particular": "Particular"
+        };
+        let tipo_cliente_valido = tipoMap[tipo_cliente.toLowerCase()];
+        let c = validaCNPJ(cnpj_cliente);
+
+        let payload = {
+            id_cliente: id_cliente,
+            nome_cliente: nome_cliente,
+            cnpj_cliente: c ? c : "",
+            tipo_cliente: tipo_cliente_valido,
+            exames_incluidos: lista_exames ? lista_exames : null
+        }
+
+        const requisicao = await fetch("/clientes/atualizar-cliente", {
+            method: "PUT",
+            headers: {
+                "Content-Type": "application/json"
+            },
+            body: JSON.stringify(payload)
+        })
+
+        const resposta = await requisicao.json();
+        if (requisicao.ok) {
+            filtrosAtuais = {};
+            recarregarTipoLista({});
+            UIkit.notification({
+                message: resposta.mensagem || "Cliente atualizado ✅",
+                status: 'success',
+                pos: 'top-center',
+                timeout: 3000
+            });
+            cancelarEdicaoCliente();
+            UIkit.modal("#cliente-modal").hide();
+        }
+        else {
+            UIkit.notification({
+                message: resposta.erro || "Erro ao atualizar cliente ❌",
+                status: 'danger',
+                pos: 'top-center',
+                timeout: 5000
+            });
+            console.log(resposta.erro);
+        }
+    }
+    catch (erro) {
+        console.log(erro);
+    }
+    finally {
+        esconderLoading();
+    }
+}
+
+async function excluirCliente() {
+    let id_cliente = parseInt(document.getElementById("modal-id-cliente-tr").textContent.split(" - ")[0]);
+    let nome_cliente = document.getElementById("modal-id-cliente-tr").textContent.split(" - ")[1];
+    let div = document.getElementsByClassName("exclusao-texto")[0];
+    div.innerHTML = "";
+
+    let texto = document.createElement("p");
+    texto.textContent = `Você tem certeza que deseja excluir? Esta ação não pode ser desfeita.`;
+    div.appendChild(texto);
+
+    let cliente = document.createElement("p");
+    cliente.innerHTML = `Cliente:<br> ID: ${id_cliente} - Nome: ${nome_cliente}`;
+    div.appendChild(cliente);
+
+    let buttonCancelar = document.getElementById("cancelar-exclusao");
+    let buttonExcluir = document.getElementById("confirmar-exclusao");
+
+    buttonCancelar.setAttribute("uk-toggle", "target: #cliente-modal")
+    buttonExcluir.addEventListener("click", async () => {
+        try {
+            mostrarLoading();
+
+            payload = {
+                id_cliente: id_cliente
+            }
+
+            const requisicao = await fetch(`/clientes/remover-cliente`, {
+                method: "DELETE",
+                headers: {
+                    "Content-Type": "application/json"
+                },
+                body: JSON.stringify(payload),
+
+            });
+
+            const resposta = await requisicao.json();
+            if (requisicao.ok) {
+                filtrosAtuais = {}
+                recarregarTipoLista({})
+                UIkit.notification({
+                    message: resposta.mensagem || "Cliente excluído ✅",
+                    status: 'success',
+                    pos: 'top-center',
+                    timeout: 3000
+                });
+                UIkit.modal("#confirmacao-modal").hide();
+            }
+            else {
+                UIkit.notification({
+                    message: resposta.erro || "Erro ao excluir cliente ❌",
+                    status: 'danger',
+                    pos: 'top-center',
+                    timeout: 5000
+                })
+            }
+        } catch (e) {
+            console.log(e)
+        } finally {
+            esconderLoading();
+        }
+    });
+}
+
+function cancelarEdicaoCliente() {
+    let id_cliente = parseInt(document.getElementById("modal-id-cliente-tr").textContent.split(" - ")[0]);
+    let tr = document.querySelector(`tr[data-id='${id_cliente}']`);
+
+    let nome_cliente = document.getElementById("modal-nome-cliente-tr");
+    let cnpj_cliente = document.getElementById("modal-cnpj-cliente-tr");
+    let tipo_cliente = document.getElementById("modal-tipo-cliente-tr");
+    let exames_cliente = document.querySelector(".multiselect-dropdown");
+
+    nome_cliente.value = tr.dataset.nome;
+    cnpj_cliente.value = tr.dataset.cnpj;
+    tipo_cliente.value = tr.dataset.tipo;
+    exames_cliente.value = tr.dataset.exames;
+
+
+    nome_cliente.disabled = true;
+    cnpj_cliente.disabled = true;
+    tipo_cliente.disabled = true;
+    exames_cliente.classList.add("desabilitado");
+
+    let buttonEditar = document.getElementById("button-editar-cliente");
+    let buttonCancelar = document.getElementById("button-excluir-cliente");
+
+    buttonEditar.removeEventListener("click", salvarAlteracaoCliente);
+    buttonEditar.addEventListener("click", habilitarInputsCliente);
+    buttonEditar.textContent = "Editar";
+
+    buttonCancelar.setAttribute("uk-toggle", "target: #cliente-modal")
+    buttonCancelar.removeEventListener("click", cancelarEdicaoCliente);
+    buttonCancelar.addEventListener("click", excluirCliente)
+    buttonCancelar.textContent = "Excluir";
+}
+
+function habilitarInputsCliente(event) {
+    event.preventDefault();
+    let buttonEditar = document.getElementById("button-editar-cliente");
+    let buttonCancelar = document.getElementById("button-excluir-cliente");
+
+    let nome_cliente = document.getElementById("modal-nome-cliente-tr");
+    let cnpj_cliente = document.getElementById("modal-cnpj-cliente-tr");
+    let tipo_cliente = document.getElementById("modal-tipo-cliente-tr");
+    let exames_cliente = document.querySelector(".desabilitado");
+
+    nome_cliente.disabled = false;
+    cnpj_cliente.disabled = false;
+    tipo_cliente.disabled = false;
+    exames_cliente.classList.remove("desabilitado");
+
+
+    buttonEditar.removeEventListener("click", habilitarInputsCliente)
+    buttonEditar.addEventListener("click", salvarAlteracaoCliente);
+    buttonEditar.textContent = "Salvar";
+
+    buttonCancelar.removeAttribute("uk-toggle");
+    buttonCancelar.addEventListener("click", cancelarEdicaoCliente);
+    buttonCancelar.textContent = "Cancelar";
+}
+
+//Exame Att
+async function salvarAlteracaoExame() {
+    try {
+        mostrarLoading();
+        let id_exame = parseInt(document.getElementById("modal-id-exame-tr").textContent.split(" - ")[0]);
+        let nome_exame = document.getElementById("modal-nome-exame-tr").value;
+        let is_interno_exame = document.getElementById("modal-is_interno-exame-tr").value;
+        let valor = document.getElementById("modal-valor-exame-tr").value;
+
+
+        if (!nome_exame || !is_interno_exame || !valor) {
+            UIkit.notification({
+                message: "Preencha todos os campos obrigatórios ❌",
+                status: 'danger',
+                pos: 'top-center',
+                timeout: 5000
+            });
+            return;
+        }
+
+        const tipoMap = {
+            "Sim": "1",
+            "Não": "0",
+        };
+        console.log(is_interno_exame)
+        let is_interno_valido = parseInt(tipoMap[is_interno_exame]);
+
+        let payload = {
+            id_exame: id_exame,
+            nome_exame: nome_exame,
+            valor_exame: parseFloat(valor),
+            is_interno: is_interno_valido,
+        }
+
+        console.log(payload)
+        const requisicao = await fetch("/exames/atualizar-exame", {
+            method: "PUT",
+            headers: {
+                "Content-Type": "application/json"
+            },
+            body: JSON.stringify(payload)
+        })
+
+        const resposta = await requisicao.json();
+        if (requisicao.ok) {
+            filtrosAtuais = {};
+            recarregarTipoLista({});
+            UIkit.notification({
+                message: resposta.mensagem || "Exame atualizado ✅",
+                status: 'success',
+                pos: 'top-center',
+                timeout: 3000
+            });
+            cancelarEdicaoExame();
+            UIkit.modal("#exame-modal").hide();
+        }
+        else {
+            UIkit.notification({
+                message: resposta.erro || "Erro ao atualizar exame ❌",
+                status: 'danger',
+                pos: 'top-center',
+                timeout: 5000
+            });
+            console.log(resposta.erro);
+        }
+    }
+    catch (erro) {
+        console.log(erro);
+    }
+    finally {
+        esconderLoading();
+    }
+}
+
+async function excluirExame() {
+    let id_exame = parseInt(document.getElementById("modal-id-exame-tr").textContent.split(" - ")[0]);
+    let nome_exame = document.getElementById("modal-id-exame-tr").textContent.split(" - ")[1];
+    let div = document.getElementsByClassName("exclusao-texto")[0];
+    div.innerHTML = "";
+
+    let texto = document.createElement("p");
+    texto.textContent = `Você tem certeza que deseja excluir? Esta ação não pode ser desfeita.`;
+    div.appendChild(texto);
+
+    let exame = document.createElement("p");
+    exame.innerHTML = `Exame:<br> ID: ${id_exame} - Nome: ${nome_exame}`;
+    div.appendChild(exame);
+
+    let buttonCancelar = document.getElementById("cancelar-exclusao");
+    let buttonExcluir = document.getElementById("confirmar-exclusao");
+
+    buttonCancelar.setAttribute("uk-toggle", "target: #cliente-modal")
+    buttonExcluir.addEventListener("click", async () => {
+        try {
+            mostrarLoading();
+
+            payload = {
+                id_exame: id_exame
+            }
+
+            const requisicao = await fetch(`/exames/remover-exame`, {
+                method: "DELETE",
+                headers: {
+                    "Content-Type": "application/json"
+                },
+                body: JSON.stringify(payload),
+
+            });
+
+            const resposta = await requisicao.json();
+            if (requisicao.ok) {
+                filtrosAtuais = {}
+                recarregarTipoLista({})
+                UIkit.notification({
+                    message: resposta.mensagem || "Exame excluído ✅",
+                    status: 'success',
+                    pos: 'top-center',
+                    timeout: 3000
+                });
+                UIkit.modal("#confirmacao-modal").hide();
+            }
+            else {
+                UIkit.notification({
+                    message: resposta.erro || "Erro ao excluir exame ❌",
+                    status: 'danger',
+                    pos: 'top-center',
+                    timeout: 5000
+                })
+            }
+        } catch (e) {
+            console.log(e)
+        } finally {
+            esconderLoading();
+        }
+    });
+}
+
+function cancelarEdicaoExame() {
+    let id_exame = parseInt(document.getElementById("modal-id-exame-tr").textContent.split(" - ")[0]);
+    let tr = document.querySelector(`tr[data-id='${id_exame}']`);
+
+    let nome_exame = document.getElementById("modal-nome-exame-tr");
+    let is_interno_exame = document.getElementById("modal-is_interno-exame-tr");
+    let valor_exame = document.getElementById("modal-valor-exame-tr");
+
+    nome_exame.value = tr.dataset.nome;
+    is_interno_exame.value = tr.dataset.is_interno;
+    valor_exame.value = unformatBRL(tr.dataset.valor);
+
+
+    nome_exame.disabled = true;
+    is_interno_exame.disabled = true;
+    valor_exame.disabled = true;
+
+    let buttonEditar = document.getElementById("button-editar-exame");
+    let buttonCancelar = document.getElementById("button-excluir-exame");
+
+    buttonEditar.removeEventListener("click", salvarAlteracaoExame);
+    buttonEditar.addEventListener("click", habilitarInputsExame);
+    buttonEditar.textContent = "Editar";
+
+    buttonCancelar.setAttribute("uk-toggle", "target: #exame-modal")
+    buttonCancelar.removeEventListener("click", cancelarEdicaoExame);
+    buttonCancelar.addEventListener("click", excluirExame)
+    buttonCancelar.textContent = "Excluir";
+}
+
+function habilitarInputsExame(event) {
+    event.preventDefault();
+    let buttonEditar = document.getElementById("button-editar-exame");
+    let buttonCancelar = document.getElementById("button-excluir-exame");
+
+    let nome_exame = document.getElementById("modal-nome-exame-tr");
+    let is_interno_exame = document.getElementById("modal-is_interno-exame-tr");
+    let valor_exame = document.getElementById("modal-valor-exame-tr");
+
+    nome_exame.disabled = false;
+    is_interno_exame.disabled = false;
+    valor_exame.disabled = false;
+
+
+    buttonEditar.addEventListener("click", salvarAlteracaoExame);
+    buttonEditar.textContent = "Salvar";
+
+    buttonCancelar.removeAttribute("uk-toggle");
+    buttonCancelar.addEventListener("click", cancelarEdicaoExame);
+    buttonCancelar.textContent = "Cancelar";
+}
+
+//Usuario Att
+async function salvarAlteracaoUsuario() {
+    try {
+        mostrarLoading();
+        let id_usuario = parseInt(document.getElementById("modal-id-usuario-tr").textContent.split(" - ")[0]);
+        console.log(id_usuario)
+        let nome_usuario = document.getElementById("modal-nome-usuario-tr").value;
+        let email_usuario = document.getElementById("modal-email-usuario-tr").value;
+        let tipo_usuario = document.getElementById("modal-tipo-usuario-tr").value;
+        // let senha_usuario = document.getElementById("modal-senha-usuario-tr").value;
+        let foto = document.getElementById("modal-foto-usuario-tr").files[0];
+
+        if (!nome_usuario || !email_usuario || !tipo_usuario) {
+            UIkit.notification({
+                message: "Preencha todos os campos obrigatórios ❌",
+                status: 'danger',
+                pos: 'top-center',
+                timeout: 5000
+            });
+            return;
+        }
+
+        const tipoMap = {
+            "usuario": "Usuario",
+            "gestor": "Gestor",
+            "administrador": "Administrador",
+        };
+        let tipo_usuario_valido = tipoMap[tipo_usuario.toLowerCase()];
+
+        let formData = new FormData();
+        formData.append("id_usuario", id_usuario);
+        formData.append("nome_usuario", nome_usuario);
+        formData.append("email_usuario", email_usuario);
+        // formData.append("senha", senha_usuario);
+        formData.append("role", tipo_usuario_valido);
+        if (foto) {
+            formData.append("foto", foto)
+        }
+
+        console.log(formData)
+        let requisicao = await fetch("/usuarios/atualizar-usuario", {
+            method: "PUT",
+            body: formData
+        })
+
+        let resposta = await requisicao.json();
+        if (requisicao.ok) {
+            filtrosAtuais = {};
+            recarregarTipoLista({});
+            UIkit.notification({
+                message: resposta.mensagem || "Usuário atualizado ✅",
+                status: 'success',
+                pos: 'top-center',
+                timeout: 3000
+            });
+            cancelarEdicaoUsuario();
+            UIkit.modal("#usuario-modal").hide();
+        }
+        else {
+            UIkit.notification({
+                message: resposta.erro || "Erro ao atualizar usuario ❌",
+                status: 'danger',
+                pos: 'top-center',
+                timeout: 5000
+            });
+            console.log(resposta.erro);
+        }
+    }
+    catch (erro) {
+        console.log(erro);
+    }
+    finally {
+        esconderLoading();
+    }
+}
+
+async function excluirUsuario() {
+    let id_usuario = parseInt(document.getElementById("modal-id-usuario-tr").textContent.split(" - ")[0]);
+    let nome_usuario = document.getElementById("modal-id-usuario-tr").textContent.split(" - ")[1];
+    let div = document.getElementsByClassName("exclusao-texto")[0];
+    div.innerHTML = "";
+
+    let texto = document.createElement("p");
+    texto.textContent = `Você tem certeza que deseja excluir? Esta ação não pode ser desfeita.`;
+    div.appendChild(texto);
+
+    let usuario = document.createElement("p");
+    usuario.innerHTML = `Usuário:<br> ID: ${id_usuario} - Nome: ${nome_usuario}`;
+    div.appendChild(usuario);
+
+    let buttonCancelar = document.getElementById("cancelar-exclusao");
+    let buttonExcluir = document.getElementById("confirmar-exclusao");
+
+    buttonCancelar.setAttribute("uk-toggle", "target: #cliente-modal")
+    buttonExcluir.addEventListener("click", async () => {
+        try {
+            mostrarLoading();
+
+            payload = {
+                id_usuario: id_usuario
+            }
+
+            const requisicao = await fetch(`/usuarios/remover-usuario`, {
+                method: "DELETE",
+                headers: {
+                    "Content-Type": "application/json"
+                },
+                body: JSON.stringify(payload),
+
+            });
+
+            const resposta = await requisicao.json();
+            if (requisicao.ok) {
+                filtrosAtuais = {}
+                recarregarTipoLista({})
+                UIkit.notification({
+                    message: resposta.mensagem || "Usuário excluído ✅",
+                    status: 'success',
+                    pos: 'top-center',
+                    timeout: 3000
+                });
+                UIkit.modal("#confirmacao-modal").hide();
+            }
+            else {
+                UIkit.notification({
+                    message: resposta.erro || "Erro ao excluir usuário ❌",
+                    status: 'danger',
+                    pos: 'top-center',
+                    timeout: 5000
+                })
+            }
+        } catch (e) {
+            console.log(e)
+        } finally {
+            esconderLoading();
+        }
+    });
+}
+
+function cancelarEdicaoUsuario() {
+    let id_usuario = parseInt(document.getElementById("modal-id-usuario-tr").textContent.split(" - ")[0]);
+    let tr = document.querySelector(`tr[data-id='${id_usuario}']`);
+
+    let nome_usuario = document.getElementById("modal-nome-usuario-tr");
+    let email_usuario = document.getElementById("modal-email-usuario-tr");
+    let tipo_usuario = document.getElementById("modal-tipo-usuario-tr");
+    // let senha_usuario = document.getElementById("modal-senha-usuario-tr");
+    let foto = document.getElementById("modal-foto-usuario-tr");
+
+    nome_usuario.value = tr.dataset.nome;
+    email_usuario.value = tr.dataset.email;
+    tipo_usuario.value = tr.dataset.tipo;
+
+
+    nome_usuario.disabled = true;
+    email_usuario.disabled = true;
+    tipo_usuario.disabled = true;
+    // senha_usuario.disabled = true;
+    foto.disabled = true;
+
+    let buttonEditar = document.getElementById("button-editar-usuario");
+    let buttonCancelar = document.getElementById("button-excluir-usuario");
+
+    buttonEditar.removeEventListener("click", salvarAlteracaoUsuario);
+    buttonEditar.addEventListener("click", habilitarInputsUsuario);
+    buttonEditar.textContent = "Editar";
+
+    buttonCancelar.setAttribute("uk-toggle", "target: #usuario-modal")
+    buttonCancelar.removeEventListener("click", cancelarEdicaoUsuario);
+    buttonCancelar.addEventListener("click", excluirUsuario)
+    buttonCancelar.textContent = "Excluir";
+}
+
+function habilitarInputsUsuario(event) {
+    event.preventDefault();
+    let buttonEditar = document.getElementById("button-editar-usuario");
+    let buttonCancelar = document.getElementById("button-excluir-usuario");
+
+    let nome_usuario = document.getElementById("modal-nome-usuario-tr");
+    let tipo_usuario = document.getElementById("modal-tipo-usuario-tr");
+    let email_usuario = document.getElementById("modal-email-usuario-tr");
+    let foto = document.getElementById("modal-foto-usuario-tr");
+    nome_usuario.disabled = false;
+    tipo_usuario.disabled = false;
+    email_usuario.disabled = false;
+    foto.disabled = false;
+
+
+
+    buttonEditar.addEventListener("click", salvarAlteracaoUsuario);
+    buttonEditar.textContent = "Salvar";
+
+    buttonCancelar.removeAttribute("uk-toggle");
+    buttonCancelar.addEventListener("click", cancelarEdicaoUsuario);
+    buttonCancelar.textContent = "Cancelar";
+}
+
+function exportarTxtTipoLista({ filtros = filtrosAtuais }) {
+    payload = {
+        filtros: filtros
+    }
+
+    switch (tipoLista.value) {
+        case "clientes":
+            exportarTxtCliente(payload);
+            break;
+        case "usuarios":
+            exportarTxtUsuario(payload);
+            break;
+        case "exames":
+            exportarTxtExame(payload);
+            break;
+    }
+}
+
+function exportarXlsTipoLista({ filtros = filtrosAtuais }) {
+    payload = {
+        filtros: filtros
+    }
+
+    switch (tipoLista.value) {
+        case "clientes":
+            exportarXlsCliente(payload);
+            break;
+        case "usuarios":
+            exportarXlsUsuario(payload);
+            break;
+        case "exames":
+            exportarXlsExame(payload);
+            break;
+    }
+}
+
+async function exportarXlsCliente({ filtros = filtrosAtuais }) {
+    const payload = {
+        ...filtros
+    };
+
+    console.log(payload)
+    try {
+
+        const resposta = await fetch("/clientes/exportar-clientes-xls", {
+            method: "POST",
+            headers: {
+                "Content-Type": "application/json"
+            },
+            body: JSON.stringify(payload)
+        });
+
+        const blob = await resposta.blob();
+        const url = window.URL.createObjectURL(blob);
+
+        const a = document.createElement('a');
+        a.href = url;
+
+
+        const agora = new Date();
+        const pad = (num) => num.toString().padStart(2, '0');
+        const hora = pad(agora.getHours());
+        const minuto = pad(agora.getMinutes());
+        const segundo = pad(agora.getSeconds());
+        const nome_excel = `Clientes_${hora}-${minuto}-${segundo}.xlsx`;
+
+        a.download = nome_excel;
+        document.body.appendChild(a);
+        a.click();
+        a.remove();
+        window.URL.revokeObjectURL(url);
+
+    } catch (e) {
+        console.log(e)
+    }
+}
+
+async function exportarTxtCliente({ filtros = {} }) {
+    const payload = {
+        ...filtros
+    };
+
+    try {
+
+        const resposta = await fetch("/clientes/exportar-clientes-txt", {
+            method: "POST",
+            headers: {
+                "Content-Type": "application/json"
+            },
+            body: JSON.stringify(payload)
+        });
+
+
+        const blob = await resposta.blob();
+        const url = window.URL.createObjectURL(blob);
+
+        const a = document.createElement('a');
+        a.href = url;
+
+
+        const agora = new Date();
+        const pad = (num) => num.toString().padStart(2, '0');
+        const hora = pad(agora.getHours());
+        const minuto = pad(agora.getMinutes());
+        const segundo = pad(agora.getSeconds());
+        const nome_txt = `Clientes_${hora}-${minuto}-${segundo}.txt`;
+
+        a.download = nome_txt;
+        document.body.appendChild(a);
+        a.click();
+        a.remove();
+        window.URL.revokeObjectURL(url);
+
+    } catch (e) {
+        console.log(e)
+    }
+}
+
+async function exportarXlsExame({ filtros = filtrosAtuais }) {
+    const payload = {
+        ...filtros
+    };
+
+    console.log(payload)
+    try {
+
+        const resposta = await fetch("/exames/exportar-exames-xls", {
+            method: "POST",
+            headers: {
+                "Content-Type": "application/json"
+            },
+            body: JSON.stringify(payload)
+        });
+
+        const blob = await resposta.blob();
+        const url = window.URL.createObjectURL(blob);
+
+        const a = document.createElement('a');
+        a.href = url;
+
+
+        const agora = new Date();
+        const pad = (num) => num.toString().padStart(2, '0');
+        const hora = pad(agora.getHours());
+        const minuto = pad(agora.getMinutes());
+        const segundo = pad(agora.getSeconds());
+        const nome_excel = `Exames_${hora}-${minuto}-${segundo}.xlsx`;
+
+        a.download = nome_excel;
+        document.body.appendChild(a);
+        a.click();
+        a.remove();
+        window.URL.revokeObjectURL(url);
+
+    } catch (e) {
+        console.log(e)
+    }
+}
+
+async function exportarTxtExame({ filtros = {} }) {
+    const payload = {
+        ...filtros
+    };
+
+    try {
+
+        const resposta = await fetch("/exames/exportar-exames-txt", {
+            method: "POST",
+            headers: {
+                "Content-Type": "application/json"
+            },
+            body: JSON.stringify(payload)
+        });
+
+
+        const blob = await resposta.blob();
+        const url = window.URL.createObjectURL(blob);
+
+        const a = document.createElement('a');
+        a.href = url;
+
+
+        const agora = new Date();
+        const pad = (num) => num.toString().padStart(2, '0');
+        const hora = pad(agora.getHours());
+        const minuto = pad(agora.getMinutes());
+        const segundo = pad(agora.getSeconds());
+        const nome_txt = `Exames_${hora}-${minuto}-${segundo}.txt`;
+
+        a.download = nome_txt;
+        document.body.appendChild(a);
+        a.click();
+        a.remove();
+        window.URL.revokeObjectURL(url);
+
+    } catch (e) {
+        console.log(e)
+    }
+
+}
+
+async function exportarXlsUsuario({ filtros = filtrosAtuais }) {
+    const payload = {
+        ...filtros
+    };
+
+    console.log(payload)
+    try {
+
+        const resposta = await fetch("/usuarios/exportar-usuarios-xls", {
+            method: "POST",
+            headers: {
+                "Content-Type": "application/json"
+            },
+            body: JSON.stringify(payload)
+        });
+
+        const blob = await resposta.blob();
+        const url = window.URL.createObjectURL(blob);
+
+        const a = document.createElement('a');
+        a.href = url;
+
+
+        const agora = new Date();
+        const pad = (num) => num.toString().padStart(2, '0');
+        const hora = pad(agora.getHours());
+        const minuto = pad(agora.getMinutes());
+        const segundo = pad(agora.getSeconds());
+        const nome_excel = `Usuarios_${hora}-${minuto}-${segundo}.xlsx`;
+
+        a.download = nome_excel;
+        document.body.appendChild(a);
+        a.click();
+        a.remove();
+        window.URL.revokeObjectURL(url);
+
+    } catch (e) {
+        console.log(e)
+    }
+}
+
+async function exportarTxtUsuario({ filtros = filtrosAtuais }) {
+    const payload = {
+        ...filtros
+    };
+
+    console.log(payload)
+    try {
+
+        const resposta = await fetch("/usuarios/exportar-usuarios-txt", {
+            method: "POST",
+            headers: {
+                "Content-Type": "application/json"
+            },
+            body: JSON.stringify(payload)
+        });
+
+        const blob = await resposta.blob();
+        const url = window.URL.createObjectURL(blob);
+
+        const a = document.createElement('a');
+        a.href = url;
+
+
+        const agora = new Date();
+        const pad = (num) => num.toString().padStart(2, '0');
+        const hora = pad(agora.getHours());
+        const minuto = pad(agora.getMinutes());
+        const segundo = pad(agora.getSeconds());
+        const nome_txt = `Usuarios_${hora}-${minuto}-${segundo}.txt`;
+
+        a.download = nome_txt;
+        document.body.appendChild(a);
+        a.click();
+        a.remove();
+        window.URL.revokeObjectURL(url);
+
+    } catch (e) {
+        console.log(e)
+    }
+}
+
+
+document.getElementById("exportXls").addEventListener("click", () => exportarXlsTipoLista({ filtros: filtrosAtuais }))
+document.getElementById("exportTxt").addEventListener("click", () => exportarTxtTipoLista({ filtros: filtrosAtuais }))
+document.getElementById("button-editar-cliente").addEventListener("click", (params) => habilitarInputsCliente(params));
+document.getElementById("button-excluir-cliente").addEventListener("click", (params) => excluirCliente(params));
+document.getElementById("button-editar-exame").addEventListener("click", (params) => habilitarInputsExame(params));
+document.getElementById("button-excluir-exame").addEventListener("click", (params) => excluirExame(params));
+document.getElementById("button-editar-usuario").addEventListener("click", (params) => habilitarInputsUsuario(params));
+document.getElementById("button-excluir-usuario").addEventListener("click", (params) => excluirUsuario(params));
 
 
 carregarClientesLista()

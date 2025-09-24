@@ -1,0 +1,100 @@
+<!DOCTYPE html>
+<html lang="pt-br">
+
+<head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <link rel="icon" type="image/x-icon" href="{{url_for('static', filename='/img/monogram-verde-hq.png')}}">
+    <link rel="stylesheet" href="{{url_for('static', filename='css/base.css')}}" />
+    <link rel="stylesheet" href="{{url_for('static', filename='css/uikit/uikit.min.css')}}" />
+    <script src="{{url_for('static', filename='js/uikit/uikit-icons.min.js')}}"></script>
+    <script src="{{url_for('static', filename='js/uikit/uikit.min.js')}}"></script>
+    {% block titleCss %}
+    {% endblock titleCss %}
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=Poppins:ital,wght@0,100;0,200;0,300;0,400;0,500;0,600;0,700;0,800;0,900;1,100;1,200;1,300;1,400;1,500;1,600;1,700;1,800;1,900&display=swap');
+    </style>
+</head>
+
+<header>
+    <header>
+        <img src="{{ url_for('static' ,filename='/img/Logo.png')}}" alt="Logo ORAC" class="logo" />
+        <nav>
+            <a href="{{ url_for('atendimento') }}">Atendimento</a>
+            <a href="{{ url_for('cadastro') }}">Cadastro</a>
+            <a href="{{ url_for('relatorio') }}">Relatório</a>
+        </nav>
+        <!-- Perfil com nome -->
+        <div class="perfil-wrap">
+            <span class="nome-usuario">{{username}}</span>
+            <button id="avatarBtn" class="avatar-btn" aria-haspopup="true" aria-expanded="false"
+                aria-controls="profileMenu">
+                <img src="{{ link if link != '' else url_for('static', filename='/img/user1.png') }}"
+                    alt="Abrir menu do usuário" />
+            </button>
+            <div id="profileMenu" class="profile-menu" role="menu" aria-hidden="true">
+                <div class="profile-header">
+                    <img src="{{ link if link != '' else url_for('static', filename='/img/user1.png') }}"
+                        alt="Foto do usuário" class="thumb" />
+                    <div class="who">
+                        <strong>{{username}}</strong>
+                        <small>{{email}}</small>
+                    </div>
+                </div>
+                <hr />
+                <a href="{{url_for('conta')}}" class=" menu-item" role="menuitem" id="btnMinhaConta">
+                    <svg viewBox="0 0 24 24" class="mi">
+                        <path
+                            d="M12 12c2.761 0 5-2.463 5-5.5S14.761 1 12 1 7 3.463 7 6.5 9.239 12 12 12zm0 2c-4.418 0-8 2.91-8 6.5V22h16v-1.5c0-3.59-3.582-6.5-8-6.5z"
+                            fill="currentColor" />
+                    </svg>
+                    Minha conta
+                </a>
+                <a class="menu-item danger" value="logout" id="logout-button">
+                    <svg viewBox=" 0 0 24 24" class="mi">
+                        <path d="M10 17l-1.41-1.41L12.17 12 8.59 8.41 10 7l5 5-5 5zM4 4h7v2H6v12h5v2H4V4z"
+                            fill="currentColor" />
+                    </svg>
+                    Sair
+                </a>
+            </div>
+        </div>
+    </header>
+</header>
+
+<body>
+    {% block body %}
+    {% endblock body %}
+
+    <div id="loading-overlay" class="uk-position-fixed uk-position-cover uk-flex uk-flex-center uk-flex-middle"
+        style="background: rgba(0,0,0,0.5); display: none; z-index: 9999;">
+        <div uk-spinner="ratio: 3"></div>
+    </div>
+</body>
+
+<footer>
+    <hr class="solid">
+    <div class="container-footer">
+        <div>
+            <p class="texto-footer">© 2025 Orac</p>
+            <a>Suporte</a>
+            <a>Controller & Oraculu's</a>
+            <a>Controller Medicina</a>
+        </div>
+        <div>
+            <a><img src=" {{url_for('static', filename='/img/icons/instagram (2).png')}}" alt="Instagram icon"
+                    class="icon-footer"></a>
+            <a><img src="{{url_for('static', filename='/img/icons/linkedin.png')}}" alt="LinkedIn icon"
+                    class="icon-footer"></a>
+            <a><img src="{{url_for('static', filename='/img/icons/whatsapp.png')}}" alt="Whatsapp icon"
+                    class="icon-footer"></a>
+        </div>
+    </div>
+</footer>
+
+
+<script src="{{url_for('static', filename='js/base/nav.js')}}"></script>
+{% block scripts %}
+{% endblock scripts %}
+
+</html>

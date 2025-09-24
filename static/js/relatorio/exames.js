@@ -1,5 +1,5 @@
 async function carregarExames() {
-    const request = await fetch("http://10.10.10.47:5000/exames/listar-exames");
+    const request = await fetch("/exames/listar-exames");
     const resposta = await request.json();
     const exames = resposta.exames;
     const select = document.getElementById("exames-select");

@@ -176,10 +176,10 @@ document.addEventListener('DOMContentLoaded', () => {
     e.preventDefault(); close();
     console.log('Abrir Minha Conta');
   });
-  sair?.addEventListener('click', (e) => {
-    e.preventDefault(); close();
-    console.log('Logout');
-  });
+  // sair?.addEventListener('click', (e) => {
+  //   e.preventDefault(); close();
+  //   console.log('Logout');
+  // });
 
   // Estado inicial
   close();
@@ -192,6 +192,6 @@ document.getElementById('btnMinhaConta')?.addEventListener('click', () => {
   window.location.href = 'conta';
 });
 
-document.getElementById('btnSair')?.addEventListener('click', () => {
-  window.location.href = 'login';
-});
+// document.getElementById('btnSair')?.addEventListener('click', () => {
+//   window.location.href = 'login';
+// });

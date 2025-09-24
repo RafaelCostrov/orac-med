@@ -23,7 +23,7 @@ body {
   max-width: 420px;
 }
 
-.card-text {  
+.card-text {
   text-align: center;
   font-size: 16px;
   margin-bottom: 20px;
@@ -46,7 +46,7 @@ input {
 }
 
 input::placeholder {
-  font-family: "Poppins", sans-serif; 
+  font-family: "Poppins", sans-serif;
 }
 
 .input-group input {
@@ -82,7 +82,7 @@ input::placeholder {
   border-radius: 20px;
   cursor: pointer;
   margin-bottom: 15px;
-  transition: background 0.3s,;
+  transition: background 0.3s, ;
   font-family: "Poppins", sans-serif;
   font-size: 16px;
 }
@@ -101,7 +101,7 @@ input::placeholder {
 }
 
 .forgot a {
-  color: grey;
+  color: rgb(109, 109, 109);
   text-decoration: none;
   cursor: pointer;
   transition: transform 500ms;
@@ -109,8 +109,24 @@ input::placeholder {
 }
 
 .forgot a:hover {
-  color:#278a38;
+  color: #278a38;
   transition-duration: 500ms;
   transform: scale(1.05);
 }
 
+/* Toast */
+
+.uk-notification {
+    z-index: 9999 !important;
+    padding: 5px;
+}
+
+
+.uk-notification-message {
+    border-radius: 12px;
+    font-family: "Poppins", sans-serif;
+    box-shadow: 0px 4px 12px rgba(0, 0, 0, 0.2);
+    text-align: center;
+}
+
+/*Toast  */

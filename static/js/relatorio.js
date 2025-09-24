@@ -97,27 +97,27 @@ document.addEventListener('DOMContentLoaded', () => {
 
   /* ================== PREP ================== */
   // Empresas no select
-  (function fillEmpresas() {
-    const set = new Set(dados.map(d => d.empresa));
-    [...set].sort().forEach(e => {
-      const op = document.createElement('option');
-      op.value = e; op.textContent = e;
-      campos.emp.appendChild(op);
-    });
-  })();
+  // (function fillEmpresas() {
+  //   const set = new Set(dados.map(d => d.empresa));
+  //   [...set].sort().forEach(e => {
+  //     const op = document.createElement('option');
+  //     op.value = e; op.textContent = e;
+  //     campos.emp.appendChild(op);
+  //   });
+  // })();
 
   // Fechar modal no backdrop / botões X
-  $$('.modal').forEach(m => {
-    // backdrop
-    const backdrop = $('.modal__backdrop', m);
-    if (backdrop) {
-      backdrop.addEventListener('click', () => m.setAttribute('aria-hidden', 'true'));
-    }
-    // botões de fechar
-    $$('.modal__close', m).forEach(btn => {
-      btn.addEventListener('click', () => m.setAttribute('aria-hidden', 'true'));
-    });
-  });
+  // $$('.modal').forEach(m => {
+  //   // backdrop
+  //   const backdrop = $('.modal__backdrop', m);
+  //   if (backdrop) {
+  //     backdrop.addEventListener('click', () => m.setAttribute('aria-hidden', 'true'));
+  //   }
+  //   // botões de fechar
+  //   $$('.modal__close', m).forEach(btn => {
+  //     btn.addEventListener('click', () => m.setAttribute('aria-hidden', 'true'));
+  //   });
+  // });
 
   // Fechar modal com ESC
   document.addEventListener('keydown', (e) => {
@@ -127,85 +127,85 @@ document.addEventListener('DOMContentLoaded', () => {
   });
 
   /* ================== CORE ================== */
-  function applyFilters() {
-    const ini = toDate(campos.ini.value);
-    const fim = toDate(campos.fim.value);
-    const emp = (campos.emp.value || '').toLowerCase();
-    const tipoAt = (campos.tipoAt.value || '').toLowerCase();
-    const tipoEx = (campos.tipoEx.value || '').toLowerCase();
-    const status = (campos.status.value || '').toLowerCase();
-    const q = (campos.q.value || '').toLowerCase();
+  // function applyFilters() {
+  //   const ini = toDate(campos.ini.value);
+  //   const fim = toDate(campos.fim.value);
+  //   const emp = (campos.emp.value || '').toLowerCase();
+  //   const tipoAt = (campos.tipoAt.value || '').toLowerCase();
+  //   const tipoEx = (campos.tipoEx.value || '').toLowerCase();
+  //   const status = (campos.status.value || '').toLowerCase();
+  //   const q = (campos.q.value || '').toLowerCase();
 
-    filtered = dados.filter(d => {
-      const dData = toDate(d.data);
-      if (ini && dData < ini) return false;
-      if (fim && dData > fim) return false;
-      if (emp && d.empresa.toLowerCase() !== emp) return false;
-      if (tipoAt && d.tipoAt.toLowerCase() !== tipoAt) return false;
-      if (tipoEx && d.tipoEx.toLowerCase() !== tipoEx) return false;
-      if (status && d.status.toLowerCase() !== status) return false;
-      if (q) {
-        const blob = `${d.empresa} ${d.colaborador} ${d.tipoAt} ${d.tipoEx} ${d.exames}`.toLowerCase();
-        if (!blob.includes(q)) return false;
-      }
-      return true;
-    });
+  //   filtered = dados.filter(d => {
+  //     const dData = toDate(d.data);
+  //     if (ini && dData < ini) return false;
+  //     if (fim && dData > fim) return false;
+  //     if (emp && d.empresa.toLowerCase() !== emp) return false;
+  //     if (tipoAt && d.tipoAt.toLowerCase() !== tipoAt) return false;
+  //     if (tipoEx && d.tipoEx.toLowerCase() !== tipoEx) return false;
+  //     if (status && d.status.toLowerCase() !== status) return false;
+  //     if (q) {
+  //       const blob = `${d.empresa} ${d.colaborador} ${d.tipoAt} ${d.tipoEx} ${d.exames}`.toLowerCase();
+  //       if (!blob.includes(q)) return false;
+  //     }
+  //     return true;
+  //   });
 
-    page = 1;
-    render();
-  }
+  //   page = 1;
+  //   render();
+  // }
 
-  function pill(status) {
-    const s = (status || '').toLowerCase();
-    if (s === 'pago') return `<span class="pill pago">Pago</span>`;
-    if (s === 'pendente') return `<span class="pill pendente">Pendente</span>`;
-    return status || '';
-  }
+  // function pill(status) {
+  //   const s = (status || '').toLowerCase();
+  //   if (s === 'pago') return `<span class="pill pago">Pago</span>`;
+  //   if (s === 'pendente') return `<span class="pill pendente">Pendente</span>`;
+  //   return status || '';
+  // }
 
-  function render() {
-    // ordenação
-    filtered.sort((a, b) => {
-      const k = sort.key;
-      let va = a[k], vb = b[k];
-      if (k === 'data') { va = a.data; vb = b.data; }
-      if (k === 'valor') { va = +a.valor; vb = +b.valor; }
-      if (typeof va === 'string') va = va.toLowerCase();
-      if (typeof vb === 'string') vb = vb.toLowerCase();
-      if (va < vb) return sort.dir === 'asc' ? -1 : 1;
-      if (va > vb) return sort.dir === 'asc' ? 1 : -1;
-      return 0;
-    });
+  // function render() {
+  //   // ordenação
+  //   filtered.sort((a, b) => {
+  //     const k = sort.key;
+  //     let va = a[k], vb = b[k];
+  //     if (k === 'data') { va = a.data; vb = b.data; }
+  //     if (k === 'valor') { va = +a.valor; vb = +b.valor; }
+  //     if (typeof va === 'string') va = va.toLowerCase();
+  //     if (typeof vb === 'string') vb = vb.toLowerCase();
+  //     if (va < vb) return sort.dir === 'asc' ? -1 : 1;
+  //     if (va > vb) return sort.dir === 'asc' ? 1 : -1;
+  //     return 0;
+  //   });
 
-    // paginação
-    const ipp = parseInt(ippEl.value, 10) || 10;
-    const totalPages = Math.max(1, Math.ceil(filtered.length / ipp));
-    if (page > totalPages) page = totalPages;
-    const start = (page - 1) * ipp;
-    const rows = filtered.slice(start, start + ipp);
+  //   // paginação
+  //   const ipp = parseInt(ippEl.value, 10) || 10;
+  //   const totalPages = Math.max(1, Math.ceil(filtered.length / ipp));
+  //   if (page > totalPages) page = totalPages;
+  //   const start = (page - 1) * ipp;
+  //   const rows = filtered.slice(start, start + ipp);
 
-    // linhas
-    tBody.innerHTML = rows.map(r => `
-      <tr>
-        <td>${r.data.split('-').reverse().join('/')}</td>
-        <td>${r.empresa}</td>
-        <td>${r.colaborador}</td>
-        <td>${r.tipoAt}</td>
-        <td>${r.tipoEx}</td>
-        <td>${r.exames}</td>
-        <td class="num">${fmtBRL(r.valor)}</td>
-        <td>${pill(r.status)}</td>
-      </tr>
-    `).join('');
+  //   // linhas
+  //   tBody.innerHTML = rows.map(r => `
+  //       <tr>
+  //         <td>${r.data.split('-').reverse().join('/')}</td>
+  //         <td>${r.empresa}</td>
+  //         <td>${r.colaborador}</td>
+  //         <td>${r.tipoAt}</td>
+  //         <td>${r.tipoEx}</td>
+  //         <td>${r.exames}</td>
+  //         <td class="num">${fmtBRL(r.valor)}</td>
+  //         <td>${pill(r.status)}</td>
+  //       </tr>
+  //     `).join('');
 
-    // info / resumo
-    pinfo.textContent = `Página ${page} de ${totalPages}`;
-    prev.disabled = page === 1;
-    next.disabled = page === totalPages;
+  //   // info / resumo
+  //   pinfo.textContent = `Página ${page} de ${totalPages}`;
+  //   prev.disabled = page === 1;
+  //   next.disabled = page === totalPages;
 
-    count.textContent = String(filtered.length);
-    const soma = filtered.reduce((acc, r) => acc + (r.valor || 0), 0);
-    total.textContent = fmtBRL(soma);
-  }
+  //   count.textContent = String(filtered.length);
+  //   const soma = filtered.reduce((acc, r) => acc + (r.valor || 0), 0);
+  //   total.textContent = fmtBRL(soma);
+  // }
 
   /* ================== EVENTS ================== */
   // Ordenação
@@ -240,33 +240,33 @@ document.addEventListener('DOMContentLoaded', () => {
   // campos.q.addEventListener('input', () => { page = 1; applyFilters(); });
 
   // Exportar (modal)
-  exportCsvBtn.addEventListener('click', () => {
-    const header = ['Data', 'Empresa', 'Colaborador', 'Tipo Atendimento', 'Tipo Exame', 'Exames', 'Valor', 'Status'];
-    const lines = filtered.map(r => [
-      r.data.split('-').reverse().join('/'),
-      r.empresa, r.colaborador, r.tipoAt, r.tipoEx, r.exames,
-      r.valor, // número cru
-      r.status
-    ]);
-    const csv = [header, ...lines]
-      .map(arr => arr.map(v => `"${String(v).replace(/"/g, '""')}"`).join(';'))
-      .join('\n');
-    downloadFile(csv, `relatorio_${today()}.csv`, 'text/csv;charset=utf-8;');
-    closeModal('modalExportar');
-  });
+  // exportCsvBtn.addEventListener('click', () => {
+  //   const header = ['Data', 'Empresa', 'Colaborador', 'Tipo Atendimento', 'Tipo Exame', 'Exames', 'Valor', 'Status'];
+  //   const lines = filtered.map(r => [
+  //     r.data.split('-').reverse().join('/'),
+  //     r.empresa, r.colaborador, r.tipoAt, r.tipoEx, r.exames,
+  //     r.valor, // número cru
+  //     r.status
+  //   ]);
+  //   const csv = [header, ...lines]
+  //     .map(arr => arr.map(v => `"${String(v).replace(/"/g, '""')}"`).join(';'))
+  //     .join('\n');
+  //   downloadFile(csv, `relatorio_${today()}.csv`, 'text/csv;charset=utf-8;');
+  //   closeModal('modalExportar');
+  // });
 
-  exportTxtBtn.addEventListener('click', () => {
-    const header = 'Data;Empresa;Colaborador;Tipo Atendimento;Tipo Exame;Exames;Valor;Status';
-    const lines = filtered.map(r => [
-      r.data.split('-').reverse().join('/'),
-      r.empresa, r.colaborador, r.tipoAt, r.tipoEx, r.exames,
-      r.valor,
-      r.status
-    ].join(';'));
-    const txt = [header, ...lines].join('\n');
-    downloadFile(txt, `relatorio_${today()}.txt`, 'text/plain;charset=utf-8;');
-    closeModal('modalExportar');
-  });
+  // exportTxtBtn.addEventListener('click', () => {
+  //   const header = 'Data;Empresa;Colaborador;Tipo Atendimento;Tipo Exame;Exames;Valor;Status';
+  //   const lines = filtered.map(r => [
+  //     r.data.split('-').reverse().join('/'),
+  //     r.empresa, r.colaborador, r.tipoAt, r.tipoEx, r.exames,
+  //     r.valor,
+  //     r.status
+  //   ].join(';'));
+  //   const txt = [header, ...lines].join('\n');
+  //   downloadFile(txt, `relatorio_${today()}.txt`, 'text/plain;charset=utf-8;');
+  //   closeModal('modalExportar');
+  // });
 
   /* ================== START ================== */
   applyFilters(); // primeira renderização
@@ -296,6 +296,6 @@ document.addEventListener('DOMContentLoaded', () => {
   const goConta = document.getElementById('btnMinhaConta');
   if (goConta) goConta.addEventListener('click', (e) => { e.preventDefault(); window.location.href = 'conta'; });
 
-  const sair = document.getElementById('btnSair');
-  if (sair) sair.addEventListener('click', (e) => { e.preventDefault(); window.location.href = 'login'; });
+  // const sair = document.getElementById('btnSair');
+  // if (sair) sair.addEventListener('click', (e) => { e.preventDefault(); window.location.href = 'login'; });
 })();

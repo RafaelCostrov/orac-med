@@ -1,167 +1,87 @@
-<!DOCTYPE html>
-<html lang="pt-br">
+{% extends "base.html"%}
 
-<head>
-  <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <link rel="icon" type="image/x-icon" href="{{url_for('static', filename='/img/monogram-verde-hq.png')}}">
-  <title>Atendimento - Orac</title>
+{% block titleCss %}
+<title>Atendimento - Orac</title>
+<link rel="stylesheet" href="{{url_for('static', filename='/css/atendimento.css')}}" />
+{% endblock titleCss %}
 
-  <!-- CSS -->
-  <link rel="stylesheet" href="{{url_for('static', filename='/css/atendimento.css')}}" />
-  <style>
-    @import url('https://fonts.googleapis.com/css2?family=Poppins:ital,wght@0,100;0,200;0,300;0,400;0,500;0,600;0,700;0,800;0,900;1,100;1,200;1,300;1,400;1,500;1,600;1,700;1,800;1,900&display=swap');
-  </style>
-</head>
+{% block body %}
 
-<body>
-  <!-- Cabeçalho -->
-  <header>
-    <img src="{{ url_for('static' ,filename='/img/Logo.png')}}" alt="Logo ORAC" class="logo" />
+<!-- Conteúdo principal -->
+<main>
+  <h1>Ficha de Atendimento</h1>
 
-    <nav>
-      <a href="{{ url_for('atendimento') }}">Atendimento</a>
-      <a href="{{ url_for('cadastro') }}">Cadastro</a>
-      <a href="{{ url_for('relatorio') }}">Relatório</a>
-    </nav>
+  <form id="form-atendimento" autocomplete="off">
+    <div class="form-grid">
 
+      <!-- Empresa -->
+      <div class="form-group">
+        <label for="empresa">Empresa</label>
+        <select class="dropdown-empresa" id="empresa" required>
+          <option value="" disabled selected hidden>Selecione</option>
+        </select>
+      </div>
 
+      <!-- Colaborador -->
+      <div class="form-group">
+        <label for="colaborador">Colaborador</label>
+        <input type="text" id="colaborador" placeholder="Nome" />
+      </div>
 
-    <!-- Perfil com nome -->
-    <div class="perfil-wrap">
-      <span class="nome-usuario">Eduardo</span>
-      <button id="avatarBtn" class="avatar-btn" aria-haspopup="true" aria-expanded="false" aria-controls="profileMenu">
-        <img src="{{ url_for('static' ,filename='/img/perfil1.png')}}" alt="Abrir menu do usuário" />
-      </button>
+      <!-- Tipo de Exame -->
+      <div class="form-group">
+        <label for="tipo-exame">Tipo de Exame</label>
+        <select id="tipo-exame" required>
+          <option value="" disabled selected hidden>Selecione</option>
+          <option value="admissional">Admissional</option>
+          <option value="demissional">Demissional</option>
+          <option value="periodico">Periódico</option>
+          <option value="mudanca_funcao">Mudança de Função</option>
+          <option value="retorno_trabalho">Retorno ao Trabalho</option>
+          <option value="outros">Outros</option>
+        </select>
+      </div>
 
-      <div id="profileMenu" class="profile-menu" role="menu" aria-hidden="true">
-        <div class="profile-header">
-          <img src="{{ url_for('static' ,filename='/img/perfil1.png')}}" alt="" class="thumb" />
-          <div class="who">
-            <strong>Eduardo</strong>
-            <small>@usuario</small>
+      <!-- Exames (Dropdown com checkboxes) -->
+      <div class="form-group">
+        <label for="exames">Exames</label>
+        <div class="dropdown-checkbox">
+          <div class="dropdown-selected" id="dropdown-selected">Selecione os exames</div>
+          <div class="dropdown-list" id="exames">
           </div>
         </div>
+      </div>
 
-        <hr />
-
-        <a href="{{url_for('conta')}}" class=" menu-item" role="menuitem" id="btnMinhaConta">
-          <svg viewBox="0 0 24 24" class="mi">
-            <path
-              d="M12 12c2.761 0 5-2.463 5-5.5S14.761 1 12 1 7 3.463 7 6.5 9.239 12 12 12zm0 2c-4.418 0-8 2.91-8 6.5V22h16v-1.5c0-3.59-3.582-6.5-8-6.5z"
-              fill="currentColor" />
-          </svg>
-          Minha conta
-        </a>
-
-        <a href="login.html" class="menu-item danger" role="menuitem" id="btnSair">
-          <svg viewBox="0 0 24 24" class="mi">
-            <path d="M10 17l-1.41-1.41L12.17 12 8.59 8.41 10 7l5 5-5 5zM4 4h7v2H6v12h5v2H4V4z" fill="currentColor" />
-          </svg>
-          Sair
-        </a>
+      <!-- Valor Total (somente leitura) -->
+      <div class="form-group">
+        <label for="valor-total">Valor Total</label>
+        <input id="valor-total" type="text" class="readonly" readonly placeholder="R$ 0,00" />
       </div>
     </div>
-  </header>
 
-  <!-- Conteúdo principal -->
-  <main>
-    <h1>Ficha de Atendimento</h1>
-
-    <form id="form-atendimento" autocomplete="off">
-      <div class="form-grid">
-
-        <!-- Empresa -->
-        <div class="form-group">
-          <label for="empresa">Empresa</label>
-          <select class="dropdown-empresa" id="empresa" required>
-            <option value="" disabled selected hidden>Selecione</option>
-          </select>
-        </div>
-
-        <!-- Colaborador -->
-        <div class="form-group">
-          <label for="colaborador">Colaborador</label>
-          <input type="text" id="colaborador" placeholder="Nome" />
-        </div>
-
-        <!-- Tipo de Exame -->
-        <div class="form-group">
-          <label for="tipo-exame">Tipo de Exame</label>
-          <select id="tipo-exame" required>
-            <option value="" disabled selected hidden>Selecione</option>
-            <option value="admissional">Admissional</option>
-            <option value="demissional">Demissional</option>
-            <option value="periodico">Periódico</option>
-            <option value="mudanca_funcao">Mudança de Função</option>
-            <option value="retorno_trabalho">Retorno ao Trabalho</option>
-            <option value="outros">Outros</option>
-          </select>
-        </div>
-
-        <!-- Exames (Dropdown com checkboxes) -->
-        <div class="form-group">
-          <label for="exames">Exames</label>
-          <div class="dropdown-checkbox">
-            <div class="dropdown-selected" id="dropdown-selected">Selecione os exames</div>
-            <div class="dropdown-list" id="exames">
-            </div>
-          </div>
-        </div>
-
-        <!-- Valor Total (somente leitura) -->
-        <div class="form-group">
-          <label for="valor-total">Valor Total</label>
-          <input id="valor-total" type="text" class="readonly" readonly placeholder="R$ 0,00" />
-        </div>
-      </div>
-
-      <!-- Lista de exames selecionados -->
-      <div class="exames-selecionados">
-        <div>
-          <label>Exames selecionados</label>
-          <ul id="lista-exames"></ul>
-        </div>
-        <div>
-          <label>Exames inclusos</label>
-          <ul id="exames-cliente"></ul>
-        </div>
-
-        <div class="botoes">
-          <button class="remover" id="remover">Limpar</button>
-          <button class="enviar" id="enviar">Enviar</button>
-        </div>
-      </div>
-    </form>
-  </main>
-
-  <!-- Rodapé -->
-  <footer>
-    <hr class="solid">
-    <div class="container-footer">
+    <!-- Lista de exames selecionados -->
+    <div class="exames-selecionados">
       <div>
-        <p class="texto-footer">© 2025 Orac</p>
-        <a>Suporte</a>
-        <a>Controller & Oraculu's</a>
-        <a>Controller Medicina</a>
+        <label>Exames selecionados</label>
+        <ul id="lista-exames"></ul>
       </div>
       <div>
-        <a><img src=" {{url_for('static', filename='/img/icons/instagram (2).png')}}" alt="Instagram icon"
-            class="icon-footer"></a>
-        <a><img src="{{url_for('static', filename='/img/icons/linkedin.png')}}" alt="LinkedIn icon"
-            class="icon-footer"></a>
-        <a><img src="{{url_for('static', filename='/img/icons/whatsapp.png')}}" alt="Whatsapp icon"
-            class="icon-footer"></a>
+        <label>Exames inclusos</label>
+        <ul id="exames-cliente"></ul>
+      </div>
+
+      <div class="botoes">
+        <button class="remover" id="remover">Limpar</button>
+        <button class="enviar" id="enviar">Enviar</button>
       </div>
     </div>
-  </footer>
+  </form>
+</main>
 
+{% endblock body %}
 
-  <!-- JS -->
-
-  <script src="{{ url_for('static', filename='js/atendimento.js') }}" defer></script>
-  <script src="{{ url_for('static', filename='js/atendimento/cadastro.js') }}" defer></script>
-  <script src="{{ url_for('static', filename='js/atendimento/carregar.js') }}" defer></script>
-</body>
-
-</html>
+{% block scripts %}
+<script src="{{ url_for('static', filename='js/atendimento.js') }}" defer></script>
+<script src="{{ url_for('static', filename='js/atendimento/cadastro.js') }}" defer></script>
+<script src="{{ url_for('static', filename='js/atendimento/carregar.js') }}" defer></script>
+{% endblock scripts %}

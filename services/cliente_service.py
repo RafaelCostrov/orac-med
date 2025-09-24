@@ -2,6 +2,8 @@ from model.cliente import Cliente
 from repository.cliente_repository import ClienteRepository
 from repository.exame_repository import ExameRepository
 from enums.tipos_cliente import TiposCliente
+import pandas as pd
+from io import BytesIO
 import requests
 
 
@@ -10,6 +12,15 @@ class ClienteService():
     repositorio_exame = ExameRepository()
 
     def cadastrar_cliente(self, nome_cliente: str, cnpj_cliente: str, tipo_cliente: TiposCliente, exames_incluidos: list[int]):
+
+        cliente_cnpj = self.repositorio.filtrar_por_cnpj(
+            cnpj_cliente=cnpj_cliente)
+
+        if cliente_cnpj:
+            return {
+                "erro": "CNPJ já cadastrado."
+            }
+
         exames = []
         for exame_id in exames_incluidos:
             exame = self.repositorio_exame.filtrar_por_id(exame_id)
@@ -137,3 +148,96 @@ class ClienteService():
         resposta = requisicao.json()
         nome = resposta.get("nome")
         return nome
+
+    def exportar_excel(self, id_cliente: int, nome_cliente: str, cnpj_cliente: str, tipo_cliente: TiposCliente, exames_incluidos: list[int]):
+
+        clientes_filtrados = self.filtrar_clientes(
+            id_cliente=id_cliente,
+            nome_cliente=nome_cliente,
+            cnpj_cliente=cnpj_cliente,
+            tipo_cliente=tipo_cliente,
+            exames_incluidos=exames_incluidos,
+            por_pagina=None
+        )
+
+        linhas = []
+        for cliente in clientes_filtrados.get("clientes"):
+            nomes_exames = [exame.get("nome_exame") for exame in cliente.get(
+                "exames_incluidos", [])]
+            exames_str = ", ".join(nomes_exames)
+            cliente["exames_incluidos"] = exames_str
+            linha = {**cliente}
+            linhas.append(linha)
+
+        novos_cabecalhos = {
+            "id_cliente": "ID Cliente",
+            "nome_cliente": "Nome",
+            "cnpj_cliente": "CNPJ",
+            "tipo_cliente": "Tipo",
+            "usuario": "Atendente",
+            "exames_incluidos": "Exames inclusos"
+        }
+
+        map_tipos_cliente = {
+            "cliente": "Cliente",
+            "credenciado": "Credenciado",
+            "servico_prestado": "Serviço Prestado",
+            "particular": "Particular",
+        }
+
+        df = pd.DataFrame(linhas)
+        df["tipo_cliente"] = df["tipo_cliente"].map(
+            map_tipos_cliente)
+        df.rename(columns=novos_cabecalhos, inplace=True)
+        output = BytesIO()
+        with pd.ExcelWriter(output, engine="xlsxwriter") as writer:
+            df.to_excel(writer, sheet_name='Atendimentos', index=False)
+        output.seek(0)
+
+        return output
+
+    def exportar_txt(self, id_cliente: int, nome_cliente: str, cnpj_cliente: str, tipo_cliente: TiposCliente, exames_incluidos: list[int]):
+
+        clientes_filtrados = self.filtrar_clientes(
+            id_cliente=id_cliente,
+            nome_cliente=nome_cliente,
+            cnpj_cliente=cnpj_cliente,
+            tipo_cliente=tipo_cliente,
+            exames_incluidos=exames_incluidos,
+            por_pagina=None
+        )
+
+        linhas = []
+        for cliente in clientes_filtrados.get("clientes"):
+            nomes_exames = [exame.get("nome_exame") for exame in cliente.get(
+                "exames_incluidos", [])]
+            exames_str = ", ".join(nomes_exames)
+            cliente["exames_incluidos"] = exames_str
+            linha = {**cliente}
+            linhas.append(linha)
+
+        novos_cabecalhos = {
+            "id_cliente": "ID Cliente",
+            "nome_cliente": "Nome",
+            "cnpj_cliente": "CNPJ",
+            "tipo_cliente": "Tipo",
+            "usuario": "Atendente",
+            "exames_incluidos": "Exames inclusos"
+        }
+
+        map_tipos_cliente = {
+            "cliente": "Cliente",
+            "credenciado": "Credenciado",
+            "servico_prestado": "Serviço Prestado",
+            "particular": "Particular",
+        }
+
+        df = pd.DataFrame(linhas)
+        df["tipo_cliente"] = df["tipo_cliente"].map(
+            map_tipos_cliente)
+        df.rename(columns=novos_cabecalhos, inplace=True)
+        output = BytesIO()
+        df.to_csv(output, sep="\t", index=False, encoding="utf-8")
+        output.seek(0)
+
+        return output

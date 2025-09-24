@@ -4,15 +4,14 @@ function togglePassword() {
 
   if (passwordInput.type === 'password') {
     passwordInput.type = 'text';
-    eyeIcon.src = '../img/icons/view.png' ;
+    eyeIcon.src = "../static/img/icons/view.png  ";
     eyeIcon.alt = 'Ocultar senha';
   } else {
     passwordInput.type = 'password';
-    eyeIcon.src = '../img/icons/hide.png'; 
+    eyeIcon.src = '../static/img/icons/hide.png';
     eyeIcon.alt = 'Mostrar senha';
   }
 }
 
 
 
-    

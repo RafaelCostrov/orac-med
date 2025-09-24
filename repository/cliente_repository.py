@@ -25,7 +25,8 @@ class ClienteRepository:
         except Exception as e:
             raise e
 
-    def filtrar_clientes(self, id_cliente=None, nome_cliente=None, cnpj_cliente=None, tipo_cliente=None, exames_incluidos=None, offset=None, limit=None, order_by=None, order_dir=None):
+    def filtrar_clientes(self, id_cliente=None, nome_cliente=None, cnpj_cliente=None, tipo_cliente=None, exames_incluidos=None, offset=None,
+                         limit=None, order_by=None, order_dir=None):
         try:
             query = self.session.query(Cliente)
             total = query.count()
@@ -87,6 +88,15 @@ class ClienteRepository:
             cliente = self.session.query(Cliente)\
                 .options(joinedload(Cliente.exames_incluidos))\
                 .filter(Cliente.id_cliente == id_cliente).first()
+            return cliente
+        except Exception as e:
+            raise e
+
+    def filtrar_por_cnpj(self, cnpj_cliente):
+        try:
+            cliente = self.session.query(Cliente)\
+                .options(joinedload(Cliente.exames_incluidos))\
+                .filter(Cliente.cnpj_cliente == cnpj_cliente).first()
             return cliente
         except Exception as e:
             raise e

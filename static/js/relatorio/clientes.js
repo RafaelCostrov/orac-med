@@ -1,5 +1,5 @@
 async function carregarClientes() {
-    const request = await fetch("http://10.10.10.47:5000/clientes/listar-clientes");
+    const request = await fetch("/clientes/listar-clientes");
     const resposta = await request.json();
     const clientes = resposta.clientes;
     const select = document.getElementById("emp");

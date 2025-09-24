@@ -1,231 +1,158 @@
-<!DOCTYPE html>
-<html lang="pt-br">
+{% extends "base.html"%}
 
-<head>
-  <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <link rel="icon" type="image/x-icon" href="{{url_for('static', filename='/img/monogram-verde-hq.png')}}">
-  <title>Minha Conta - Orac</title>
+{% block titleCss %}
+<title>Minha Conta - Orac</title>
+<link rel="stylesheet" href="{{url_for('static', filename='/css/conta.css')}}" />
+{% endblock titleCss %}
 
-  <!-- CSS -->
-  <link rel="stylesheet" href="{{url_for('static', filename='/css/conta.css')}}" />
-</head>
+{% block body %}
+<!-- Conteúdo principal -->
+<main>
+  <h1>Minha Conta</h1>
 
-<body>
-  <!-- Cabeçalho -->
-  <header>
-    <img src="{{url_for('static', filename='/img/Logo.png')}}" alt="Logo ORAC" class="logo" />
-    <nav>
-      <a href="{{ url_for('atendimento') }}">Atendimento</a>
-      <a href="{{ url_for('cadastro') }}">Cadastro</a>
-      <a href="{{ url_for('relatorio') }}">Relatório</a>
-    </nav>
-    <div class="perfil-wrap">
-      <span class="nome-usuario">Eduardo</span>
-      <button id="avatarBtn" class="avatar-btn" aria-haspopup="true" aria-expanded="false" aria-controls="profileMenu">
-        <img src="{{url_for('static', filename='/img/perfil1.png')}}" alt="Abrir menu do usuário" />
-      </button>
-      <div id="profileMenu" class="profile-menu" role="menu" aria-hidden="true">
-        <div class="profile-header">
-          <img src="{{url_for('static', filename='/img/perfil1.png')}}" alt="" class="thumb" />
-          <div class="who">
-            <strong>Eduardo</strong>
-            <small>@usuario</small>
-          </div>
-        </div>
-        <hr />
-        <a href="conta.html" class="menu-item" role="menuitem" id="btnMinhaConta">
-          <svg viewBox="0 0 24 24" class="mi">
-            <path
-              d="M12 12c2.761 0 5-2.463 5-5.5S14.761 1 12 1 7 3.463 7 6.5 9.239 12 12 12zm0 2c-4.418 0-8 2.91-8 6.5V22h16v-1.5c0-3.59-3.582-6.5-8-6.5z"
-              fill="currentColor" />
-          </svg>
-          Minha conta
-        </a>
-        <a href="#" class="menu-item danger" role="menuitem" id="btnSair">
-          <svg viewBox="0 0 24 24" class="mi">
-            <path d="M10 17l-1.41-1.41L12.17 12 8.59 8.41 10 7l5 5-5 5zM4 4h7v2H6v12h5v2H4V4z" fill="currentColor" />
-          </svg>
-          Sair
-        </a>
-      </div>
+  <form id="form-conta" autocomplete="off" class="conta-form">
+    <!-- Foto de Perfil -->
+    <div class="avatar-box">
+      <label for="foto">
+        <img id="avatar-preview" src="{{ link if link != '' else url_for('static', filename='/img/user1.png') }}"
+          alt="Foto de perfil" data-foto="{{ link if link != '' else '' }}" />
+      </label>
+      <input type="file" id="foto" accept="image/*" hidden />
     </div>
-  </header>
 
-  <!-- Conteúdo principal -->
-  <main>
-    <h1>Minha Conta</h1>
+    <!-- Nome -->
+    <div class="form-group">
+      <label for="nome">ID usuário</label>
+      <input type="text" id="id_usuario" data-id="{{ id_usuario }}" disabled required />
+    </div>
 
-    <form id="form-conta" autocomplete="off" class="conta-form">
-      <!-- Foto de Perfil -->
-      <div class="avatar-box">
-        <label for="avatar-upload">
-          <img id="avatar-preview" src="{{url_for('static', filename='/img/perfil1.png')}}" alt="Foto de perfil" />
-        </label>
-        <input type="file" id="avatar-upload" accept="image/*" hidden />
-      </div>
+    <!-- Nome -->
+    <div class="form-group">
+      <label for="nome">Nome completo</label>
+      <input type="text" id="nome" placeholder="Digite seu nome" data-username="{{ username }}" disabled required />
+    </div>
 
-      <!-- Nome -->
-      <div class="form-group">
-        <label for="nome">Nome completo</label>
-        <input type="text" id="nome" placeholder="Digite seu nome" required />
-      </div>
+    <!-- E-mail (somente leitura) -->
+    <div class="form-group">
+      <label for="email">E-mail</label>
+      <input type="email" id="email" placeholder="E-mail" data-email="{{ email }}" disabled required />
+    </div>
 
-      <!-- E-mail (somente leitura) -->
-      <div class="form-group">
-        <label for="email">E-mail</label>
-        <input type="email" id="email" value="eduardo@email.com" readonly />
-      </div>
+    <!-- Segurança -->
+    <section class="seguranca">
+      <h2>Segurança</h2>
 
-      <!-- Segurança -->
-      <section class="seguranca">
-        <h2>Segurança</h2>
+      <!-- Tile/linha clicável para abrir o modal -->
+      <button type="button" id="openChangePwd" class="pwd-tile" aria-haspopup="dialog" aria-controls="modalSenha">
+        <svg class="lock-ic" viewBox="0 0 24 24" aria-hidden="true">
+          <path fill="currentColor"
+            d="M12 1a6 6 0 0 1 6 6v3h1a2 2 0 0 1 2 2v9a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-9a2 2 0 0 1 2-2h1V7a6 6 0 0 1 6-6zm0 2a4 4 0 0 0-4 4v3h8V7a4 4 0 0 0-4-4z" />
+        </svg>
+        <span>Alterar senha</span>
+      </button>
+    </section>
 
-        <!-- Tile/linha clicável para abrir o modal -->
-        <button type="button" id="openChangePwd" class="pwd-tile" aria-haspopup="dialog" aria-controls="modalSenha">
-          <svg class="lock-ic" viewBox="0 0 24 24" aria-hidden="true">
-            <path fill="currentColor"
-              d="M12 1a6 6 0 0 1 6 6v3h1a2 2 0 0 1 2 2v9a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-9a2 2 0 0 1 2-2h1V7a6 6 0 0 1 6-6zm0 2a4 4 0 0 0-4 4v3h8V7a4 4 0 0 0-4-4z" />
-          </svg>
-          <span>Alterar senha</span>
-        </button>
-      </section>
+    <!-- Botão salvar (dados da conta) -->
+    <div class="form-buttons">
+      <button type="submit" class="btn-cancelar disabled" id="cancelar" disabled>Cancelar</button>
+      <button type="submit" class="btn-salvar" id="editar">Editar</button>
+    </div>
+  </form>
+</main>
 
-      <!-- Botão salvar (dados da conta) -->
-      <button type="submit" class="btn-salvar">Salvar alterações</button>
-    </form>
-  </main>
+<!-- Modal Alterar Senha -->
+<div id="modalSenha" class="modal" aria-hidden="true" role="dialog" aria-modal="true">
+  <div class="modal__backdrop">
+    <div class="modal__dialog modal-lg" role="document">
+      <header class="modal__header">
+        <h2>Alterar senha</h2>
+        <button class="modal__close" type="button" data-close aria-label="Fechar">&times;</button>
+      </header>
 
-  <!-- Modal Alterar Senha -->
-  <div id="modalSenha" class="modal" aria-hidden="true" role="dialog" aria-modal="true">
-    <div class="modal__backdrop">
-      <div class="modal__dialog modal-lg" role="document">
-        <header class="modal__header">
-          <h2>Alterar senha</h2>
-          <button class="modal__close" type="button" data-close aria-label="Fechar">&times;</button>
-        </header>
+      <div class="modal__body">
+        <div class="grid filtros-grid">
+          <!-- Lembrete -->
+          <aside class="pwd-tips">
+            <h3>Lembre-se:</h3>
+            <ul class="requisitos">
+              <li>
+                <img src="{{url_for('static', filename='/img/icons/info.png')}}" class="info-ic" alt=""
+                  aria-hidden="true">
+                <span>No mínimo 8 caracteres</span>
+              </li>
+              <li>
+                <img src="{{url_for('static', filename='/img/icons/info.png')}}" class="info-ic" alt=""
+                  aria-hidden="true">
+                <span>Pelo menos 1 letra minúscula</span>
+              </li>
+              <li>
+                <img src="{{url_for('static', filename='/img/icons/info.png')}}" class="info-ic" alt=""
+                  aria-hidden="true">
+                <span>Pelo menos 1 letra maiúscula</span>
+              </li>
+              <li>
+                <img src="{{url_for('static', filename='/img/icons/info.png')}}" class="info-ic" alt=""
+                  aria-hidden="true">
+                <span>Pelo menos 1 número</span>
+              </li>
+              <li>
+                <img src="{{url_for('static', filename='/img/icons/info.png')}}" class="info-ic" alt=""
+                  aria-hidden="true">
+                <span>Pelo menos 1 caractere especial</span>
+              </li>
+            </ul>
+          </aside>
 
-        <div class="modal__body">
-          <div class="grid filtros-grid">
-            <!-- Lembrete -->
-            <aside class="pwd-tips">
-              <h3>Lembre-se:</h3>
-              <ul class="requisitos">
-                <li>
-                  <img src="{{url_for('static', filename='/img/icons/info.png')}}" class="info-ic" alt=""
-                    aria-hidden="true">
-                  <span>No mínimo 8 caracteres</span>
-                </li>
-                <li>
-                  <img src="{{url_for('static', filename='/img/icons/info.png')}}" class="info-ic" alt=""
-                    aria-hidden="true">
-                  <span>Pelo menos 1 letra minúscula</span>
-                </li>
-                <li>
-                  <img src="{{url_for('static', filename='/img/icons/info.png')}}" class="info-ic" alt=""
-                    aria-hidden="true">
-                  <span>Pelo menos 1 letra maiúscula</span>
-                </li>
-                <li>
-                  <img src="{{url_for('static', filename='/img/icons/info.png')}}" class="info-ic" alt=""
-                    aria-hidden="true">
-                  <span>Pelo menos 1 número</span>
-                </li>
-                <li>
-                  <img src="{{url_for('static', filename='/img/icons/info.png')}}" class="info-ic" alt=""
-                    aria-hidden="true">
-                  <span>Pelo menos 1 caractere especial</span>
-                </li>
-                <li>
-                  <img src="{{url_for('static', filename='/img/icons/info.png')}}" class="info-ic" alt=""
-                    aria-hidden="true">
-                  <span>Ser diferente da senha atual</span>
-                </li>
-              </ul>
-            </aside>
+          <!-- Form Senha -->
+          <form id="formSenha" class="pwd-form" autocomplete="off">
 
-            <!-- Form Senha -->
-            <form id="formSenha" class="pwd-form" autocomplete="off">
-              <div class="form-row">
-                <label for="pwdAtual">Senha atual</label>
-                <div class="pwd-field">
-                  <img class="icon-left" src="{{url_for('static', filename='/img/icons/cadeado.png')}}" alt=""
-                    aria-hidden="true">
-                  <input id="pwdAtual" type="password" autocomplete="current-password" />
-                  <button type="button" class="toggle-pass" aria-label="Mostrar senha" aria-pressed="false"
-                    data-target="#pwdAtual">
-                    <img class="eye eye-open" src="{{url_for('static', filename='/img/icons/view.png')}}" alt="">
-                    <img class="eye eye-closed" src="{{url_for('static', filename='/img/icons/hide.png')}}" alt="">
-                  </button>
-                </div>
+            <div class="form-row">
+              <label for="pwdNova">Nova senha</label>
+              <div class="pwd-field">
+                <img class="icon-left" src="{{url_for('static', filename='/img/icons/cadeado.png')}}" alt=""
+                  aria-hidden="true">
+                <input id="pwdNova" type="password" autocomplete="new-password" />
+                <button type="button" class="toggle-pass" aria-label="Mostrar senha" aria-pressed="false"
+                  data-target="#pwdNova">
+                  <img class="eye eye-open" src="{{url_for('static', filename='/img/icons/view.png')}}" alt="">
+                  <img class="eye eye-closed" src="{{url_for('static', filename='/img/icons/hide.png')}}" alt="">
+                </button>
               </div>
-
-              <div class="form-row">
-                <label for="pwdNova">Nova senha</label>
-                <div class="pwd-field">
-                  <img class="icon-left" src="{{url_for('static', filename='/img/icons/cadeado.png')}}" alt=""
-                    aria-hidden="true">
-                  <input id="pwdNova" type="password" autocomplete="new-password" />
-                  <button type="button" class="toggle-pass" aria-label="Mostrar senha" aria-pressed="false"
-                    data-target="#pwdNova">
-                    <img class="eye eye-open" src="{{url_for('static', filename='/img/icons/view.png')}}" alt="">
-                    <img class="eye eye-closed" src="{{url_for('static', filename='/img/icons/hide.png')}}" alt="">
-                  </button>
-                </div>
-                <div class="pwd-meter">
-                  <div class="bar" id="pwdBar"></div>
-                </div>
+              <div class="pwd-meter">
+                <div class="bar" id="pwdBar"></div>
               </div>
+            </div>
 
-              <div class="form-row">
-                <label for="pwdConfirma">Confirme a nova senha</label>
-                <div class="pwd-field">
-                  <img class="icon-left" src="{{url_for('static', filename='/img/icons/cadeado.png')}}" alt=""
-                    aria-hidden="true">
-                  <input id="pwdConfirma" type="password" autocomplete="new-password" />
-                  <button type="button" class="toggle-pass" aria-label="Mostrar senha" aria-pressed="false"
-                    data-target="#pwdConfirma">
-                    <img class="eye eye-open" src="{{url_for('static', filename='/img/icons/view.png')}}" alt="">
-                    <img class="eye eye-closed" src="{{url_for('static', filename='/img/icons/hide.png')}}" alt="">
-                  </button>
-                </div>
+            <div class="form-row">
+              <label for="pwdConfirma">Confirme a nova senha</label>
+              <div class="pwd-field">
+                <img class="icon-left" src="{{url_for('static', filename='/img/icons/cadeado.png')}}" alt=""
+                  aria-hidden="true">
+                <input id="pwdConfirma" type="password" autocomplete="new-password" />
+                <button type="button" class="toggle-pass" aria-label="Mostrar senha" aria-pressed="false"
+                  data-target="#pwdConfirma">
+                  <img class="eye eye-open" src="{{url_for('static', filename='/img/icons/view.png')}}" alt="">
+                  <img class="eye eye-closed" src="{{url_for('static', filename='/img/icons/hide.png')}}" alt="">
+                </button>
               </div>
-            </form>
-          </div>
+            </div>
+          </form>
         </div>
+      </div>
 
-        <div class="modal__footer">
-          <button class="btn cinza" id="btnCancelarSenha" type="button">Voltar</button>
-          <button class="btn verde" form="formSenha" type="submit">Alterar Senha</button>
-        </div>
+      <div class="modal__footer">
+        <button class="btn cinza" id="btnCancelarSenha" type="button">Voltar</button>
+        <button class="btn verde" form="formSenha" id="salvarSenha" type="submit">Alterar Senha</button>
       </div>
     </div>
   </div>
+</div>
 
-  <!-- Rodapé -->
-  <footer>
-    <hr class="solid">
-    <div class="container-footer">
-      <div>
-        <p class="texto-footer">© 2025 Orac</p>
-        <a>Suporte</a>
-        <a>Controller & Oraculu's</a>
-        <a>Controller Medicina</a>
-      </div>
-      <div>
-        <a><img src=" {{url_for('static', filename='/img/icons/instagram (2).png')}}" alt="Instagram icon"
-            class="icon-footer"></a>
-        <a><img src="{{url_for('static', filename='/img/icons/linkedin.png')}}" alt="LinkedIn icon"
-            class="icon-footer"></a>
-        <a><img src="{{url_for('static', filename='/img/icons/whatsapp.png')}}" alt="Whatsapp icon"
-            class="icon-footer"></a>
-      </div>
-    </div>
-  </footer>
 
-  <!-- Scripts -->
-  <script src="{{url_for('static', filename='/js/core.js')}}" defer></script>
-  <script src="{{url_for('static', filename='/js/conta.js')}} " defer></script>
-</body>
 
-</html>
+{% endblock body %}
+
+{% block scripts %}
+<script src="{{url_for('static', filename='/js/conta.js')}} " defer></script>
+<script src="{{url_for('static', filename='/js/conta/conta.js')}} " defer></script>
+{% endblock scripts %}
