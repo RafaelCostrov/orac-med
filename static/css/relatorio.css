@@ -1,3 +1,8 @@
+/* === Tipografia global para Relatório === */ /* === Algund elemntos estão sem font-family definido === */
+body, table, th, td, h1, h2, h3, label, span, small, button {
+  font-family: "Poppins", sans-serif !important;
+}
+
 /* ================== Cores ================== */
 :root {
 

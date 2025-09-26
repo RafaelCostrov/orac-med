@@ -8,7 +8,7 @@
 }
 
 html {
-    max-height: 100vh;
+    min-height: 100vh;
     -ms-overflow-style: none;
     scrollbar-width: none;
     overflow: auto;
@@ -27,16 +27,23 @@ body {
     background: linear-gradient(120deg, #d3d3d3, #cfcfcf);
     display: flex;
     flex-direction: column;
-    max-height: 100vh;
+    min-height: 100vh; /* fundo sempre cobrindo a tela */
 }
 
+/*conteúdo central ocups0 todo o espaço entre header e footer */
+main, .page, .content {
+    flex: 1 0 auto;
+}
 
+/* impede o footer de subiit quando o conteúdo é pequeno */
+footer {
+    flex-shrink: 0;
+}
 
 img {
     max-width: 100%;
     height: auto;
 }
-
 /* ================== Cores ================== */
 :root {
     --verde-50: #ebf9e3;

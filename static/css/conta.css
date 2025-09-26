@@ -1,3 +1,9 @@
+/* === So´ garantindo === */
+body, table, th, td, h1, h2, h3, h4, h5, h6,
+label, span, small, button, input, select {
+  font-family: "Poppins", sans-serif !important;
+}
+
 /* ================== Cores ================== */
 :root {
   --green-700: #2e7d32;
