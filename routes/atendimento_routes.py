@@ -71,7 +71,7 @@ def filtrar_atendimentos():
         por_pagina = data.get('por_pagina', 20)
         order_by = data.get('order_by')
         order_dir = data.get('order_dir')
-
+        print(data)
         atendimentos_filtrados = service.filtrar_atendimentos(
             id_atendimento=id_atendimento,
             min_data=min_data,

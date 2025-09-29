@@ -50,8 +50,8 @@ class AtendimentoRepository:
                 filtros.append(Atendimento.data_atendimento <= data_formatada)
 
             if tipo_atendimento:
-                filtros.append(func.lower(
-                    Atendimento.tipo_atendimento).like(f"%{tipo_atendimento}%"))
+                filtros.append(Atendimento.tipo_atendimento.in_(tipo_atendimento)
+                               )
 
             if usuario:
                 filtros.append(func.lower(
@@ -69,20 +69,18 @@ class AtendimentoRepository:
 
             if tipo_cliente:
                 filtros.append(Atendimento.cliente_atendimento.has(
-                    Cliente.tipo_cliente.like(f"%{tipo_cliente}%")
+                    Cliente.tipo_cliente.in_(tipo_cliente)
                 ))
 
             if is_ativo is not None:
                 filtros.append(Atendimento.is_ativo == is_ativo)
-            # Filtros com clienteX OR clienteY
+
             if ids_clientes:
                 filtros.append(Atendimento.id_cliente.in_(ids_clientes))
-            # Filtros com exameX AND exameY
+
             if ids_exames:
                 query = query.join(Atendimento.exames_atendimento)\
-                    .filter(Exame.id_exame.in_(ids_exames))\
-                    .group_by(Atendimento.id_atendimento)\
-                    .having(func.count(distinct(Exame.id_exame)) == len(ids_exames))
+                    .filter(Exame.id_exame.in_(ids_exames))
 
             query = query.filter(and_(*filtros)).options(
                 joinedload(Atendimento.cliente_atendimento),

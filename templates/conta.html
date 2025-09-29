@@ -14,7 +14,7 @@
     <!-- Foto de Perfil -->
     <div class="avatar-box">
       <label for="foto">
-        <img id="avatar-preview" src="{{ link if link != '' else url_for('static', filename='/img/user1.png') }}"
+        <img id="avatar-preview" src="{{ link if link != '' else url_for('static', filename='img/user1.png') }}"
           alt="Foto de perfil" data-foto="{{ link if link != '' else '' }}" />
       </label>
       <input type="file" id="foto" accept="image/*" hidden />

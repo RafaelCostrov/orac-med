@@ -69,10 +69,25 @@ main {
   margin-bottom: 14px
 }
 
-.faixa h1 {
+.titulo {
+  display: flex;
+  flex-direction: column;
+  margin: 8px 0;
+  gap: 2px;
+}
+
+.titulo h1 {
   color: var(--orange);
   font-size: clamp(20px, 2.6vw, 24px);
-  font-weight: 700
+  font-weight: 700;
+  margin: 0;
+}
+
+.titulo p {
+  color: var(--orange);
+  font-size: 13px;
+  font-weight: 500;
+  margin: 0;
 }
 
 .faixa-right {
@@ -483,11 +498,56 @@ select:focus {
   box-shadow: 0 0 0 2px rgba(247, 147, 30, .25)
 }
 
-/* Modal Exportar */
-.export-meta {
-  color: var(--grey-600);
-  font-size: 13px;
-  margin-bottom: 10px
+/* Modais */
+
+.exportar-modal-div{
+  display: flex;
+  gap:72px;
+  justify-content: center;
+}
+
+.input-label {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+}
+
+.modal-body-filtros {
+  max-width: 1000px; 
+  width: 90vw;      
+}
+
+.modal-container-filtros {
+  width: 100%;
+}
+
+.grid-filtros {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr); 
+  grid-template-rows: repeat(4, auto);  
+  gap: 16px;
+}
+
+.grid-filtros .input-label,
+.grid-filtros .fg {
+  display: flex;
+  flex-direction: column;
+}
+
+.grid-filtros .modal-footer {
+  grid-column: 1 / span 3; /* footer ocupa as 3 colunas */
+  display: flex;
+  justify-content: flex-end;
+  gap: 10px;
+  margin-top: 10px;
+}
+
+.modal-footer {
+  display: flex;
+  gap: 12px;
+  align-items: end;
+  justify-content: end;
+  width: 100%;
 }
 
 /* ================== Responsivo ================== */

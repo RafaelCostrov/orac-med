@@ -228,7 +228,7 @@ document.addEventListener('DOMContentLoaded', () => {
   // ippEl.addEventListener('change', () => { page = 1; render(); });
 
   // Toolbar
-  btnFiltro.addEventListener('click', () => openModal('modalFiltros'));
+  // btnFiltro.addEventListener('click', () => openModal('modalFiltros'));
   btnExportar.addEventListener('click', () => openModal('modalExportar'));
   btnImprimir.addEventListener('click', () => window.print());
 

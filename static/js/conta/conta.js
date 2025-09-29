@@ -50,7 +50,7 @@ function cancelarEdicao(event) {
     buttonEditar.textContent = "Editar";
     buttonEditar.removeEventListener("click", salvarAlteracao);
     buttonEditar.addEventListener("click", habilitarInputs);
-    avatar.src = avatar.dataset.foto || "/static/img/avatar.png";
+    avatar.src = avatar.dataset.foto || "/static/img/user1.png";
     colocarInputs();
 };
 

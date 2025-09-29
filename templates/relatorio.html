@@ -9,7 +9,10 @@
 <main>
   <!-- Faixa verde com título e ícones -->
   <div class="faixa">
-    <h1>Relatório</h1>
+    <div class="titulo">
+      <h1>Relatório</h1>
+      <p>Exibindo <span id="expCount"></span> Atendimentos</p>
+    </div>
     <div class="faixa-right">
       <div class="itens-por-pagina">
         <label for="ipp">Itens/página</label>
@@ -20,14 +23,11 @@
         </select>
       </div>
 
-      <button id="btnFiltro" class="icon-btn" title="Filtros">
+      <button id="btnFiltro" class="icon-btn" title="Filtros" uk-toggle="target: #filtro-modal">
         <img src="{{url_for('static', filename='/img/icons/icon-filtro.png')}}" alt="Filtros">
       </button>
-      <button id="btnExportar" class="icon-btn" title="Exportar">
+      <button id="btnExportar" class="icon-btn" title="Exportar" uk-toggle="target: #exportar-modal">
         <img src="{{url_for('static', filename='/img/icons/icon-exportar.png')}}" alt="Exportar">
-      </button>
-      <button id="btnImprimir" class="icon-btn" title="Imprimir">
-        <img src="{{url_for('static', filename='/img/icons/icon-impressora.png')}}" alt="Imprimir">
       </button>
     </div>
   </div>
@@ -60,52 +60,50 @@
   </section>
 </main>
 
-<!-- MODAL: Filtros -->
-<div id="modalFiltros" class="modal" aria-hidden="true" role="dialog" aria-modal="true" aria-labelledby="filtrosTitle">
-  <div class="modal__backdrop" data-close="modalFiltros"></div>
-  <div class="modal__dialog modal-lg">
-    <div class="modal__header">
-      <h2 id="filtrosTitle">Filtros</h2>
-      <button class="modal__close" data-close="modalFiltros" aria-label="Fechar">&times;</button>
-    </div>
-    <div class="modal__body">
-      <div class="grid filtros-grid">
-        <div class="fg">
-          <label for="data_min">Data mínima</label>
-          <input type="date" id="data_min" />
+<!-- Modal Filtro -->
+<div id="filtro-modal" uk-modal>
+  <div class="uk-modal-dialog uk-margin-auto-vertical uk-modal-body modal-body-filtros">
+    <div class="modal-container-filtros">
+      <button class="uk-modal-close-default" type="button" uk-close></button>
+      <h2 class="uk-modal-title">Filtros</h2>
+      <hr>
+      <div class="grid-filtros">
+        <div class="input-label">
+          <label for="data_min">Data Mínima</label>
+          <input id="data_min" name="data_min" type="date"></input>
         </div>
-        <div class="fg">
-          <label for="data_max">Data máxima</label>
-          <input type="date" id="data_max" />
+        <div class="input-label">
+          <label for="data_max">Data Máxima</label>
+          <input id="data_max" name="data_max" type="date"></input>
         </div>
-        <div class="fg">
-          <label for="emp">Empresa</label>
-          <select id="emp">
-            <option value="">Todas</option>
+        <div class="input-label">
+          <label for="empresas">Empresas</label>
+          <select multiple multiselect-search="true" multiselect-select-all="true"
+            class="modal-empresas-filtro-multiselect-dropdown" id="empresas">
           </select>
         </div>
-        <div class="fg">
-          <label for="usuario">Usuario</label>
-          <input type="text" id="usuario" />
+        <div class="input-label">
+          <label for="usuario">Usuário</label>
+          <input id="usuario" name="usuario" type="text"></input>
         </div>
-        <div class="fg">
+        <div class="input-label">
           <label for="colaborador">Colaborador</label>
-          <input type="text" id="colaborador" />
+          <input id="colaborador" name="colaborador" type="text"></input>
         </div>
-        <div class="fg">
-          <label for="tipoCl">Tipo de Cliente</label>
-          <select id="tipoCl">
-            <option value="">Todos</option>
+        <div class="input-label">
+          <label for="tipoCl">Tipo do Cliente</label>
+          <select multiple multiselect-search="true" multiselect-select-all="true"
+            class="modal-tipoCl-filtro-multiselect-dropdown" id="tipoCl">
             <option value="cliente">Cliente</option>
             <option value="credenciado">Credenciado</option>
             <option value="servico_prestado">Serviço Prestado</option>
             <option value="particular">Particular</option>
           </select>
         </div>
-        <div class="fg">
+        <div class="input-label">
           <label for="tipoAt">Tipo de Atendimento</label>
-          <select id="tipoAt">
-            <option value="">Todos</option>
+          <select multiple multiselect-search="true" multiselect-select-all="true"
+            class="modal-tipoAt-filtro-multiselect-dropdown" id="tipoAt">
             <option value="admissional">Admissional</option>
             <option value="demissional">Demissional</option>
             <option value="periodico">Periódico</option>
@@ -114,10 +112,10 @@
             <option value="outros">Outros</option>
           </select>
         </div>
-        <div class="fg">
-          <label for="exames-select">Exames</label>
-          <select id="exames-select">
-            <option value="">Todos</option>
+        <div class="input-label">
+          <label for="exames">Exames</label>
+          <select multiple multiselect-search="true" multiselect-select-all="true"
+            class="modal-exames-filtro-multiselect-dropdown" id="exames">
           </select>
         </div>
         <div class="fg">
@@ -128,36 +126,31 @@
             <option value="0">Canceladas</option>
           </select>
         </div>
-        <div class="fg">
-          <label for="valor_min">Valor mínimo</label>
-          <input type="number" id="valor_min" />
+        <div class="input-label">
+          <label for="valor_min">Valor Mínimo</label>
+          <input id="valor_min" name="valor_min" type="number"></input>
         </div>
-        <div class="fg">
-          <label for="valor_max">Valor máximo</label>
-          <input type="number" id="valor_max" />
+        <div class="input-label">
+          <label for="valor_max">Valor Máximo</label>
+          <input id="valor_max" name="valor_max" type="number"></input>
+        </div>
+        <div class="modal-footer">
+          <button class="btn vermelho" id="filtrosLimpar">Limpar</button>
+          <button class="btn verde" id="filtrosAplicar">Aplicar</button>
         </div>
       </div>
-    </div>
-    <div class="modal__footer">
-      <button id="filtrosLimpar" class="btn cinza">Limpar</button>
-      <button id="filtrosAplicar" class="btn verde">Aplicar</button>
     </div>
   </div>
 </div>
 
-<!-- MODAL: Exportar -->
-<div id="modalExportar" class="modal" aria-hidden="true" role="dialog" aria-modal="true" aria-labelledby="expTitle">
-  <div class="modal__backdrop" data-close="modalExportar"></div>
-  <div class="modal__dialog">
-    <div class="modal__header">
-      <h2 id="expTitle">Exportar</h2>
-      <button class="modal__close" data-close="modalExportar" aria-label="Fechar">&times;</button>
-    </div>
-    <div class="modal__body">
-      <p class="export-meta">
-        <span id="expCount">0</span> registros filtrados • arquivo: <code id="expName">atendimentos_HH-MM-SS</code>
-      </p>
-      <div class="export-grid">
+<!-- Modal Exportar -->
+<div id="exportar-modal" uk-modal>
+  <div class="uk-modal-dialog uk-margin-auto-vertical uk-modal-body modal-body">
+    <div class="modal-container">
+      <button class="uk-modal-close-default" type="button" uk-close></button>
+      <h2 class="uk-modal-title">O que deseja exportar?</h2>
+      <hr>
+      <div class="exportar-modal-div">
         <button id="exportXls" class="export-tile" aria-label="Exportar CSV">
           <img src="{{url_for('static', filename='/img/icons/xls-file.png')}}" alt="">
           <span>Excel</span>
@@ -171,7 +164,6 @@
   </div>
 </div>
 
-
 {% endblock body %}
 
 {% block scripts %}
@@ -179,6 +171,7 @@
 <script src=" {{url_for('static', filename='/js/relatorio/atendimentos.js')}}" defer></script>
 <script src="{{url_for('static', filename='/js/relatorio/clientes.js')}}" defer></script>
 <script src="{{url_for('static', filename='/js/relatorio/exames.js ')}}" defer></script>
+<script src="{{url_for('static', filename='/js/multiselect-dropdown.js')}}"></script>
 {% endblock scripts %}
 
 

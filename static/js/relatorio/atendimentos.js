@@ -3,11 +3,23 @@ let porPaginaInput = document.getElementById('ipp')
 porPaginaInput.addEventListener("change", () => {
     carregarAtendimentos({ pagina: 1, filtros: filtrosAtuais, porPagina: parseInt(porPaginaInput.value) })
 })
+
 let totalPaginas = 1;
 let filtrosAtuais = {};
 let orderByAtual = null;
 let orderDirAtual = 'asc';
 
+let date = new Date();
+let primeiroDia = new Date(date.getFullYear(), date.getMonth(), 1);
+let primeiroDiaFormatted = primeiroDia.toISOString().split('T')[0];
+let ultimoDia = new Date(date.getFullYear(), date.getMonth() + 1, 0);
+let ultimoDiaFormatted = ultimoDia.toISOString().split('T')[0];
+let filtroInicial = {
+    min_data: primeiroDiaFormatted,
+    max_data: ultimoDiaFormatted,
+}
+document.getElementById("data_min").value = primeiroDiaFormatted;
+document.getElementById("data_max").value = ultimoDiaFormatted;
 
 const $ = (s, ctx = document) => ctx.querySelector(s);
 function closeModal(id) {
@@ -39,7 +51,6 @@ async function carregarAtendimentos({ pagina = 1, filtros = {}, porPagina = 20 }
     };
 
     try {
-
         const resposta = await fetch("/atendimentos/filtrar-atendimentos", {
             method: "POST",
             headers: {
@@ -50,6 +61,7 @@ async function carregarAtendimentos({ pagina = 1, filtros = {}, porPagina = 20 }
 
         const dados = await resposta.json();
 
+        console.log(payload)
         if (resposta.ok) {
             const tbody = document.querySelector("#tbl tbody");
             tbody.innerHTML = '';
@@ -97,15 +109,31 @@ document.getElementById("next").addEventListener("click", () => {
 });
 
 function getFiltros() {
+    var tipoClSelect = document.getElementById("tipoCl");
+    var tipoClienteSelecionados = Array.from(tipoClSelect.selectedOptions).map(opt => opt.value);
+
+    var empresasSelect = document.getElementById("empresas");
+    var empresasSelecionadas = Array.from(empresasSelect.selectedOptions)
+        .map(opt => parseInt(opt.value))
+        .filter(Number.isInteger);;
+
+    var tipoAtSelect = document.getElementById("tipoAt");
+    var tipoAtendimentoSelecionados = Array.from(tipoAtSelect.selectedOptions).map(opt => opt.value);
+
+    var examesSelect = document.getElementById("exames");
+    const examesSelecionados = Array.from(examesSelect.selectedOptions)
+        .map(opt => parseInt(opt.value))
+        .filter(Number.isInteger);
+
     return {
         data_min: document.getElementById("data_min").value || null,
         data_max: document.getElementById("data_max").value || null,
-        empresa: document.getElementById("emp").value || null,
+        empresa: empresasSelecionadas.length > 0 ? empresasSelecionadas : null,
         usuario: document.getElementById("usuario").value || null,
         colaborador: document.getElementById("colaborador").value || null,
-        tipoCliente: document.getElementById("tipoCl").value || null,
-        tipoAtendimento: document.getElementById("tipoAt").value || null,
-        exames: document.getElementById("exames-select").value || null,
+        tipoCliente: tipoClienteSelecionados.length > 0 ? tipoClienteSelecionados : null,
+        tipoAtendimento: tipoAtendimentoSelecionados.length > 0 ? tipoAtendimentoSelecionados : null,
+        exames: examesSelecionados.length > 0 ? examesSelecionados : null,
         status: document.getElementById("status").value || null,
         valor_min: document.getElementById("valor_min").value || null,
         valor_max: document.getElementById("valor_max").value || null
@@ -114,6 +142,17 @@ function getFiltros() {
 
 document.getElementById("filtrosLimpar").addEventListener("click", () => {
     filtrosAtuais = {}
+    document.getElementById("data_min").value = "";
+    document.getElementById("data_max").value = "";
+    document.getElementById("empresas").value = "";
+    document.getElementById("usuario").value = "";
+    document.getElementById("colaborador").value = "";
+    document.getElementById("tipoCl").value = "";
+    document.getElementById("tipoAt").value = "";
+    document.getElementById("exames").value = "";
+    document.getElementById("status").value = "";
+    document.getElementById("valor_min").value = "";
+    document.getElementById("valor_max").value = "";
     carregarAtendimentos({ pagina: paginaAtual, filtrosAtuais: {}, porPagina: parseInt(porPaginaInput.value) })
 })
 
@@ -131,12 +170,8 @@ document.getElementById("filtrosAplicar").addEventListener("click", () => {
         colaborador_atendimento: filtrosBrutos.colaborador,
         tipo_cliente: filtrosBrutos.tipoCliente,
         is_ativo: filtrosBrutos.status,
-        ids_clientes: filtrosBrutos.empresa
-            ? filtrosBrutos.empresa.split(",").map(v => parseInt(v.trim())).filter(Number.isInteger)
-            : [],
+        ids_clientes: filtrosBrutos.empresa,
         ids_exames: filtrosBrutos.exames
-            ? filtrosBrutos.exames.split(",").map(v => parseInt(v.trim())).filter(Number.isInteger)
-            : []
     };
 
     Object.keys(filtrosAtuais).forEach(key => {
@@ -151,10 +186,10 @@ document.getElementById("filtrosAplicar").addEventListener("click", () => {
         }
     });
     carregarAtendimentos({ filtros: filtrosAtuais, pagina: 1, porPagina: parseInt(porPaginaInput.value) });
-    closeModal('modalFiltros');
+    UIkit.modal("#filtro-modal").hide();
 })
 
-carregarAtendimentos();
+carregarAtendimentos({ filtros: filtroInicial, pagina: 1, porPagina: parseInt(porPaginaInput.value) });
 
 document.querySelectorAll("th[data-sort]").forEach(th => {
     th.addEventListener("click", () => {

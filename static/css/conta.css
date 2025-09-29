@@ -522,6 +522,7 @@ footer hr {
   gap: 10px;
   width: 100%;
   padding: 12px 14px;
+  font-size: 16px;
   border: 1px solid var(--grey-300);
   background: #fff;
   border-radius: 10px;
@@ -796,15 +797,15 @@ footer hr {
 }
 
 /* alterna view/hide via aria-pressed */
-.toggle-pass .eye-closed {
-  display: none;
-}
-
-.toggle-pass[aria-pressed="true"] .eye-open {
+.toggle-pass .eye-open {
   display: none;
 }
 
 .toggle-pass[aria-pressed="true"] .eye-closed {
+  display: none;
+}
+
+.toggle-pass[aria-pressed="true"] .eye-open {
   display: inline;
 }
 

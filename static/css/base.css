@@ -258,6 +258,18 @@ footer {
     padding-top: 24px;
 }
 
+.texto-footer {
+    font-weight:bold
+}
+
+.or {
+    color: #0082c7
+}
+
+.ac {
+    color: #F0A23B
+}
+
 footer hr {
     margin: 0 5%;
     border-top: 1px solid rgb(75, 75, 75);

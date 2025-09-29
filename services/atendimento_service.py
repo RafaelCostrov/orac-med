@@ -83,9 +83,10 @@ class AtendimentoService():
             lista.append(json_atendimento)
         return lista
 
-    def filtrar_atendimentos(self, id_atendimento: str, min_data: str, max_data: str, tipo_atendimento: TiposAtendimento, usuario: str, min_valor: float,
-                             max_valor: str, colaborador_atendimento: str, tipo_cliente: TiposCliente, is_ativo: bool, ids_clientes: list[int],
-                             ids_exames: list[int], pagina: int = 1, por_pagina=50, order_by: str = "data_atendimento", order_dir: str = "desc"):
+    def filtrar_atendimentos(self, id_atendimento: str, min_data: str, max_data: str, tipo_atendimento: list[TiposAtendimento],
+                             usuario: str, min_valor: float, max_valor: str, colaborador_atendimento: str, tipo_cliente: list[TiposCliente],
+                             is_ativo: bool, ids_clientes: list[int], ids_exames: list[int], pagina: int = 1, por_pagina=50,
+                             order_by: str = "data_atendimento", order_dir: str = "desc"):
         if por_pagina is not None:
             offset = (pagina - 1) * por_pagina
         else:

@@ -12,7 +12,7 @@
     {% block titleCss %}
     {% endblock titleCss %}
 
- <!-- Alteração do B.O do Poppins -->
+    <!-- Alteração do B.O do Poppins -->
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;500;600;700&display=swap" rel="stylesheet">
@@ -79,17 +79,21 @@
     <hr class="solid">
     <div class="container-footer">
         <div>
-            <p class="texto-footer">© 2025 Orac</p>
-            <a>Suporte</a>
-            <a>Controller & Oraculu's</a>
-            <a>Controller Medicina</a>
+            <p class="texto-footer">© 2025 <span class="or">Or</span><span class="ac">ac</span></p>
+            <a href="https://wa.me/5511976825950?text=Ol%C3%A1%2C%20gostaria%20de%20uma%20ajuda%20com%20o%20Orac%20Med"
+                target="_blank">Suporte</a>
+            <a href="https://controller-oraculus.com.br" target="_blank">Controller & Oraculu's</a>
+            <a href="https://www.controllermedseg.com.br" target="_blank">Controller Medicina</a>
         </div>
         <div>
-            <a><img src=" {{url_for('static', filename='/img/icons/instagram (2).png')}}" alt="Instagram icon"
+            <a href="https://www.instagram.com/controller-oraculus" target="_blank"><img
+                    src=" {{url_for('static', filename='/img/icons/instagram (2).png')}}" alt="Instagram icon"
                     class="icon-footer"></a>
-            <a><img src="{{url_for('static', filename='/img/icons/linkedin.png')}}" alt="LinkedIn icon"
+            <a href="https://br.linkedin.com/company/controller-oraculus" target="_blank"><img
+                    src="{{url_for('static', filename='/img/icons/linkedin.png')}}" alt="LinkedIn icon"
                     class="icon-footer"></a>
-            <a><img src="{{url_for('static', filename='/img/icons/whatsapp.png')}}" alt="Whatsapp icon"
+            <a href="https://wa.me/5511976825950" target="_blank"><img
+                    src="{{url_for('static', filename='/img/icons/whatsapp.png')}}" alt="Whatsapp icon"
                     class="icon-footer"></a>
         </div>
     </div>
