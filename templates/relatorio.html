@@ -23,11 +23,11 @@
         </select>
       </div>
 
-      <button id="btnFiltro" class="icon-btn" title="Filtros" uk-toggle="target: #filtro-modal">
-        <img src="{{url_for('static', filename='/img/icons/icon-filtro.png')}}" alt="Filtros">
+      <button id="btnFiltro" class="icon-btn" title="Filtros" uk-toggle="target: #filtro-modal-atendimentos">
+        <img src="{{url_for('static', filename='/img/icons/filter.png')}}" alt="Filtros">
       </button>
       <button id="btnExportar" class="icon-btn" title="Exportar" uk-toggle="target: #exportar-modal">
-        <img src="{{url_for('static', filename='/img/icons/icon-exportar.png')}}" alt="Exportar">
+        <img src="{{url_for('static', filename='/img/icons/export.png')}}" alt="Exportar">
       </button>
     </div>
   </div>
@@ -61,7 +61,7 @@
 </main>
 
 <!-- Modal Filtro -->
-<div id="filtro-modal" uk-modal>
+<div id="filtro-modal-atendimentos" uk-modal>
   <div class="uk-modal-dialog uk-margin-auto-vertical uk-modal-body modal-body-filtros">
     <div class="modal-container-filtros">
       <button class="uk-modal-close-default" type="button" uk-close></button>
@@ -152,11 +152,11 @@
       <hr>
       <div class="exportar-modal-div">
         <button id="exportXls" class="export-tile" aria-label="Exportar CSV">
-          <img src="{{url_for('static', filename='/img/icons/xls-file.png')}}" alt="">
+          <img src="{{url_for('static', filename='/img/icons/xls.png')}}" alt="">
           <span>Excel</span>
         </button>
         <button id="exportTxt" class="export-tile" aria-label="Exportar TXT">
-          <img src="{{url_for('static', filename='/img/icons/txt-file.png')}}" alt="">
+          <img src="{{url_for('static', filename='/img/icons/txt.png')}}" alt="">
           <span>TXT</span>
         </button>
       </div>

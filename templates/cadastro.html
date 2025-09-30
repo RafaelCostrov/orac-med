@@ -7,9 +7,13 @@
 
 {% block body %}
 <main>
+
   <!-- Faixa verde -->
   <div class="faixa">
-    <h1>Cadastro</h1>
+    <div class="titulo">
+      <h1>Cadastro</h1>
+      <p>Exibindo <span id="expCount"></span> <span id="tipoListagem"></span></p>
+    </div>
     <div class="faixa-right">
       <div class="tipo-lista">
         <label for="tipoLista">Tipo</label>
@@ -29,18 +33,17 @@
         </select>
       </div>
 
-      <button id="btnFiltro" class="icon-btn" title="Filtros">
-        <img src=" {{ url_for('static' ,filename='/img/icons/icon-filtro.png')}}" alt="Filtros">
+      <button id="btnFiltro" class="icon-btn" title="Filtros" uk-toggle="target: #filtro-modal-cadastro">
+        <img src=" {{ url_for('static' ,filename='/img/icons/filter.png')}}" alt="Filtros">
       </button>
       <button id="btnExportar" class="icon-btn" title="Exportar" uk-toggle="target: #exportar-modal">
-        <img src=" {{ url_for('static' ,filename='/img/icons/icon-exportar.png')}}" alt="Exportar">
+        <img src=" {{ url_for('static' ,filename='/img/icons/export.png')}}" alt="Exportar">
       </button>
-      <button id="btnNovo" class="icon-btn" title="Novo cadastro">
-        <img src=" {{ url_for('static' ,filename='/img/icons/icon-plus.png')}}" alt="Novo">
+      <button id="btnNovo" class="icon-btn" title="Novo cadastro" uk-toggle="target: #modal-cadastro">
+        <img src=" {{ url_for('static' ,filename='/img/icons/plus.png')}}" alt="Novo">
       </button>
     </div>
   </div>
-
 
   <!-- Tabela -->
   <section class="tabela-wrap">
@@ -64,194 +67,204 @@
   </section>
 </main>
 
-<!-- MODAL: Novo -->
-<div id="modalCadastro" class="modal modal--brand" aria-hidden="true" role="dialog" aria-modal="true"
-  aria-labelledby="cadTitle">
-  <div class="modal__backdrop" data-close="modalCadastro"></div>
-  <div class="modal__dialog modal-lg">
-    <div class="modal__header">
-      <h2 id="cadTitle">Novo cadastro</h2>
-      <button class="modal__close" data-close="modalCadastro" aria-label="Fechar">&times;</button>
-    </div>
-    <div class="modal__body">
-      <form id="formCadastro" autocomplete="off">
-        <div class="grid filtros-grid">
-          <div class="fg">
-            <label for="cadTipo">Tipo de Cadastro</label>
-            <select id="cadTipo">
-              <option value="clientes">Cliente</option>
-              <option value="usuarios">Usuário</option>
-              <option value="exames">Exame</option>
-            </select>
-          </div>
+<!-- Modal Cadastro -->
+<div id="modal-cadastro" uk-modal>
+  <div class="uk-modal-dialog uk-margin-auto-vertical uk-modal-body modal-body-cadastro">
+    <div class="modal-container-cadastro">
 
-          <!-- ======= USUÁRIOS ======= -->
-          <div class="fg cad-field" data-for="usuarios">
-            <label>Nome</label>
-            <input id="nome_usuario" type="text" placeholder="Nome completo">
-          </div>
-          <div class="fg cad-field" data-for="usuarios">
-            <label>E-mail</label>
-            <input id="email_usuario" type="email" placeholder="email@exemplo.com">
-          </div>
-          <div class="fg cad-field" data-for="usuarios">
-            <label>Senha</label>
-            <input id="senha" type="password" placeholder="••••••••">
-          </div>
-          <div class="fg cad-field" data-for="usuarios">
-            <label>Perfil</label>
-            <select id="role">
-              <option value="usuario">Usuário</option>
-              <option value="gestor">Gestor</option>
-              <option value="administrador">Administrador</option>
-            </select>
-          </div>
-          <div class="fg cad-field" data-for="usuarios">
-            <label>Foto</label>
-            <input id="foto" type="file" accept="image/*" placeholder="Foto do usuário">
-          </div>
+      <!-- botão fechar -->
+      <button class="uk-modal-close-default" type="button" uk-close></button>
 
-          <!-- ======= CLIENTES ======= -->
+      <!-- título -->
+      <h2 class="uk-modal-title">Novo cadastro</h2>
+      <hr>
 
-          <div class="fg cad-field hidden" data-for="clientes">
-            <label>CNPJ do cliente</label>
-            <div class="input-wrapper">
-              <input id="cnpj_cliente" type="text" placeholder="00.000.000/0000-00">
-              <button id="pesquisar_cnpj"><img id="pesquisar_cnpj"
-                  src="{{ url_for('static' ,filename='/img/icons/search.png')}}" alt="Pesquisar"></button>
-            </div>
-          </div>
-          <div class="fg cad-field hidden" data-for="clientes">
-            <label>Nome do cliente</label>
-            <input id="nome_cliente" type="text" placeholder="Razão/Nome">
-          </div>
-          <div class="fg cad-field hidden" data-for="clientes">
-            <label>Tipo do cliente</label>
-            <select id="tipo_cliente">
-              <option value="cliente">Cliente</option>
-              <option value="credenciado">Credenciado</option>
-              <option value="servico_prestado">Serviço Prestado</option>
-              <option value="particular">Particular</option>
-            </select>
-          </div>
-          <div class="fg cad-field hidden" data-for="clientes">
-            <label for="exames">Exames Inclusos</label>
-            <select id="exames-select">
-              <option value="">Nenhum</option>
-            </select>
-          </div>
+      <!-- corpo -->
+      <form id="formCadastro" autocomplete="off" class="grid-cadastro">
 
-          <!-- ======= EXAMES ======= -->
-          <div class="fg cad-field hidden" data-for="exames">
-            <label>Nome do exame</label>
-            <input id="nome_exame" type="text" placeholder="Ex.: Audiometria">
-          </div>
-          <div class="fg cad-field hidden" data-for="exames">
-            <label>Interno?</label>
-            <select id="is_interno">
-              <option value=1>Sim</option>
-              <option value=0>Não</option>
-            </select>
-          </div>
-          <div class="fg cad-field hidden" data-for="exames">
-            <label>Valor (R$)</label>
-            <input id="valor_exame" type="number" step="0.01" min="0" placeholder="0,00">
+        <!-- ======= USUÁRIOS ======= -->
+        <div class="input-label hidden" data-for="usuarios">
+          <label for="nome_usuario">Nome</label>
+          <input id="nome_usuario" type="text" placeholder="Nome completo">
+        </div>
+
+        <div class="input-label hidden" data-for="usuarios">
+          <label for="email_usuario">E-mail</label>
+          <input id="email_usuario" type="email" placeholder="email@exemplo.com">
+        </div>
+
+        <div class="input-label hidden" data-for="usuarios">
+          <label for="senha">Senha</label>
+          <input id="senha" type="password" placeholder="••••••••">
+        </div>
+
+        <div class="input-label hidden" data-for="usuarios">
+          <label for="role">Perfil</label>
+          <select id="role">
+            <option value="usuario">Usuário</option>
+            <option value="gestor">Gestor</option>
+            <option value="administrador">Administrador</option>
+          </select>
+        </div>
+
+        <div class="input-label hidden" data-for="usuarios">
+          <label for="foto">Foto</label>
+          <input id="foto" type="file" accept="image/*" placeholder="Foto do usuário">
+        </div>
+
+        <!-- ======= CLIENTES ======= -->
+        <div class="input-label hidden" data-for="clientes">
+          <label for="cnpj_cliente">CNPJ do cliente</label>
+          <div class="input-wrapper">
+            <input id="cnpj_cliente" type="text" placeholder="00.000.000/0000-00">
+            <button id="pesquisar_cnpj" type="button">
+              <img src="{{ url_for('static', filename='/img/icons/search.png') }}" alt="Pesquisar">
+            </button>
           </div>
         </div>
-      </form>
-    </div>
-    <div class="modal__footer">
-      <button class="btn cinza" data-close="modalCadastro" type="button">Voltar</button>
-      <button id="btnExcluirReg" class="btn vermelho" type="button" style="display:none">Excluir</button>
-      <button class="btn verde" id="button-cadastro">Salvar</button>
-    </div>
-  </div>
-</div>
 
-<!-- MODAL: Filtros -->
-<div id="modalFiltrosCad" class="modal" aria-hidden="true" role="dialog" aria-modal="true"
-  aria-labelledby="filtrosTitle">
-  <div class="modal__backdrop" data-close="modalFiltrosCad"></div>
-  <div class="modal__dialog">
-    <div class="modal__header">
-      <h2 id="filtrosTitle">Filtros</h2>
-      <button class="modal__close" data-close="modalFiltrosCad" aria-label="Fechar">&times;</button>
-    </div>
-    <div class="modal__body">
-      <form id="formFiltros">
-        <div class="grid filtros-grid">
-          <!-- Usuários -->
-          <div class="fg filtro-field" data-for="usuarios">
-            <label>Nome</label>
-            <input id="nome_usuario_filtro" type="text">
-          </div>
-          <div class="fg filtro-field" data-for="usuarios">
-            <label>E-mail</label>
-            <input id="email_usuario_filtro" type="text">
-          </div>
-          <div class="fg filtro-field" data-for="usuarios">
-            <label>Perfil</label>
-            <select id="role_filtro">
-              <option value="">Todos</option>
-              <option value="administrador">Administrador</option>
-              <option value="gesto">Gestor</option>
-              <option value="usuario">Usuário</option>
-            </select>
-          </div>
+        <div class="input-label hidden" data-for="clientes">
+          <label for="nome_cliente">Nome do cliente</label>
+          <input id="nome_cliente" type="text" placeholder="Razão/Nome">
+        </div>
 
-          <!-- Clientes -->
-          <div class="fg filtro-field hidden" data-for="clientes">
-            <label>Nome</label>
-            <input id="nome_cliente_filtro" type="text">
-          </div>
-          <div class="fg filtro-field hidden" data-for="clientes">
-            <label>CNPJ</label>
-            <input id="cnpj_cliente_filtro" type="text">
-          </div>
-          <div class="fg filtro-field hidden" data-for="clientes">
-            <label>Tipo</label>
-            <select id="tipo_cliente_filtro">
-              <option value="">Todos</option>
-              <option value="cliente">Cliente</option>
-              <option value="credenciado">Credenciado</option>
-              <option value="servico_prestado">Serviço Prestado</option>
-              <option value="particular">Particular</option>
-            </select>
-          </div>
+        <div class="input-label hidden" data-for="clientes">
+          <label for="tipo_cliente">Tipo do cliente</label>
+          <select id="tipo_cliente">
+            <option value="cliente">Cliente</option>
+            <option value="credenciado">Credenciado</option>
+            <option value="servico_prestado">Serviço Prestado</option>
+            <option value="particular">Particular</option>
+          </select>
+        </div>
 
-          <!-- Exames -->
-          <div class="fg filtro-field hidden" data-for="exames">
-            <label>Nome do exame</label>
-            <input id="nome_exame_filtro" type="text">
-          </div>
-          <div class="fg filtro-field hidden" data-for="exames">
-            <label>Interno?</label>
-            <select id="is_interno_filtro">
-              <option value="">Todos</option>
-              <option value="1">Sim</option>
-              <option value="0">Não</option>
-            </select>
-          </div>
-          <div class="fg filtro-field hidden" data-for="exames">
-            <label>Valor mín.</label>
-            <input id="min_valor_filtro" type="number" step="0.01" min="0">
-          </div>
-          <div class="fg filtro-field hidden" data-for="exames">
-            <label>Valor máx.</label>
-            <input id="max_valor_filtro" type="number" step="0.01" min="0">
-          </div>
+        <div class="input-label hidden" data-for="clientes">
+          <label for="exames-select">Exames Inclusos</label>
+          <select id="exames-select">
+            <option value="">Nenhum</option>
+          </select>
+        </div>
+
+        <!-- ======= EXAMES ======= -->
+        <div class="input-label hidden" data-for="exames">
+          <label for="nome_exame">Nome do exame</label>
+          <input id="nome_exame" type="text" placeholder="Ex.: Audiometria">
+        </div>
+
+        <div class="input-label hidden" data-for="exames">
+          <label for="is_interno">Interno?</label>
+          <select id="is_interno">
+            <option value="1">Sim</option>
+            <option value="0">Não</option>
+          </select>
+        </div>
+
+        <div class="input-label hidden" data-for="exames">
+          <label for="valor_exame">Valor (R$)</label>
+          <input id="valor_exame" type="number" step="0.01" min="0" placeholder="0,00">
+        </div>
+
+        <!-- footer -->
+        <div class="modal-footer">
+          <button class="btn cinza" type="button" uk-toggle="target: #modal-cadastro">Voltar</button>
+          <button id="btnExcluirReg" class="btn vermelho" type="button" style="display:none">Excluir</button>
+          <button class="btn verde" id="button-cadastro" type="submit">Salvar</button>
         </div>
       </form>
-    </div>
-    <div class="modal__footer">
-      <button id="filtrosLimparCad" class="btn cinza" type="button">Limpar</button>
-      <button id="filtrosAplicarCad" class="btn verde" type="button">Aplicar</button>
     </div>
   </div>
 </div>
 
 
-<!-- Modal TR Cliente -->
+<!-- Modal Filtros -->
+<div id="filtro-modal-cadastro" uk-modal>
+  <div class="uk-modal-dialog uk-margin-auto-vertical uk-modal-body modal-body-filtros">
+    <div class="modal-container-filtros">
+      <!-- botão fechar -->
+      <button class="uk-modal-close-default" type="button" uk-close></button>
+
+      <!-- título -->
+      <h2 class="uk-modal-title">Filtros</h2>
+      <hr>
+
+      <!-- corpo -->
+      <form id="formFiltros" class="grid-filtros">
+
+        <!-- Exemplo de campo -->
+        <div class="input-label hidden" data-for="usuarios">
+          <label for="nome_usuario_filtro">Nome</label>
+          <input id="nome_usuario_filtro" type="text">
+        </div>
+
+        <div class="input-label hidden" data-for="usuarios">
+          <label for="email_usuario_filtro">E-mail</label>
+          <input id="email_usuario_filtro" type="text">
+        </div>
+
+        <div class="input-label hidden" data-for="usuarios">
+          <label for="role_filtro">Perfil</label>
+          <select id="role_filtro">
+            <option value="">Todos</option>
+            <option value="administrador">Administrador</option>
+            <option value="gestor">Gestor</option>
+            <option value="usuario">Usuário</option>
+          </select>
+        </div>
+
+        <!-- Clientes -->
+        <div class="input-label" data-for="clientes">
+          <label for="nome_cliente_filtro">Nome</label>
+          <input id="nome_cliente_filtro" type="text">
+        </div>
+        <div class="input-label" data-for="clientes">
+          <label for="cnpj_cliente_filtro">CNPJ</label>
+          <input id="cnpj_cliente_filtro" type="text">
+        </div>
+
+        <div class="input-label" data-for="clientes">
+          <label for="tipo_cliente_filtro">Tipo do Cliente</label>
+          <select multiple multiselect-search="true" multiselect-select-all="true"
+            class="modal-tipoCl-filtro-multiselect-dropdown" id="tipo_cliente_filtro">
+            <option value="cliente">Cliente</option>
+            <option value="credenciado">Credenciado</option>
+            <option value="servico_prestado">Serviço Prestado</option>
+            <option value="particular">Particular</option>
+          </select>
+        </div>
+
+        <!-- Exames -->
+        <div class="input-label hidden" data-for="exames">
+          <label for="nome_exame_filtro">Nome do exame</label>
+          <input id="nome_exame_filtro" type="text">
+        </div>
+        <div class="input-label hidden" data-for="exames">
+          <label for="is_interno_filtro">Interno?</label>
+          <select id="is_interno_filtro">
+            <option value="">Todos</option>
+            <option value="1">Sim</option>
+            <option value="0">Não</option>
+          </select>
+        </div>
+        <div class="input-label hidden" data-for="exames">
+          <label for="min_valor_filtro">Valor mín.</label>
+          <input id="min_valor_filtro" type="number" step="0.01" min="0">
+        </div>
+        <div class="input-label hidden" data-for="exames">
+          <label for="max_valor_filtro">Valor máx.</label>
+          <input id="max_valor_filtro" type="number" step="0.01" min="0">
+        </div>
+
+        <!-- footer -->
+        <div class="modal-footer">
+          <button id="filtrosLimparCad" class="btn cinza" type="button">Limpar</button>
+          <button id="filtrosAplicarCad" class="btn verde" type="button">Aplicar</button>
+        </div>
+      </form>
+    </div>
+  </div>
+</div>
+
+<!-- Modal Detalhamento Cliente -->
 <div id="cliente-modal" uk-modal>
   <div class="uk-modal-dialog uk-margin-auto-vertical uk-modal-body modal-body">
     <div class="modal-container">
@@ -276,7 +289,7 @@
             <option value="Particular">Particular</option>
           </select>
         </div>
-        <div class="cliente-input-label">
+        <div class="cliente-input-label" id="cliente-multiselect-exames">
           <label for="modal-exames-cliente-tr">Exames</label>
           <select multiple multiselect-search="true" multiselect-select-all="true"
             class="modal-exames-multiselect-dropdown" id="modal-exames-cliente-tr" disabled>
@@ -291,7 +304,7 @@
   </div>
 </div>
 
-<!-- Modal TR Usuario -->
+<!-- Modal Detalhamento Usuario -->
 <div id="usuario-modal" uk-modal>
   <div class="uk-modal-dialog uk-margin-auto-vertical uk-modal-body modal-body">
     <div class="modal-container">
@@ -329,7 +342,7 @@
   </div>
 </div>
 
-<!-- Modal TR Exame -->
+<!-- Modal Detalhamento Exame -->
 <div id="exame-modal" uk-modal>
   <div class="uk-modal-dialog uk-margin-auto-vertical uk-modal-body modal-body">
     <div class="modal-container">
@@ -389,11 +402,11 @@
       <hr>
       <div class="exportar-modal-div">
         <button id="exportXls" class="export-tile" aria-label="Exportar CSV">
-          <img src="{{url_for('static', filename='/img/icons/xls-file.png')}}" alt="">
+          <img src="{{url_for('static', filename='/img/icons/xls.png')}}" alt="">
           <span>Excel</span>
         </button>
         <button id="exportTxt" class="export-tile" aria-label="Exportar TXT">
-          <img src="{{url_for('static', filename='/img/icons/txt-file.png')}}" alt="">
+          <img src="{{url_for('static', filename='/img/icons/txt.png')}}" alt="">
           <span>TXT</span>
         </button>
       </div>
@@ -406,7 +419,7 @@
 {% block scripts %}
 <script src="{{ url_for('static' ,filename='/js/cadastro.js')}}" defer></script>
 <script src="{{ url_for('static' ,filename='/js/cadastro/carregar.js')}}" defer></script>
-<script src="{{url_for('static', filename='/js/relatorio/exames.js')}}" defer></script>
+<!-- <script src="{{url_for('static', filename='/js/relatorio/exames.js')}}" defer></script> -->
 <script src="{{url_for('static', filename='/js/multiselect-dropdown.js')}}"></script>
 {% endblock scripts %}
 

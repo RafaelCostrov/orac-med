@@ -212,7 +212,6 @@ function MultiselectDropdown(options) {
             search.select();
         });
 
-        div.className += " desabilitado"
 
         document.addEventListener('click', function (event) {
             if (!div.contains(event.target)) {

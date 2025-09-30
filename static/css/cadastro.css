@@ -40,9 +40,6 @@
   --white: #fff;
 }
 
-
-
-
 /* Main */
 main {
   background: #fff;
@@ -65,12 +62,26 @@ main {
   gap: 12px;
   margin-bottom: 14px
 }
+.titulo {
+  display: flex;
+  flex-direction: column;
+  margin: 8px 0;
+  gap: 2px;
+}
 
-.faixa h1 {
-  color: var(--orange);
+.titulo h1 {
+  color: white;
   font-size: clamp(20px, 2.6vw, 24px);
-  font-family: "Poppins", sans-serif;
-  font-weight: 700
+  font-weight: 700;
+  margin: 0;
+  font-family: "Poppins", "sans-serif"
+}
+
+.titulo p {
+  color: white;
+  font-size: 13px;
+  font-weight: 500;
+  margin: 0;
 }
 
 .faixa-right {
@@ -307,126 +318,6 @@ tbody tr:hover {
 }
 
 /* Modal base */
-.modal {
-  position: fixed;
-  inset: 0;
-  display: none;
-  z-index: 1200
-}
-
-.modal[aria-hidden="false"] {
-  display: block
-}
-
-.modal__backdrop {
-  position: absolute;
-  inset: 0;
-  background: rgba(0, 0, 0, .35)
-}
-
-.modal__dialog {
-  position: relative;
-  z-index: 1;
-  margin: 8vh auto 0;
-  background: #fff;
-  width: min(980px, 94vw);
-  border-radius: 14px;
-  box-shadow: 0 20px 60px rgba(0, 0, 0, .25);
-  overflow: hidden;
-  transform: translateY(-6px);
-  animation: modalIn .18s ease-out
-}
-
-@keyframes modalIn {
-  from {
-    opacity: .75;
-    transform: translateY(-12px)
-  }
-
-  to {
-    opacity: 1;
-    transform: translateY(0)
-  }
-}
-
-.modal__header {
-  padding: 14px 16px;
-  display: flex;
-  align-items: center;
-  justify-content: space-between;
-  border-bottom: 1px solid #eee;
-  background: #fafafa
-}
-
-.modal__header h2 {
-  font-size: 18px;
-  color: var(--grey-800)
-}
-
-.modal__close {
-  background: transparent;
-  border: 0;
-  font-size: 26px;
-  line-height: 1;
-  cursor: pointer;
-  color: #555;
-  padding: 2px 8px;
-  border-radius: 8px
-}
-
-.modal__close:hover {
-  background: #eee
-}
-
-.modal__body {
-  padding: 16px
-}
-
-.modal__footer {
-  padding: 12px 16px;
-  border-top: 1px solid #eee;
-  display: flex;
-  gap: 10px;
-  justify-content: flex-end
-}
-
-/* Variante brand (faixa verde) */
-.modal--brand .modal__header {
-  background: var(--green-700);
-  color: #fff;
-  border-bottom: 0
-}
-
-.modal--brand .modal__header h2 {
-  color: #fff
-}
-
-.modal--brand .modal__close {
-  color: #fff;
-  background: transparent;
-  border: 0;
-  border-radius: 8px
-}
-
-.modal--brand .modal__close:hover {
-  background: rgba(255, 255, 255, .14)
-}
-
-/* Grid / campos (reuso) */
-.grid {
-  display: grid;
-  gap: 12px
-}
-
-.filtros-grid {
-  grid-template-columns: repeat(3, 1fr)
-}
-
-.fg {
-  display: flex;
-  flex-direction: column;
-  gap: 6px
-}
 
 label {
   font-weight: 600;
@@ -453,10 +344,6 @@ textarea:focus {
   box-shadow: 0 0 0 2px rgba(247, 147, 30, .25)
 }
 
-.hidden {
-  display: none
-}
-
 .input-wrapper {
   position: relative;
 }
@@ -480,6 +367,78 @@ textarea:focus {
   width: 20px;
   height: 20px;
 }
+
+/* Modais */
+
+.grid-filtros {
+  display: grid;
+  grid-template-columns: repeat(2, 1fr); 
+  grid-template-rows: repeat(3, 1fr);  
+  gap: 16px;
+}
+
+.grid-cadastro {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr); 
+  grid-template-rows: repeat(3, 1fr);  
+  gap: 16px;
+}
+
+
+.grid-filtros .modal-footer {
+  grid-column: 1 / span 2; 
+  display: flex;
+  justify-content: flex-end;
+  gap: 10px;
+  margin-top: 10px;
+}
+
+.grid-cadastro .modal-footer {
+  grid-column: 1 / span 3; 
+  grid-row: 3;
+  display: flex;
+  justify-content: flex-end;
+  gap: 10px;
+  margin-top: 10px;
+}
+
+.modal-body-filtros {
+  border-radius: 20px;     
+}
+
+.modal-body-cadastro {
+  max-width: 1000px; 
+  width: 70vw; 
+  border-radius: 20px;     
+}
+
+.modal-container-cadastro {
+  width: 100%;
+}
+
+.uk-modal-title {
+  font-family: "Poppins", "sans-serif"
+}
+
+.input-label {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+}
+
+
+.hidden {
+  display: none
+}
+
+.modal-footer {
+  display: flex;
+  gap: 12px;
+  align-items: end;
+  justify-content: end;
+  width: 100%;
+}
+
 
 
 /* Responsivo pq o pai é bigas */
@@ -613,27 +572,6 @@ td.num {
   text-align: right
 }
 
-/* === Overrides para igualar ao RELATÓRIO (header/menu/footer) === */
-
-/* Header dark e navegação */
-header {
-  background: #242424
-}
-
-nav a {
-  color: #fff
-}
-
-nav a:hover,
-nav a:focus {
-  color: var(--orange)
-}
-
-.nome-usuario {
-  color: var(--orange)
-}
-
-/* mantém o destaque laranja igual no relatório */
 
 /* HR e textos do footer */
 hr.solid {

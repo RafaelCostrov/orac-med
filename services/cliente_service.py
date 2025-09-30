@@ -56,7 +56,8 @@ class ClienteService():
             lista.append(json_cliente)
         return lista
 
-    def filtrar_clientes(self, id_cliente: int, nome_cliente: str, cnpj_cliente: str, tipo_cliente: TiposCliente, exames_incluidos: list[int], por_pagina=50, pagina: int = 1,
+    def filtrar_clientes(self, id_cliente: int, nome_cliente: str, cnpj_cliente: str, tipo_cliente: list[TiposCliente],
+                         exames_incluidos: list[int], por_pagina=50, pagina: int = 1,
                          order_by: str = "nome_cliente", order_dir: str = "desc"):
         if por_pagina is not None:
             offset = (pagina - 1) * por_pagina
@@ -104,6 +105,13 @@ class ClienteService():
         self.repositorio.remover_cliente(id_cliente=id_cliente)
 
     def atualizar_cliente(self, id_cliente: int, nome_cliente: str, cnpj_cliente: str, tipo_cliente: TiposCliente, exames_incluidos: list[int]):
+        cliente_cnpj = self.repositorio.filtrar_por_cnpj(
+            cnpj_cliente=cnpj_cliente)
+        if cliente_cnpj:
+            return {
+                "erro": "CNPJ já cadastrado."
+            }
+
         cliente = self.repositorio.filtrar_por_id(id_cliente=id_cliente)
         if exames_incluidos is not None:
             exames = []

@@ -114,17 +114,21 @@ def atualizar_cliente():
         cnpj_cliente = data.get('cnpj_cliente')
         tipo_cliente = data.get('tipo_cliente')
         exames_incluidos = data.get('exames_incluidos')
+        print(data)
 
-        atendimento_atualizado = service.atualizar_cliente(
+        cliente_atualizado = service.atualizar_cliente(
             id_cliente=id_cliente,
             nome_cliente=nome_cliente,
             cnpj_cliente=cnpj_cliente,
             tipo_cliente=tipo_cliente,
             exames_incluidos=exames_incluidos
         )
+        if "CNPJ já cadastrado" in cliente_atualizado.get("erro", ""):
+            return jsonify(cliente_atualizado), 400
+
         return jsonify({
-            "mensagem": "Atendimento atualizado com sucesso!",
-            "cliente": atendimento_atualizado
+            "mensagem": "Cliente atualizado com sucesso!",
+            "cliente": cliente_atualizado
         }), 200
     except Exception as e:
         print(f"Erro: {e}")

@@ -4,7 +4,6 @@ let porPaginaInput = document.getElementById("ipp")
 
 const $ = (s, ctx = document) => ctx.querySelector(s);
 let tipoLista = document.getElementById("tipoLista")
-let tipoCadastro = document.getElementById("cadTipo")
 
 function mostrarLoading() {
     document.getElementById("loading-overlay").style.display = "flex";
@@ -186,6 +185,8 @@ async function carregarClientesLista({ pagina = 1, filtros = {}, porPagina = 20 
             paginaAtual = pagina;
             filtros ? totalPaginas = Math.ceil(dados.total_filtrado / porPagina) : totalPaginas = Math.ceil(dados.total / porPagina)
             document.getElementById("pinfo").textContent = `Página ${paginaAtual} de ${totalPaginas}`;
+            document.getElementById("expCount").textContent = dados.total_filtrado ?? 0;
+            document.getElementById("tipoListagem").textContent = "clientes";
         }
     } catch (e) {
         console.log(e)
@@ -259,6 +260,8 @@ async function carregarUsuariosLista({ pagina = 1, filtros = {}, porPagina = 20 
             paginaAtual = pagina;
             filtros ? totalPaginas = Math.ceil(dados.total_filtrado / porPagina) : totalPaginas = Math.ceil(dados.total / porPagina)
             document.getElementById("pinfo").textContent = `Página ${paginaAtual} de ${totalPaginas}`;
+            document.getElementById("expCount").textContent = dados.total_filtrado ?? 0;
+            document.getElementById("tipoListagem").textContent = "usuários";
         }
     } catch (e) {
         console.log(e)
@@ -338,6 +341,8 @@ async function carregarExamesLista({ pagina = 1, filtros = {}, porPagina = 20 } 
             paginaAtual = pagina;
             filtros ? totalPaginas = Math.ceil(dados.total_filtrado / porPagina) : totalPaginas = Math.ceil(dados.total / porPagina)
             document.getElementById("pinfo").textContent = `Página ${paginaAtual} de ${totalPaginas}`;
+            document.getElementById("expCount").textContent = dados.total_filtrado ?? 0;
+            document.getElementById("tipoListagem").textContent = "exames";
         }
     } catch (e) {
         console.log(e)
@@ -353,14 +358,17 @@ async function carregarExamesLista({ pagina = 1, filtros = {}, porPagina = 20 } 
 tipoLista.addEventListener("change", () => {
     switch (tipoLista.value) {
         case "clientes":
+            switchFiltroFields("clientes");
             filtrosAtuais = {}
             carregarClientesLista({ pagina: 1, filtros: filtrosAtuais, porPagina: parseInt(porPaginaInput.value) });
             break;
         case "usuarios":
+            switchFiltroFields("usuarios");
             filtrosAtuais = {}
             carregarUsuariosLista({ pagina: 1, filtros: filtrosAtuais, porPagina: parseInt(porPaginaInput.value) });
             break;
         case "exames":
+            switchFiltroFields("exames");
             filtrosAtuais = {}
             carregarExamesLista({ pagina: 1, filtros: filtrosAtuais, porPagina: parseInt(porPaginaInput.value) });
             break;
@@ -423,12 +431,22 @@ document.getElementById("filtrosLimparCad").addEventListener("click", () => {
     filtrosAtuais = {}
     switch (tipoLista.value) {
         case "clientes":
+            document.getElementById("nome_cliente_filtro").value = "";
+            document.getElementById("cnpj_cliente_filtro").value = "";
+            document.getElementById("tipo_cliente_filtro").value = "";
             carregarClientesLista({ pagina: 1, filtros: filtrosAtuais, porPagina: parseInt(porPaginaInput.value) });
             break;
         case "usuarios":
+            document.getElementById("nome_usuario_filtro").value = "";
+            document.getElementById("email_usuario_filtro").value = "";
+            document.getElementById("role_filtro").value = "";
             carregarUsuariosLista({ pagina: 1, filtros: filtrosAtuais, porPagina: parseInt(porPaginaInput.value) });
             break;
         case "exames":
+            document.getElementById("nome_exame_filtro").value = "";
+            document.getElementById("is_interno_filtro").value = "";
+            document.getElementById("min_valor_filtro").value = "";
+            document.getElementById("max_valor_filtro").value = "";
             carregarExamesLista({ pagina: 1, filtros: filtrosAtuais, porPagina: parseInt(porPaginaInput.value) });
             break;
     }
@@ -442,10 +460,12 @@ function getFiltros() {
     let resultado = {}
     switch (tipoLista.value) {
         case "clientes":
+            var tipoClSelect = document.getElementById("tipo_cliente_filtro");
+            var tipoClienteSelecionados = Array.from(tipoClSelect.selectedOptions).map(opt => opt.value);
             resultado = {
                 nome_cliente: document.getElementById("nome_cliente_filtro").value || null,
                 cnpj_cliente: document.getElementById("cnpj_cliente_filtro").value || null,
-                tipo_cliente: document.getElementById("tipo_cliente_filtro").value || null,
+                tipo_cliente: tipoClienteSelecionados.length > 0 ? tipoClienteSelecionados : null,
             }
             break;
         case "usuarios":
@@ -507,7 +527,8 @@ document.getElementById("filtrosAplicarCad").addEventListener("click", () => {
             break;
     }
 
-    closeModal("modalFiltrosCad")
+
+    UIkit.modal("#filtro-modal-cadastro").hide();
 })
 
 document.getElementById("pesquisar_cnpj").addEventListener("click", async (event) => {
@@ -750,7 +771,7 @@ async function cadastrarExame() {
 
 document.getElementById("button-cadastro").addEventListener("click", async (event) => {
     event.preventDefault()
-    switch (tipoCadastro.value) {
+    switch (tipoLista.value) {
         case "clientes":
             cadastrarCliente();
             break;
@@ -809,15 +830,25 @@ async function salvarAlteracaoCliente() {
             });
             return;
         }
+        let c = validaCNPJ(cnpj_cliente);
+
+        if (c == false) {
+            UIkit.notification({
+                message: "CNPJ inválido ❌",
+                status: 'danger',
+                pos: 'top-center',
+                timeout: 5000
+            });
+            return;
+        }
 
         const tipoMap = {
-            "cliente": "Cliente",
-            "credenciado": "Credenciado",
-            "servico_prestado": "Serviço Prestado",
-            "particular": "Particular"
+            "Cliente": "cliente",
+            "Credenciado": "credenciado",
+            "Serviço Prestado": "servico_prestado",
+            "Particular": "particular"
         };
-        let tipo_cliente_valido = tipoMap[tipo_cliente.toLowerCase()];
-        let c = validaCNPJ(cnpj_cliente);
+        let tipo_cliente_valido = tipoMap[tipo_cliente];
 
         let payload = {
             id_cliente: id_cliente,
@@ -826,6 +857,12 @@ async function salvarAlteracaoCliente() {
             tipo_cliente: tipo_cliente_valido,
             exames_incluidos: lista_exames ? lista_exames : null
         }
+
+
+        console.log(tipo_cliente_valido)
+        console.log(tipo_cliente_valido)
+        console.log(tipoMap["Credenciado"])
+        console.log(payload)
 
         const requisicao = await fetch("/clientes/atualizar-cliente", {
             method: "PUT",
@@ -836,6 +873,7 @@ async function salvarAlteracaoCliente() {
         })
 
         const resposta = await requisicao.json();
+        console.log(resposta)
         if (requisicao.ok) {
             filtrosAtuais = {};
             recarregarTipoLista({});
@@ -936,7 +974,7 @@ function cancelarEdicaoCliente() {
     let nome_cliente = document.getElementById("modal-nome-cliente-tr");
     let cnpj_cliente = document.getElementById("modal-cnpj-cliente-tr");
     let tipo_cliente = document.getElementById("modal-tipo-cliente-tr");
-    let exames_cliente = document.querySelector(".multiselect-dropdown");
+    let exames_cliente = document.querySelector("#cliente-multiselect-exames > .multiselect-dropdown");
 
     nome_cliente.value = tr.dataset.nome;
     cnpj_cliente.value = tr.dataset.cnpj;
@@ -970,7 +1008,7 @@ function habilitarInputsCliente(event) {
     let nome_cliente = document.getElementById("modal-nome-cliente-tr");
     let cnpj_cliente = document.getElementById("modal-cnpj-cliente-tr");
     let tipo_cliente = document.getElementById("modal-tipo-cliente-tr");
-    let exames_cliente = document.querySelector(".desabilitado");
+    let exames_cliente = document.querySelector("#cliente-multiselect-exames > .multiselect-dropdown");
 
     nome_cliente.disabled = false;
     cnpj_cliente.disabled = false;
@@ -1656,6 +1694,12 @@ async function exportarTxtUsuario({ filtros = filtrosAtuais }) {
     }
 }
 
+function switchFiltroFields(tipoLista) {
+    document.querySelectorAll('.input-label').forEach(el => {
+        el.classList.toggle('hidden', el.getAttribute('data-for') !== tipoLista);
+    });
+}
+
 
 document.getElementById("exportXls").addEventListener("click", () => exportarXlsTipoLista({ filtros: filtrosAtuais }))
 document.getElementById("exportTxt").addEventListener("click", () => exportarTxtTipoLista({ filtros: filtrosAtuais }))
@@ -1666,5 +1710,12 @@ document.getElementById("button-excluir-exame").addEventListener("click", (param
 document.getElementById("button-editar-usuario").addEventListener("click", (params) => habilitarInputsUsuario(params));
 document.getElementById("button-excluir-usuario").addEventListener("click", (params) => excluirUsuario(params));
 
+UIkit.util.on('#cliente-modal', 'show', () => {
+    document.querySelector("#cliente-multiselect-exames > .multiselect-dropdown")
+        .classList.add("desabilitado");
+});
 
+
+
+switchFiltroFields("clientes");
 carregarClientesLista()
