@@ -230,6 +230,13 @@
           </select>
         </div>
 
+        <div class="input-label" data-for="clientes">
+          <label for="exames-cliente">Exames</label>
+          <select multiple multiselect-search="true" multiselect-select-all="true"
+            class="modal-exames-multiselect-dropdown" id="exames-cliente">
+          </select>
+        </div>
+
         <!-- Exames -->
         <div class="input-label hidden" data-for="exames">
           <label for="nome_exame_filtro">Nome do exame</label>
@@ -415,9 +422,7 @@
 {% endblock body %}
 
 {% block scripts %}
-<script src="{{ url_for('static' ,filename='/js/cadastro.js')}}" defer></script>
 <script src="{{ url_for('static' ,filename='/js/cadastro/carregar.js')}}" defer></script>
-<!-- <script src="{{url_for('static', filename='/js/relatorio/exames.js')}}" defer></script> -->
 <script src="{{url_for('static', filename='/js/multiselect-dropdown.js')}}"></script>
 {% endblock scripts %}
 

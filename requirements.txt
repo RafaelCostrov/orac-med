@@ -1,0 +1,13 @@
+Flask
+pandas
+requests
+python-dotenv
+google-api-python-client
+google-auth
+google-auth-httplib2
+google-auth-oauthlib
+SQLAlchemy
+Werkzeug
+flask-cors
+mysql-connector-python
+flask_sqlalchemy

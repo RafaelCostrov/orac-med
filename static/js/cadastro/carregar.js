@@ -1,17 +1,30 @@
+
+
 let paginaAtual = 1;
 let porPaginaInput = document.getElementById("ipp")
+let loadingStart = null;
 
-
-const $ = (s, ctx = document) => ctx.querySelector(s);
 let tipoLista = document.getElementById("tipoLista")
 
 function mostrarLoading() {
     document.getElementById("loading-overlay").style.display = "flex";
+    loadingStart = Date.now();
 }
 
 function esconderLoading() {
-    document.getElementById("loading-overlay").style.display = "none";
+    const overlay = document.getElementById("loading-overlay");
+    const elapsed = Date.now() - loadingStart;
+    const minTime = 100;
+
+    if (elapsed >= minTime) {
+        overlay.style.display = "none";
+    } else {
+        setTimeout(() => {
+            overlay.style.display = "none";
+        }, minTime - elapsed);
+    }
 }
+
 
 let totalPaginas = 1;
 let filtrosAtuais = {};
@@ -113,6 +126,7 @@ function verificarCliqueHead() {
 }
 
 async function carregarClientesLista({ pagina = 1, filtros = {}, porPagina = 20 } = {}) {
+    mostrarLoading();
     const payload = {
         pagina: pagina,
         por_pagina: porPagina,
@@ -191,11 +205,13 @@ async function carregarClientesLista({ pagina = 1, filtros = {}, porPagina = 20 
     } catch (e) {
         console.log(e)
     } finally {
-        verificarCliqueHead()
+        verificarCliqueHead();
+        esconderLoading();
     }
 }
 
 async function carregarUsuariosLista({ pagina = 1, filtros = {}, porPagina = 20 } = {}) {
+    mostrarLoading();
     const payload = {
         pagina: pagina,
         por_pagina: porPagina,
@@ -266,7 +282,8 @@ async function carregarUsuariosLista({ pagina = 1, filtros = {}, porPagina = 20 
     } catch (e) {
         console.log(e)
     } finally {
-        verificarCliqueHead()
+        verificarCliqueHead();
+        esconderLoading();
     } const thOrdenado = thead.querySelector(`th[data-sort="${orderByAtual}"]`);
     if (thOrdenado) {
         thOrdenado.classList.add(orderDirAtual);
@@ -274,6 +291,7 @@ async function carregarUsuariosLista({ pagina = 1, filtros = {}, porPagina = 20 
 }
 
 async function carregarExamesLista({ pagina = 1, filtros = {}, porPagina = 20 } = {}) {
+    mostrarLoading();
     const payload = {
         pagina: pagina,
         por_pagina: porPagina,
@@ -347,7 +365,8 @@ async function carregarExamesLista({ pagina = 1, filtros = {}, porPagina = 20 } 
     } catch (e) {
         console.log(e)
     } finally {
-        verificarCliqueHead()
+        verificarCliqueHead();
+        esconderLoading();
         const thOrdenado = thead.querySelector(`th[data-sort="${orderByAtual}"]`);
         if (thOrdenado) {
             thOrdenado.classList.add(orderDirAtual);
@@ -434,6 +453,7 @@ document.getElementById("filtrosLimparCad").addEventListener("click", () => {
             document.getElementById("nome_cliente_filtro").value = "";
             document.getElementById("cnpj_cliente_filtro").value = "";
             document.getElementById("tipo_cliente_filtro").value = "";
+            document.getElementById("exames-cliente").value = "";
             carregarClientesLista({ pagina: 1, filtros: filtrosAtuais, porPagina: parseInt(porPaginaInput.value) });
             break;
         case "usuarios":
@@ -450,6 +470,31 @@ document.getElementById("filtrosLimparCad").addEventListener("click", () => {
             carregarExamesLista({ pagina: 1, filtros: filtrosAtuais, porPagina: parseInt(porPaginaInput.value) });
             break;
     }
+    document.querySelectorAll('select[multiple]').forEach(sel => {
+        const widget = sel.nextElementSibling;
+        if (!widget) return;
+        widget.querySelectorAll('.multiselect-dropdown-list > div:not(.multiselect-dropdown-all-selector)')
+            .forEach(op => {
+                op.classList.remove('checked');
+                const cb = op.querySelector('input[type="checkbox"]');
+                if (cb) {
+                    cb.checked = false;
+                    cb.removeAttribute('checked');
+                }
+                if (op.optEl) {
+                    op.optEl.selected = false;
+                    op.optEl.removeAttribute && op.optEl.removeAttribute('selected');
+                }
+            });
+
+        const allCb = widget.querySelector('.multiselect-dropdown-all-selector input[type="checkbox"]');
+        if (allCb) {
+            allCb.checked = false;
+            allCb.removeAttribute('checked');
+        }
+        sel.dispatchEvent(new Event('change', { bubbles: true }));
+        if (typeof widget.refresh === 'function') widget.refresh();
+    });
 })
 
 document.getElementById("cnpj_cliente").addEventListener("input", function () {
@@ -462,10 +507,13 @@ function getFiltros() {
         case "clientes":
             var tipoClSelect = document.getElementById("tipo_cliente_filtro");
             var tipoClienteSelecionados = Array.from(tipoClSelect.selectedOptions).map(opt => opt.value);
+            var examesSelect = document.getElementById("exames-cliente");
+            var examesSelecionados = Array.from(examesSelect.selectedOptions).map(opt => parseInt(opt.value));
             resultado = {
                 nome_cliente: document.getElementById("nome_cliente_filtro").value || null,
                 cnpj_cliente: document.getElementById("cnpj_cliente_filtro").value || null,
                 tipo_cliente: tipoClienteSelecionados.length > 0 ? tipoClienteSelecionados : null,
+                exames_incluidos: examesSelecionados.length > 0 ? examesSelecionados : null,
             }
             break;
         case "usuarios":
@@ -495,6 +543,7 @@ document.getElementById("filtrosAplicarCad").addEventListener("click", () => {
         cnpj_cliente: filtrosBrutos.cnpj_cliente,
         tipo_cliente: filtrosBrutos.tipo_cliente,
         nome_usuario: filtrosBrutos.nome_usuario,
+        exames_incluidos: filtrosBrutos.exames_incluidos,
         email_usuario: filtrosBrutos.email_usuario,
         role: filtrosBrutos.role,
         nome_exame: filtrosBrutos.nome_exame,
@@ -532,6 +581,7 @@ document.getElementById("filtrosAplicarCad").addEventListener("click", () => {
 })
 
 document.getElementById("pesquisar_cnpj").addEventListener("click", async (event) => {
+    mostrarLoading();
     event.preventDefault()
     try {
         let cnpj = document.getElementById("cnpj_cliente").value
@@ -576,6 +626,8 @@ document.getElementById("pesquisar_cnpj").addEventListener("click", async (event
     }
     catch (e) {
         console.log(e)
+    } finally {
+        esconderLoading();
     }
 })
 
@@ -813,18 +865,20 @@ async function carregarExamesSelectCadastro() {
     const exames = resposta.exames;
 
     const examesUl = document.getElementById("exames-select");
+    const examesUlFiltro = document.getElementById("exames-cliente");
     examesUl.innerHTML = "";
 
     exames.forEach(exame => {
         const option = document.createElement("option");
         option.value = exame.id_exame;
         option.textContent = `${exame.id_exame} - ${exame.nome_exame}`;
-        examesUl.appendChild(option);
+        const optionCadastro = document.createElement("option");
+        optionCadastro.value = exame.id_exame;
+        optionCadastro.textContent = `${exame.id_exame} - ${exame.nome_exame}`;
+        examesUlFiltro.appendChild(option);
+        examesUl.appendChild(optionCadastro);
     });
 
-    if (typeof examesUl.loadOptions === "function") {
-        examesUl.loadOptions();
-    }
 }
 
 //Cliente Att
@@ -1507,10 +1561,8 @@ async function exportarXlsCliente({ filtros = filtrosAtuais }) {
     const payload = {
         ...filtros
     };
-
-    console.log(payload)
     try {
-
+        mostrarLoading();
         const resposta = await fetch("/clientes/exportar-clientes-xls", {
             method: "POST",
             headers: {
@@ -1541,6 +1593,8 @@ async function exportarXlsCliente({ filtros = filtrosAtuais }) {
 
     } catch (e) {
         console.log(e)
+    } finally {
+        esconderLoading();
     }
 }
 
@@ -1550,7 +1604,7 @@ async function exportarTxtCliente({ filtros = {} }) {
     };
 
     try {
-
+        mostrarLoading();
         const resposta = await fetch("/clientes/exportar-clientes-txt", {
             method: "POST",
             headers: {
@@ -1582,6 +1636,8 @@ async function exportarTxtCliente({ filtros = {} }) {
 
     } catch (e) {
         console.log(e)
+    } finally {
+        esconderLoading();
     }
 }
 
@@ -1592,7 +1648,7 @@ async function exportarXlsExame({ filtros = filtrosAtuais }) {
 
     console.log(payload)
     try {
-
+        mostrarLoading();
         const resposta = await fetch("/exames/exportar-exames-xls", {
             method: "POST",
             headers: {
@@ -1623,6 +1679,8 @@ async function exportarXlsExame({ filtros = filtrosAtuais }) {
 
     } catch (e) {
         console.log(e)
+    } finally {
+        esconderLoading();
     }
 }
 
@@ -1632,7 +1690,7 @@ async function exportarTxtExame({ filtros = {} }) {
     };
 
     try {
-
+        mostrarLoading();
         const resposta = await fetch("/exames/exportar-exames-txt", {
             method: "POST",
             headers: {
@@ -1664,6 +1722,8 @@ async function exportarTxtExame({ filtros = {} }) {
 
     } catch (e) {
         console.log(e)
+    } finally {
+        esconderLoading();
     }
 
 }
@@ -1673,9 +1733,9 @@ async function exportarXlsUsuario({ filtros = filtrosAtuais }) {
         ...filtros
     };
 
-    console.log(payload)
-    try {
 
+    try {
+        mostrarLoading();
         const resposta = await fetch("/usuarios/exportar-usuarios-xls", {
             method: "POST",
             headers: {
@@ -1706,6 +1766,8 @@ async function exportarXlsUsuario({ filtros = filtrosAtuais }) {
 
     } catch (e) {
         console.log(e)
+    } finally {
+        esconderLoading();
     }
 }
 
@@ -1714,9 +1776,9 @@ async function exportarTxtUsuario({ filtros = filtrosAtuais }) {
         ...filtros
     };
 
-    console.log(payload)
-    try {
 
+    try {
+        mostrarLoading();
         const resposta = await fetch("/usuarios/exportar-usuarios-txt", {
             method: "POST",
             headers: {
@@ -1747,6 +1809,8 @@ async function exportarTxtUsuario({ filtros = filtrosAtuais }) {
 
     } catch (e) {
         console.log(e)
+    } finally {
+        esconderLoading();
     }
 }
 

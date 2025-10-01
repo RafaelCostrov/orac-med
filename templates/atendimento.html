@@ -42,15 +42,14 @@
         </select>
       </div>
 
-      <!-- Exames (Dropdown com checkboxes) -->
+      <!-- Select dos Exames -->
       <div class="form-group">
-        <label for="exames">Exames</label>
-        <div class="dropdown-checkbox">
-          <div class="dropdown-selected" id="dropdown-selected">Selecione os exames</div>
-          <div class="dropdown-list" id="exames">
-          </div>
-        </div>
+        <label for="exames">Selecione os exames</label>
+        <select multiple multiselect-search="true" multiselect-select-all="true"
+          class="modal-exames-multiselect-dropdown" id="exames">
+        </select>
       </div>
+
 
       <!-- Valor Total (somente leitura) -->
       <div class="form-group">
@@ -81,7 +80,7 @@
 {% endblock body %}
 
 {% block scripts %}
-<script src="{{ url_for('static', filename='js/atendimento.js') }}" defer></script>
 <script src="{{ url_for('static', filename='js/atendimento/cadastro.js') }}" defer></script>
 <script src="{{ url_for('static', filename='js/atendimento/carregar.js') }}" defer></script>
+<script src="{{url_for('static', filename='/js/multiselect-dropdown.js')}}"></script>
 {% endblock scripts %}

@@ -48,11 +48,9 @@ class ClienteRepository:
                     Cliente.tipo_cliente.in_(tipo_cliente)
                 ))
 
-            if exames_incluidos:  # filtro com OR
+            if exames_incluidos:
                 query = query.join(Cliente.exames_incluidos)\
-                    .filter(Exame.id_exame.in_(exames_incluidos))\
-                    .group_by(Cliente.id_cliente)\
-                    .having(func.count(distinct(Exame.id_exame)) == len(exames_incluidos))
+                    .filter(Exame.id_exame.in_(exames_incluidos))
 
             query = query.filter(
                 and_(*filtros)).options(joinedload(Cliente.exames_incluidos))

@@ -6,68 +6,61 @@ let valoresExames = {};
 let nomesExame = {};
 let inputValorTotal;
 
-async function carregarExames() {
+
+async function carregarEmpresasExames() {
     const request = await fetch("/exames/listar-exames");
     const resposta = await request.json();
     const exames = resposta.exames;
 
-    container = document.getElementById("exames");
-    inputValorTotal = document.getElementById("valor-total");
+    const selectExames = document.getElementById("exames");
+    const inputValorTotal = document.getElementById("valor-total");
 
+    const valoresExames = {};
+    const nomesExames = {};
     exames.forEach(exame => {
         valoresExames[exame.id_exame] = exame.valor_exame ?? 0;
-        nomesExame[exame.id_exame] = exame.nome_exame ?? "";
+        nomesExames[exame.id_exame] = exame.nome_exame ?? "";
     });
 
-    atualizarValorTotal = function () {
+    selectExames.innerHTML = "";
+    exames.forEach(exame => {
+        const option = document.createElement("option");
+        option.value = exame.id_exame;
+        option.textContent = `${exame.id_exame} - ${exame.nome_exame}`;
+        selectExames.appendChild(option);
+    });
+
+    function atualizarValorTotal() {
         let soma = 0;
         const lista = document.getElementById("lista-exames");
         lista.innerHTML = "";
-
-        const checkboxes = container.querySelectorAll('input[type="checkbox"]:checked');
-        checkboxes.forEach(cb => {
-            const id = parseInt(cb.value);
-
-            const exame = document.createElement("li");
+        const selecionados = Array.from(selectExames.selectedOptions);
+        selecionados.forEach(opt => {
+            const exame = document.createElement("li")
+            const id = parseInt(opt.value);
             if (examesIncluidosCliente.includes(id)) {
-                exame.textContent = `${id} - ${nomesExame[id]}`;
+                exame.textContent = `${id} - ${nomesExames[id]}`;
             } else {
-                exame.textContent = `${id} - ${nomesExame[id]}`;
+                exame.textContent = `${id} - ${nomesExames[id]}`;
                 soma += valoresExames[id] || 0;
             }
             lista.appendChild(exame);
         });
 
-        let dropdownSelected = document.getElementById("dropdown-selected");
-        dropdownSelected.textContent = lista.childElementCount > 0
-            ? `${lista.childElementCount} exame(s) selecionado(s)`
-            : "Selecione os exames";
-
         inputValorTotal.value = new Intl.NumberFormat("pt-BR", {
             style: "currency",
             currency: "BRL"
         }).format(soma);
-    };
+    }
 
-    exames.forEach(exame => {
-        const label = document.createElement("label");
-        label.setAttribute("for", `exame-${exame.id_exame}`);
-
-        const checkbox = document.createElement("input");
-        checkbox.type = "checkbox";
-        checkbox.value = exame.id_exame;
-        checkbox.id = `exame-${exame.id_exame}`;
-
-        label.appendChild(checkbox);
-        label.appendChild(document.createTextNode(`${exame.id_exame} - ${exame.nome_exame}`));
-        container.appendChild(label);
-        checkbox.addEventListener("change", atualizarValorTotal);
-    });
+    selectExames.addEventListener("change", atualizarValorTotal);
 
     inputValorTotal.value = "R$ 0,00";
-}
 
-async function carregarEmpresas() {
+    if (typeof selectExames.loadOptions === "function") {
+        selectExames.loadOptions();
+    }
+
     const response = await fetch("/clientes/listar-clientes");
     const dados = await response.json();
     const clientes = dados.clientes;
@@ -111,7 +104,4 @@ function mostrarExamesCliente(cliente) {
     });
 }
 
-
-
-carregarExames();
-carregarEmpresas();
+carregarEmpresasExames();

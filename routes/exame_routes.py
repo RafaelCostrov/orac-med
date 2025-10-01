@@ -1,7 +1,7 @@
 from flask import Blueprint, request, jsonify, send_file
 from services.exame_service import ExameService
 from model.exame import Exame
-from db.db import Session
+from auxiliar.auxiliar import role_required, login_required
 from datetime import datetime
 
 exame_bp = Blueprint('exame', __name__, url_prefix="/exames")
@@ -10,6 +10,7 @@ service = ExameService()
 
 
 @exame_bp.route('/cadastrar-exame', methods=['POST'])
+@login_required
 def cadastrar_exame():
     try:
         data = request.get_json()
@@ -35,6 +36,7 @@ def cadastrar_exame():
 
 
 @exame_bp.route('/listar-exames')
+@login_required
 def listar_todos_exames():
     try:
         exames = service.listar_todos_exames()
@@ -50,6 +52,7 @@ def listar_todos_exames():
 
 
 @exame_bp.route('/filtrar-exames', methods=['POST'])
+@login_required
 def filtrar_exame():
     try:
         data = request.get_json()
@@ -86,6 +89,8 @@ def filtrar_exame():
 
 
 @exame_bp.route('/remover-exame', methods=['DELETE'])
+@login_required
+@role_required("administrador", "gestor")
 def remover_exame():
     try:
         data = request.get_json()
@@ -103,6 +108,8 @@ def remover_exame():
 
 
 @exame_bp.route('/atualizar-exame', methods=['PUT'])
+@login_required
+@role_required("administrador", "gestor")
 def atualizar_exame():
     try:
         data = request.get_json()
@@ -128,6 +135,7 @@ def atualizar_exame():
 
 
 @exame_bp.route('/exportar-exames-xls', methods=['POST'])
+@login_required
 def exportar_excel():
     try:
         data = request.get_json()
@@ -164,6 +172,7 @@ def exportar_excel():
 
 
 @exame_bp.route('/exportar-exames-txt', methods=['POST'])
+@login_required
 def exportar_txt():
     try:
         data = request.get_json()

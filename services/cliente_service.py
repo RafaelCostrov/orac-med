@@ -22,9 +22,10 @@ class ClienteService():
             }
 
         exames = []
-        for exame_id in exames_incluidos:
-            exame = self.repositorio_exame.filtrar_por_id(exame_id)
-            exames.append(exame)
+        if exames_incluidos is not None:
+            for exame_id in exames_incluidos:
+                exame = self.repositorio_exame.filtrar_por_id(exame_id)
+                exames.append(exame)
         cliente = Cliente(
             nome_cliente=nome_cliente,
             cnpj_cliente=cnpj_cliente,
@@ -105,14 +106,15 @@ class ClienteService():
         self.repositorio.remover_cliente(id_cliente=id_cliente)
 
     def atualizar_cliente(self, id_cliente: int, nome_cliente: str, cnpj_cliente: str, tipo_cliente: TiposCliente, exames_incluidos: list[int]):
+        cliente = self.repositorio.filtrar_por_id(id_cliente=id_cliente)
+
         cliente_cnpj = self.repositorio.filtrar_por_cnpj(
             cnpj_cliente=cnpj_cliente)
-        if cliente_cnpj:
+        if cliente_cnpj and cnpj_cliente != cliente.cnpj_cliente:
             return {
                 "erro": "CNPJ já cadastrado."
             }
 
-        cliente = self.repositorio.filtrar_por_id(id_cliente=id_cliente)
         if exames_incluidos is not None:
             exames = []
             for exame_id in exames_incluidos:

@@ -9,6 +9,11 @@ let avatar = document.getElementById("avatar-preview");
 
 const regexSenha = /^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[!@#$%^&*()_+\-=\[\]{};':"\\|,.<>\/?]).{8,}$/;
 
+// Esconder "Minha conta" nesta página
+
+const btnMinhaConta = $('#btnMinhaConta');
+if (btnMinhaConta) btnMinhaConta.style.display = 'none';
+
 function validarSenha(senha) {
     return regexSenha.test(senha);
 }
@@ -90,7 +95,6 @@ async function salvarAlteracao(params) {
             body: formData
         });
         const resposta = await requisicao.json();
-        console.log(resposta);
         if (requisicao.ok) {
             nome.dataset.username = nome.value;
             email.dataset.email = email.value;

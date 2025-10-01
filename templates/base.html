@@ -29,7 +29,7 @@
         </nav>
         <!-- Perfil com nome -->
         <div class="perfil-wrap">
-            <span class="nome-usuario">{{username}}</span>
+            <span class="nome-usuario" id="nome-usuario">{{username}}</span>
             <button id="avatarBtn" class="avatar-btn" aria-haspopup="true" aria-expanded="false"
                 aria-controls="profileMenu">
                 <img src="{{ link if link != '' else url_for('static', filename='/img/user1.png') }}"

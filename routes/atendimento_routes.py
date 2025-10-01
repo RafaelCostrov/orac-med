@@ -1,6 +1,7 @@
 from flask import Blueprint, request, jsonify, send_file
 from services.atendimento_service import AtendimentoService
 from datetime import datetime
+from auxiliar.auxiliar import role_required, login_required
 
 atendimento_bp = Blueprint('atendimento', __name__, url_prefix='/atendimentos')
 
@@ -8,6 +9,7 @@ service = AtendimentoService()
 
 
 @atendimento_bp.route('/cadastrar-atendimento', methods=['POST'])
+@login_required
 def cadastrar_atendimento():
     try:
         data = request.get_json()
@@ -37,6 +39,7 @@ def cadastrar_atendimento():
 
 
 @atendimento_bp.route('/listar-atendimentos')
+@login_required
 def listar_todos_atendimentos():
     try:
         atendimentos = service.listar_todos_atendimentos()
@@ -52,6 +55,7 @@ def listar_todos_atendimentos():
 
 
 @atendimento_bp.route('/filtrar-atendimentos', methods=['POST'])
+@login_required
 def filtrar_atendimentos():
     try:
         data = request.get_json()
@@ -71,7 +75,7 @@ def filtrar_atendimentos():
         por_pagina = data.get('por_pagina', 20)
         order_by = data.get('order_by')
         order_dir = data.get('order_dir')
-        print(data)
+
         atendimentos_filtrados = service.filtrar_atendimentos(
             id_atendimento=id_atendimento,
             min_data=min_data,
@@ -101,27 +105,10 @@ def filtrar_atendimentos():
             "erro": "Ocorreu um erro, tente novamente!"
         }), 400
 
-# Não tem remover atendimento, apenas cancelar
-# @atendimento_bp.route('/remover-atendimento', methods=['DELETE'])
-# def remover_atendimento():
-#     try:
-#         data = request.get_json()
-#         id_atendimento = data.get('id_atendimento')
-
-#         service.remover_atendimento(id_atendimento=id_atendimento)
-#
-#         return ({
-#             "mensagem": "Atendimento removido com sucesso!"
-#         }), 200
-#     except Exception as e:
-#         print(f"Erro: {e}")
-#
-#         return jsonify({
-#             "erro": "Ocorreu um erro, tente novamente!"
-#         }), 400
-
 
 @atendimento_bp.route('/atualizar-atendimento', methods=['PUT'])
+@login_required
+@role_required("administrador", "gestor")
 def atualizar_atendimento():
     try:
         data = request.get_json()
@@ -160,6 +147,7 @@ def atualizar_atendimento():
 
 
 @atendimento_bp.route('/exportar-atendimentos-xls', methods=['POST'])
+@login_required
 def exportar_excel():
     try:
         data = request.get_json().get("filtrosAtuais")
@@ -210,6 +198,7 @@ def exportar_excel():
 
 
 @atendimento_bp.route('/exportar-atendimentos-txt', methods=['POST'])
+@login_required
 def exportar_txt():
     try:
         data = request.get_json().get("filtrosAtuais")

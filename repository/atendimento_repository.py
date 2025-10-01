@@ -1,4 +1,4 @@
-from sqlalchemy import func, and_, distinct
+from sqlalchemy import func, and_
 from sqlalchemy.orm import joinedload
 from model.exame import Exame
 from model.cliente import Cliente

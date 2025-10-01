@@ -1,10 +1,11 @@
-from flask import Flask, render_template, session, redirect, url_for
+from flask import Flask, jsonify, render_template, session, redirect, url_for
 from functools import wraps
 from flask_cors import CORS
 from routes.exame_routes import exame_bp
 from routes.cliente_routes import cliente_bp
 from routes.usuario_routes import usuario_bp
 from routes.atendimento_routes import atendimento_bp
+from auxiliar.auxiliar import role_required, login_required
 
 app = Flask(__name__)
 app.secret_key = "segredo"
@@ -14,15 +15,6 @@ app.register_blueprint(exame_bp)
 app.register_blueprint(cliente_bp)
 app.register_blueprint(usuario_bp)
 app.register_blueprint(atendimento_bp)
-
-
-def login_required(f):
-    @wraps(f)
-    def decorated_function(*args, **kwargs):
-        if "usuario" not in session:
-            return redirect(url_for("login"))
-        return f(*args, **kwargs)
-    return decorated_function
 
 
 @app.route("/")

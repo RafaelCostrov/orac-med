@@ -1,6 +1,7 @@
 from flask import Blueprint, request, jsonify, send_file
 from services.cliente_service import ClienteService
 from datetime import datetime
+from auxiliar.auxiliar import role_required, login_required
 
 cliente_bp = Blueprint('cliente', __name__, url_prefix='/clientes')
 
@@ -8,6 +9,7 @@ service = ClienteService()
 
 
 @cliente_bp.route('/cadastrar-cliente', methods=['POST'])
+@login_required
 def cadastrar_cliente():
     try:
         data = request.get_json()
@@ -37,6 +39,7 @@ def cadastrar_cliente():
 
 
 @cliente_bp.route('/listar-clientes')
+@login_required
 def listar_todos_clientes():
     try:
         clientes = service.listar_todos_clientes()
@@ -52,6 +55,7 @@ def listar_todos_clientes():
 
 
 @cliente_bp.route('/filtrar-clientes', methods=['POST'])
+@login_required
 def filtrar_clientes():
     try:
         data = request.get_json()
@@ -89,6 +93,8 @@ def filtrar_clientes():
 
 
 @cliente_bp.route('/remover-cliente', methods=['DELETE'])
+@login_required
+@role_required("administrador", "gestor")
 def remover_cliente():
     try:
         data = request.get_json()
@@ -106,6 +112,8 @@ def remover_cliente():
 
 
 @cliente_bp.route('/atualizar-cliente', methods=['PUT'])
+@login_required
+@role_required("administrador", "gestor")
 def atualizar_cliente():
     try:
         data = request.get_json()
@@ -114,7 +122,6 @@ def atualizar_cliente():
         cnpj_cliente = data.get('cnpj_cliente')
         tipo_cliente = data.get('tipo_cliente')
         exames_incluidos = data.get('exames_incluidos')
-        print(data)
 
         cliente_atualizado = service.atualizar_cliente(
             id_cliente=id_cliente,
@@ -138,6 +145,7 @@ def atualizar_cliente():
 
 
 @cliente_bp.route('/buscar-cnpj', methods=['POST'])
+@login_required
 def buscar_cnpj():
     try:
         data = request.get_json()
@@ -158,6 +166,7 @@ def buscar_cnpj():
 
 
 @cliente_bp.route('/exportar-clientes-xls', methods=['POST'])
+@login_required
 def exportar_excel():
     try:
         data = request.get_json()
@@ -194,6 +203,7 @@ def exportar_excel():
 
 
 @cliente_bp.route('/exportar-clientes-txt', methods=['POST'])
+@login_required
 def exportar_txt():
     try:
         data = request.get_json()

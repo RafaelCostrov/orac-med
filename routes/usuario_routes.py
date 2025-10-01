@@ -1,6 +1,7 @@
 from flask import Blueprint, request, jsonify, session, send_file
 from services.usuario_service import UsuarioService
 from datetime import datetime
+from auxiliar.auxiliar import role_required, login_required
 
 usuario_bp = Blueprint('usuario', __name__, url_prefix="/usuarios")
 
@@ -42,7 +43,6 @@ def login():
 def resetar_senha():
     try:
         data = request.get_json()
-        print(data)
         email_usuario = data.get('email_usuario')
         email_enviado = service.resetar_senha(
             email_usuario=email_usuario
@@ -58,6 +58,7 @@ def resetar_senha():
 
 
 @usuario_bp.route('/logout', methods=['POST'])
+@login_required
 def logout():
     try:
         session.pop('usuario', None)
@@ -72,6 +73,7 @@ def logout():
 
 
 @usuario_bp.route('/cadastrar-usuario', methods=['POST'])
+@login_required
 def cadastrar_usuario():
     try:
         data = request.form
@@ -104,6 +106,7 @@ def cadastrar_usuario():
 
 
 @usuario_bp.route('/listar-usuarios')
+@login_required
 def listar_todos_usuarios():
     try:
         usuarios = service.listar_todos_usuarios()
@@ -119,6 +122,7 @@ def listar_todos_usuarios():
 
 
 @usuario_bp.route('/filtrar-usuarios', methods=['POST'])
+@login_required
 def filtrar_usuario():
     try:
         data = request.get_json()
@@ -153,10 +157,17 @@ def filtrar_usuario():
 
 
 @usuario_bp.route('/remover-usuario', methods=['DELETE'])
+@login_required
+@role_required("administrador")
 def remover_usuario():
     try:
         data = request.get_json()
         id_usuario = data.get('id_usuario')
+        if id_usuario != str(session['usuario']['id_usuario']):
+            return jsonify({
+                "erro": "Você não pode excluir sua própria conta!"
+            }), 403
+
         service.remover_usuario(id_usuario=id_usuario)
         return ({
             "mensagem": "Usuario removido com sucesso!"
@@ -169,6 +180,8 @@ def remover_usuario():
 
 
 @usuario_bp.route('/atualizar-usuario', methods=['PUT'])
+@login_required
+@role_required("administrador")
 def atualizar_usuario():
     try:
         data = request.form
@@ -202,6 +215,7 @@ def atualizar_usuario():
 
 
 @usuario_bp.route('/atualizar-conta', methods=['PUT'])
+@login_required
 def atualizar_conta():
     try:
         data = request.form
@@ -211,7 +225,11 @@ def atualizar_conta():
         senha = data.get('senha')
         role = data.get('role')
         foto = request.files.get('foto')
-        role = data.get('role')
+
+        if id_usuario != str(session['usuario']['id_usuario']):
+            return jsonify({
+                "erro": "Você só pode atualizar sua própria conta!"
+            }), 403
 
         usuario_atualizado = service.atualizar_usuario(
             id_usuario=id_usuario,
@@ -235,6 +253,7 @@ def atualizar_conta():
 
 
 @usuario_bp.route('/exportar-usuarios-xls', methods=['POST'])
+@login_required
 def exportar_excel():
     try:
         data = request.get_json()
@@ -269,6 +288,7 @@ def exportar_excel():
 
 
 @usuario_bp.route('/exportar-usuarios-txt', methods=['POST'])
+@login_required
 def exportar_txt():
     try:
         data = request.get_json()

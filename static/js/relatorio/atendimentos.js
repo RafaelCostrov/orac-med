@@ -4,6 +4,25 @@ porPaginaInput.addEventListener("change", () => {
     carregarAtendimentos({ pagina: 1, filtros: filtrosAtuais, porPagina: parseInt(porPaginaInput.value) })
 })
 
+function mostrarLoading() {
+    document.getElementById("loading-overlay").style.display = "flex";
+    loadingStart = Date.now();
+}
+
+function esconderLoading() {
+    const overlay = document.getElementById("loading-overlay");
+    const elapsed = Date.now() - loadingStart;
+    const minTime = 100;
+
+    if (elapsed >= minTime) {
+        overlay.style.display = "none";
+    } else {
+        setTimeout(() => {
+            overlay.style.display = "none";
+        }, minTime - elapsed);
+    }
+}
+
 let totalPaginas = 1;
 let filtrosAtuais = {};
 let orderByAtual = null;
@@ -20,12 +39,6 @@ let filtroInicial = {
 }
 document.getElementById("data_min").value = primeiroDiaFormatted;
 document.getElementById("data_max").value = ultimoDiaFormatted;
-
-const $ = (s, ctx = document) => ctx.querySelector(s);
-function closeModal(id) {
-    const m = $('#' + id); if (!m) return;
-    m.setAttribute('aria-hidden', 'true');
-}
 
 const tiposAtendimento = {
     admissional: "Admissional",
@@ -44,6 +57,7 @@ const tiposCliente = {
 }
 
 async function carregarAtendimentos({ pagina = 1, filtros = {}, porPagina = 20 } = {}) {
+    mostrarLoading();
     const payload = {
         pagina: pagina,
         por_pagina: porPagina,
@@ -93,6 +107,8 @@ async function carregarAtendimentos({ pagina = 1, filtros = {}, porPagina = 20 }
         }
     } catch (e) {
         console.log(e)
+    } finally {
+        esconderLoading();
     }
 }
 
@@ -153,6 +169,31 @@ document.getElementById("filtrosLimpar").addEventListener("click", () => {
     document.getElementById("status").value = "";
     document.getElementById("valor_min").value = "";
     document.getElementById("valor_max").value = "";
+    document.querySelectorAll('select[multiple]').forEach(sel => {
+        const widget = sel.nextElementSibling;
+        if (!widget) return;
+        widget.querySelectorAll('.multiselect-dropdown-list > div:not(.multiselect-dropdown-all-selector)')
+            .forEach(op => {
+                op.classList.remove('checked');
+                const cb = op.querySelector('input[type="checkbox"]');
+                if (cb) {
+                    cb.checked = false;
+                    cb.removeAttribute('checked');
+                }
+                if (op.optEl) {
+                    op.optEl.selected = false;
+                    op.optEl.removeAttribute && op.optEl.removeAttribute('selected');
+                }
+            });
+
+        const allCb = widget.querySelector('.multiselect-dropdown-all-selector input[type="checkbox"]');
+        if (allCb) {
+            allCb.checked = false;
+            allCb.removeAttribute('checked');
+        }
+        sel.dispatchEvent(new Event('change', { bubbles: true }));
+        if (typeof widget.refresh === 'function') widget.refresh();
+    });
     carregarAtendimentos({ pagina: paginaAtual, filtrosAtuais: {}, porPagina: parseInt(porPaginaInput.value) })
 })
 
@@ -186,7 +227,7 @@ document.getElementById("filtrosAplicar").addEventListener("click", () => {
         }
     });
     carregarAtendimentos({ filtros: filtrosAtuais, pagina: 1, porPagina: parseInt(porPaginaInput.value) });
-    UIkit.modal("#filtro-modal").hide();
+    UIkit.modal("#filtro-modal-atendimentos").hide();
 })
 
 carregarAtendimentos({ filtros: filtroInicial, pagina: 1, porPagina: parseInt(porPaginaInput.value) });
@@ -215,6 +256,7 @@ document.querySelectorAll("th[data-sort]").forEach(th => {
 });
 
 document.getElementById("exportXls").addEventListener("click", async () => {
+    mostrarLoading();
     const payload = {
         filtrosAtuais
     };
@@ -252,11 +294,13 @@ document.getElementById("exportXls").addEventListener("click", async () => {
 
     } catch (e) {
         console.log(e)
+    } finally {
+        esconderLoading();
     }
 })
 
 document.getElementById("exportTxt").addEventListener("click", async () => {
-
+    mostrarLoading();
     const payload = {
         filtrosAtuais
     };
@@ -294,5 +338,7 @@ document.getElementById("exportTxt").addEventListener("click", async () => {
 
     } catch (e) {
         console.log(e)
+    } finally {
+        esconderLoading();
     }
 })
