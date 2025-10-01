@@ -178,7 +178,7 @@ async function carregarClientesLista({ pagina = 1, filtros = {}, porPagina = 20 
                     modalNomeCliente.value = trBody.dataset.nome;
                     modalCnpjCliente.value = trBody.dataset.cnpj;
                     modalTipoCliente.value = trBody.dataset.tipo;
-                    carregarExamesSelect(exames_lista);
+                    carregarExamesSelectDetalhes(exames_lista);
                 });
                 tbody.appendChild(trBody)
             });
@@ -587,12 +587,13 @@ async function cadastrarCliente() {
         let nome = document.getElementById("nome_cliente").value
         let tipo_cliente = document.getElementById("tipo_cliente").value
         let ids_exames = [];
-        // const checkboxes = document.getElementById("exames-select").querySelectorAll('input[type="checkbox"]:checked');
-        // checkboxes.forEach(exame => {
-        //     ids_exames.push(parseInt(exame.value));
-        // });
-        let exames_inclusos = document.getElementById("exames-select").value
-        ids_exames.push(parseInt(exames_inclusos))
+        const checkboxes = document.getElementById("exames-select").querySelectorAll('input[type="checkbox"]:checked');
+        checkboxes.forEach(exame => {
+            ids_exames.push(parseInt(exame.value));
+        });
+
+        var examesInclusos = document.getElementById("exames-select");
+        var examesInclusosSelecionados = Array.from(examesInclusos.selectedOptions).map(opt => opt.value);
 
         if (!nome || !tipo_cliente || !c) {
             UIkit.notification({
@@ -609,7 +610,7 @@ async function cadastrarCliente() {
                 nome_cliente: nome,
                 cnpj_cliente: c,
                 tipo_cliente: tipo_cliente,
-                exames_incluidos: ids_exames
+                exames_incluidos: examesInclusosSelecionados.length > 0 ? examesInclusosSelecionados : null,
             }
 
             let requisicao = await fetch("/clientes/cadastrar-cliente", {
@@ -630,8 +631,7 @@ async function cadastrarCliente() {
                     pos: 'top-center',
                     timeout: 3000
                 });
-                closeModal("modalCadastro")
-
+                UIkit.modal("#modal-cadastro").hide();
             }
             else {
                 UIkit.notification({
@@ -692,7 +692,7 @@ async function cadastrarUsuario() {
                 pos: 'top-center',
                 timeout: 3000
             });
-            closeModal("modalCadastro")
+            UIkit.modal("#modal-cadastro").hide();
         }
         else {
             UIkit.notification({
@@ -752,7 +752,7 @@ async function cadastrarExame() {
                 pos: 'top-center',
                 timeout: 3000
             });
-            closeModal("modalCadastro")
+            UIkit.modal("#modal-cadastro").hide();
         }
         else {
             UIkit.notification({
@@ -784,7 +784,7 @@ document.getElementById("button-cadastro").addEventListener("click", async (even
     }
 })
 
-async function carregarExamesSelect(examesInclusos = []) {
+async function carregarExamesSelectDetalhes(examesInclusos = []) {
     const request = await fetch("/exames/listar-exames");
     const resposta = await request.json();
     const exames = resposta.exames;
@@ -799,6 +799,26 @@ async function carregarExamesSelect(examesInclusos = []) {
         if (examesInclusos.includes(exame.id_exame)) {
             option.selected = true;
         }
+        examesUl.appendChild(option);
+    });
+
+    if (typeof examesUl.loadOptions === "function") {
+        examesUl.loadOptions();
+    }
+}
+
+async function carregarExamesSelectCadastro() {
+    const request = await fetch("/exames/listar-exames");
+    const resposta = await request.json();
+    const exames = resposta.exames;
+
+    const examesUl = document.getElementById("exames-select");
+    examesUl.innerHTML = "";
+
+    exames.forEach(exame => {
+        const option = document.createElement("option");
+        option.value = exame.id_exame;
+        option.textContent = `${exame.id_exame} - ${exame.nome_exame}`;
         examesUl.appendChild(option);
     });
 
@@ -858,12 +878,6 @@ async function salvarAlteracaoCliente() {
             exames_incluidos: lista_exames ? lista_exames : null
         }
 
-
-        console.log(tipo_cliente_valido)
-        console.log(tipo_cliente_valido)
-        console.log(tipoMap["Credenciado"])
-        console.log(payload)
-
         const requisicao = await fetch("/clientes/atualizar-cliente", {
             method: "PUT",
             headers: {
@@ -922,7 +936,7 @@ async function excluirCliente() {
     let buttonExcluir = document.getElementById("confirmar-exclusao");
 
     buttonCancelar.setAttribute("uk-toggle", "target: #cliente-modal")
-    buttonExcluir.addEventListener("click", async () => {
+    buttonExcluir.onclick = async () => {
         try {
             mostrarLoading();
 
@@ -964,7 +978,7 @@ async function excluirCliente() {
         } finally {
             esconderLoading();
         }
-    });
+    };
 }
 
 function cancelarEdicaoCliente() {
@@ -1116,8 +1130,8 @@ async function excluirExame() {
     let buttonCancelar = document.getElementById("cancelar-exclusao");
     let buttonExcluir = document.getElementById("confirmar-exclusao");
 
-    buttonCancelar.setAttribute("uk-toggle", "target: #cliente-modal")
-    buttonExcluir.addEventListener("click", async () => {
+    buttonCancelar.setAttribute("uk-toggle", "target: #exame-modal")
+    buttonExcluir.onclick = async () => {
         try {
             mostrarLoading();
 
@@ -1159,7 +1173,7 @@ async function excluirExame() {
         } finally {
             esconderLoading();
         }
-    });
+    };
 }
 
 function cancelarEdicaoExame() {
@@ -1223,7 +1237,6 @@ async function salvarAlteracaoUsuario() {
         let nome_usuario = document.getElementById("modal-nome-usuario-tr").value;
         let email_usuario = document.getElementById("modal-email-usuario-tr").value;
         let tipo_usuario = document.getElementById("modal-tipo-usuario-tr").value;
-        // let senha_usuario = document.getElementById("modal-senha-usuario-tr").value;
         let foto = document.getElementById("modal-foto-usuario-tr").files[0];
 
         if (!nome_usuario || !email_usuario || !tipo_usuario) {
@@ -1247,7 +1260,6 @@ async function salvarAlteracaoUsuario() {
         formData.append("id_usuario", id_usuario);
         formData.append("nome_usuario", nome_usuario);
         formData.append("email_usuario", email_usuario);
-        // formData.append("senha", senha_usuario);
         formData.append("role", tipo_usuario_valido);
         if (foto) {
             formData.append("foto", foto)
@@ -1290,6 +1302,50 @@ async function salvarAlteracaoUsuario() {
     }
 }
 
+async function confirmarExclusaoUsuario(id_usuario) {
+    try {
+        mostrarLoading();
+
+        payload = {
+            id_usuario: id_usuario
+        }
+
+        const requisicao = await fetch(`/usuarios/remover-usuario`, {
+            method: "DELETE",
+            headers: {
+                "Content-Type": "application/json"
+            },
+            body: JSON.stringify(payload),
+
+        });
+
+        const resposta = await requisicao.json();
+        if (requisicao.ok) {
+            filtrosAtuais = {}
+            recarregarTipoLista({})
+            UIkit.notification({
+                message: resposta.mensagem || "Usuário excluído ✅",
+                status: 'success',
+                pos: 'top-center',
+                timeout: 3000
+            });
+            UIkit.modal("#confirmacao-modal").hide();
+        }
+        else {
+            UIkit.notification({
+                message: resposta.erro || "Erro ao excluir usuário ❌",
+                status: 'danger',
+                pos: 'top-center',
+                timeout: 5000
+            })
+        }
+    } catch (e) {
+        console.log(e)
+    } finally {
+        esconderLoading();
+    }
+}
+
 async function excluirUsuario() {
     let id_usuario = parseInt(document.getElementById("modal-id-usuario-tr").textContent.split(" - ")[0]);
     let nome_usuario = document.getElementById("modal-id-usuario-tr").textContent.split(" - ")[1];
@@ -1307,8 +1363,9 @@ async function excluirUsuario() {
     let buttonCancelar = document.getElementById("cancelar-exclusao");
     let buttonExcluir = document.getElementById("confirmar-exclusao");
 
-    buttonCancelar.setAttribute("uk-toggle", "target: #cliente-modal")
-    buttonExcluir.addEventListener("click", async () => {
+    buttonCancelar.setAttribute("uk-toggle", "target: #usuario-modal");
+
+    buttonExcluir.onclick = async () => {
         try {
             mostrarLoading();
 
@@ -1324,7 +1381,6 @@ async function excluirUsuario() {
                 body: JSON.stringify(payload),
 
             });
-
             const resposta = await requisicao.json();
             if (requisicao.ok) {
                 filtrosAtuais = {}
@@ -1350,7 +1406,7 @@ async function excluirUsuario() {
         } finally {
             esconderLoading();
         }
-    });
+    };
 }
 
 function cancelarEdicaoUsuario() {
@@ -1700,7 +1756,6 @@ function switchFiltroFields(tipoLista) {
     });
 }
 
-
 document.getElementById("exportXls").addEventListener("click", () => exportarXlsTipoLista({ filtros: filtrosAtuais }))
 document.getElementById("exportTxt").addEventListener("click", () => exportarTxtTipoLista({ filtros: filtrosAtuais }))
 document.getElementById("button-editar-cliente").addEventListener("click", (params) => habilitarInputsCliente(params));
@@ -1715,7 +1770,6 @@ UIkit.util.on('#cliente-modal', 'show', () => {
         .classList.add("desabilitado");
 });
 
-
-
 switchFiltroFields("clientes");
-carregarClientesLista()
+carregarClientesLista();
+carregarExamesSelectCadastro();

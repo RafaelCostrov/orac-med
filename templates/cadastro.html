@@ -140,8 +140,8 @@
 
         <div class="input-label hidden" data-for="clientes">
           <label for="exames-select">Exames Inclusos</label>
-          <select id="exames-select">
-            <option value="">Nenhum</option>
+          <select multiple multiselect-search="true" multiselect-select-all="true"
+            class="modal-tipoCl-filtro-multiselect-dropdown" id="exames-select">
           </select>
         </div>
 
@@ -167,14 +167,12 @@
         <!-- footer -->
         <div class="modal-footer">
           <button class="btn cinza" type="button" uk-toggle="target: #modal-cadastro">Voltar</button>
-          <button id="btnExcluirReg" class="btn vermelho" type="button" style="display:none">Excluir</button>
           <button class="btn verde" id="button-cadastro" type="submit">Salvar</button>
         </div>
       </form>
     </div>
   </div>
 </div>
-
 
 <!-- Modal Filtros -->
 <div id="filtro-modal-cadastro" uk-modal>

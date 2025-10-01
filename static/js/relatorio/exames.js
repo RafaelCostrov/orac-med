@@ -13,7 +13,7 @@ async function carregarExames() {
 
 // carregarExames();
 
-async function carregarExamesSelect() {
+async function carregarExamesSelectDetalhes() {
     const request = await fetch("/exames/listar-exames");
     const resposta = await request.json();
     const exames = resposta.exames;
@@ -33,4 +33,4 @@ async function carregarExamesSelect() {
     }
 }
 
-carregarExamesSelect();
+carregarExamesSelectDetalhes();

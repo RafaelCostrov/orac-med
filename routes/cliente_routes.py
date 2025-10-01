@@ -22,9 +22,9 @@ def cadastrar_cliente():
             tipo_cliente=tipo_cliente,
             exames_incluidos=exames_incluidos
         )
-
-        if "CNPJ já cadastrado" in retorno.get("erro", ""):
-            return jsonify(retorno), 400
+        if retorno is not None:
+            if "CNPJ já cadastrado" in retorno.get("erro", ""):
+                return jsonify(retorno), 400
 
         return jsonify({
             "mensagem": f"Cliente cadastrado!"
