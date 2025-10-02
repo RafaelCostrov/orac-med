@@ -15,9 +15,9 @@
       <p class="texto-faixa">Para uma ajuda rápida, use as opções abaixo:</p>
     </div>
     <div class="botoes-faixa">
-      <button class="verde">Cadastrar cliente</button>
-      <button class="branco">Cadastrar exame</button>
-      <button class="verde">Relatório do dia</button>
+      <button class="verde" uk-toggle="target: #modal-cadastro-cliente">Cadastrar cliente</button>
+      <button class="branco" uk-toggle="target: #modal-cadastro-exame">Cadastrar exame</button>
+      <button class="verde" id="exportXls">Relatório do dia</button>
     </div>
     <img src="{{ url_for('static', filename='img/Forms-pana.png') }}" alt="Mulher preenchendo formulário"
       class="mulher-formulario" />
@@ -88,6 +88,110 @@
     </form>
   </section>
 </main>
+
+<!-- Modal Cadastro Cliente -->
+<div id="modal-cadastro-cliente" uk-modal>
+  <div class="uk-modal-dialog uk-margin-auto-vertical uk-modal-body modal-body-cadastro">
+    <div class="modal-container-cadastro">
+
+      <!-- botão fechar -->
+      <button class="uk-modal-close-default" type="button" uk-close></button>
+
+      <!-- título -->
+      <h2 class="uk-modal-title">Novo Cliente</h2>
+      <hr>
+
+      <!-- corpo -->
+      <form id="formCadastro" autocomplete="off" class="grid-cadastro">
+
+        <!-- ======= CLIENTES ======= -->
+        <div class="input-label" data-for="clientes">
+          <label for="cnpj_cliente">CNPJ do cliente</label>
+          <div class="input-wrapper">
+            <input id="cnpj_cliente" type="text" placeholder="00.000.000/0000-00">
+            <button id="pesquisar_cnpj" type="button">
+              <img src="{{ url_for('static', filename='/img/icons/search.png') }}" alt="Pesquisar">
+            </button>
+          </div>
+        </div>
+
+        <div class="input-label" data-for="clientes">
+          <label for="nome_cliente">Nome do cliente</label>
+          <input id="nome_cliente" type="text" placeholder="Razão/Nome">
+        </div>
+
+        <div class="input-label" data-for="clientes">
+          <label for="tipo_cliente">Tipo do cliente</label>
+          <select id="tipo_cliente">
+            <option value="cliente">Cliente</option>
+            <option value="credenciado">Credenciado</option>
+            <option value="servico_prestado">Serviço Prestado</option>
+            <option value="particular">Particular</option>
+          </select>
+        </div>
+
+        <div class="input-label" data-for="clientes">
+          <label for="exames-select">Exames Inclusos</label>
+          <select multiple multiselect-search="true" multiselect-select-all="true"
+            class="modal-tipoCl-filtro-multiselect-dropdown" id="exames-select">
+          </select>
+        </div>
+
+        <!-- footer -->
+        <div class="modal-footer">
+          <button class="remover" type="button" id="button-cancelar-cliente">Cancelar</button>
+          <button class="enviar" id="button-cadastro-cliente" type="submit">Salvar</button>
+        </div>
+      </form>
+    </div>
+  </div>
+</div>
+
+
+<!-- Modal Cadastro Exame -->
+<div id="modal-cadastro-exame" uk-modal>
+  <div class="uk-modal-dialog uk-margin-auto-vertical uk-modal-body modal-body-cadastro">
+    <div class="modal-container-cadastro">
+
+      <!-- botão fechar -->
+      <button class="uk-modal-close-default" type="button" uk-close></button>
+
+      <!-- título -->
+      <h2 class="uk-modal-title">Novo Exame</h2>
+      <hr>
+
+      <!-- corpo -->
+      <form id="formCadastro" autocomplete="off" class="grid-cadastro">
+
+        <!-- ======= EXAMES ======= -->
+        <div class="input-label" data-for="exames">
+          <label for="nome_exame">Nome do exame</label>
+          <input id="nome_exame" type="text" placeholder="Ex.: Audiometria">
+        </div>
+
+        <div class="input-label" data-for="exames">
+          <label for="is_interno">Interno?</label>
+          <select id="is_interno">
+            <option value="1">Sim</option>
+            <option value="0">Não</option>
+          </select>
+        </div>
+
+        <div class="input-label" data-for="exames">
+          <label for="valor_exame">Valor (R$)</label>
+          <input id="valor_exame" type="number" step="0.01" min="0" placeholder="0,00">
+        </div>
+
+        <!-- footer -->
+        <div class="modal-footer">
+          <button class="remover" type="button" id="button-cancelar-exame">Voltar</button>
+          <button class="enviar" id="button-cadastro-exame" type="submit">Salvar</button>
+        </div>
+      </form>
+    </div>
+  </div>
+</div>
+
 
 {% endblock body %}
 

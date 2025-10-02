@@ -13,6 +13,7 @@ async function carregarEmpresasExames() {
     const exames = resposta.exames;
 
     const selectExames = document.getElementById("exames");
+    const selectExamesCadastro = document.getElementById("exames-select");
     const inputValorTotal = document.getElementById("valor-total");
 
     const valoresExames = {};
@@ -27,7 +28,11 @@ async function carregarEmpresasExames() {
         const option = document.createElement("option");
         option.value = exame.id_exame;
         option.textContent = `${exame.id_exame} - ${exame.nome_exame}`;
+        const optionCadastro = document.createElement("option");
+        optionCadastro.value = exame.id_exame;
+        optionCadastro.textContent = `${exame.id_exame} - ${exame.nome_exame}`;
         selectExames.appendChild(option);
+        selectExamesCadastro.appendChild(optionCadastro);
     });
 
     function atualizarValorTotal() {

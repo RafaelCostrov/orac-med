@@ -31,8 +31,6 @@ let filtrosAtuais = {};
 let orderByAtual = null;
 let orderDirAtual = 'asc';
 
-function closeModal(id) { const m = $('#' + id); if (!m) return; m.setAttribute('aria-hidden', 'true'); }
-
 
 
 porPaginaInput.addEventListener("change", () => {
@@ -608,7 +606,7 @@ document.getElementById("pesquisar_cnpj").addEventListener("click", async (event
             }
             else {
                 UIkit.notification({
-                    message: "Erro ❌",
+                    message: "Erro",
                     status: 'danger',
                     pos: 'top-center',
                     timeout: 5000
@@ -617,7 +615,7 @@ document.getElementById("pesquisar_cnpj").addEventListener("click", async (event
         }
         else {
             UIkit.notification({
-                message: "CNPJ inválido ❌",
+                message: "CNPJ inválido",
                 status: 'danger',
                 pos: 'top-center',
                 timeout: 5000
@@ -649,7 +647,7 @@ async function cadastrarCliente() {
 
         if (!nome || !tipo_cliente || !c) {
             UIkit.notification({
-                message: "Preencha os campos obrigatórios ❌",
+                message: "Preencha os campos obrigatórios",
                 status: 'danger',
                 pos: 'top-center',
                 timeout: 5000
@@ -678,7 +676,7 @@ async function cadastrarCliente() {
                 filtrosAtuais = {}
                 recarregarTipoLista({})
                 UIkit.notification({
-                    message: "Cliente Cadastrado ✅",
+                    message: "Cliente Cadastrado",
                     status: 'success',
                     pos: 'top-center',
                     timeout: 3000
@@ -712,7 +710,7 @@ async function cadastrarUsuario() {
 
         if (!nome || !email || !senha || !role) {
             UIkit.notification({
-                message: "Preencha todos os campos! ❌",
+                message: "Preencha todos os campos",
                 status: 'danger',
                 pos: 'top-center',
                 timeout: 5000
@@ -739,7 +737,7 @@ async function cadastrarUsuario() {
             filtrosAtuais = {}
             recarregarTipoLista({})
             UIkit.notification({
-                message: "Cliente Cadastrado ✅",
+                message: "Usuário Cadastrado",
                 status: 'success',
                 pos: 'top-center',
                 timeout: 3000
@@ -748,7 +746,7 @@ async function cadastrarUsuario() {
         }
         else {
             UIkit.notification({
-                message: resposta.erro + " ❌",
+                message: resposta.erro,
                 status: 'danger',
                 pos: 'top-center',
                 timeout: 5000
@@ -771,7 +769,7 @@ async function cadastrarExame() {
 
     if (!nome || !is_interno || !valor) {
         UIkit.notification({
-            message: "Prencha todos os campos ❌",
+            message: "Prencha todos os campos",
             status: 'danger',
             pos: 'top-center',
             timeout: 5000
@@ -799,7 +797,7 @@ async function cadastrarExame() {
             filtrosAtuais = {}
             recarregarTipoLista({})
             UIkit.notification({
-                message: "Cliente Cadastrado ✅",
+                message: "Exame Cadastrado",
                 status: 'success',
                 pos: 'top-center',
                 timeout: 3000
@@ -808,7 +806,7 @@ async function cadastrarExame() {
         }
         else {
             UIkit.notification({
-                message: resposta.erro + " ❌",
+                message: resposta.erro,
                 status: 'danger',
                 pos: 'top-center',
                 timeout: 5000
@@ -868,8 +866,7 @@ async function carregarExamesSelectCadastro() {
     const examesUlFiltro = document.getElementById("exames-cliente");
     examesUl.innerHTML = "";
 
-    console.log(examesUlFiltro)
-    console.log(examesUl)
+
 
     exames.forEach(exame => {
         const option = document.createElement("option");
@@ -907,7 +904,7 @@ async function salvarAlteracaoCliente() {
 
         if (!nome_cliente || !cnpj_cliente || !tipo_cliente) {
             UIkit.notification({
-                message: "Preencha todos os campos obrigatórios ❌",
+                message: "Preencha todos os campos obrigatórios",
                 status: 'danger',
                 pos: 'top-center',
                 timeout: 5000
@@ -918,7 +915,7 @@ async function salvarAlteracaoCliente() {
 
         if (c == false) {
             UIkit.notification({
-                message: "CNPJ inválido ❌",
+                message: "CNPJ inválido",
                 status: 'danger',
                 pos: 'top-center',
                 timeout: 5000
@@ -951,12 +948,11 @@ async function salvarAlteracaoCliente() {
         })
 
         const resposta = await requisicao.json();
-        console.log(resposta)
         if (requisicao.ok) {
             filtrosAtuais = {};
             recarregarTipoLista({});
             UIkit.notification({
-                message: resposta.mensagem || "Cliente atualizado ✅",
+                message: resposta.mensagem || "Cliente atualizado",
                 status: 'success',
                 pos: 'top-center',
                 timeout: 3000
@@ -966,7 +962,7 @@ async function salvarAlteracaoCliente() {
         }
         else {
             UIkit.notification({
-                message: resposta.erro || "Erro ao atualizar cliente ❌",
+                message: resposta.erro || "Erro ao atualizar cliente",
                 status: 'danger',
                 pos: 'top-center',
                 timeout: 5000
@@ -1022,7 +1018,7 @@ async function excluirCliente() {
                 filtrosAtuais = {}
                 recarregarTipoLista({})
                 UIkit.notification({
-                    message: resposta.mensagem || "Cliente excluído ✅",
+                    message: resposta.mensagem || "Cliente excluído",
                     status: 'success',
                     pos: 'top-center',
                     timeout: 3000
@@ -1031,7 +1027,7 @@ async function excluirCliente() {
             }
             else {
                 UIkit.notification({
-                    message: resposta.erro || "Erro ao excluir cliente ❌",
+                    message: resposta.erro || "Erro ao excluir cliente",
                     status: 'danger',
                     pos: 'top-center',
                     timeout: 5000
@@ -1115,7 +1111,7 @@ async function salvarAlteracaoExame() {
 
         if (!nome_exame || !is_interno_exame || !valor) {
             UIkit.notification({
-                message: "Preencha todos os campos obrigatórios ❌",
+                message: "Preencha todos os campos obrigatórios",
                 status: 'danger',
                 pos: 'top-center',
                 timeout: 5000
@@ -1127,7 +1123,6 @@ async function salvarAlteracaoExame() {
             "Sim": "1",
             "Não": "0",
         };
-        console.log(is_interno_exame)
         let is_interno_valido = parseInt(tipoMap[is_interno_exame]);
 
         let payload = {
@@ -1137,7 +1132,6 @@ async function salvarAlteracaoExame() {
             is_interno: is_interno_valido,
         }
 
-        console.log(payload)
         const requisicao = await fetch("/exames/atualizar-exame", {
             method: "PUT",
             headers: {
@@ -1151,7 +1145,7 @@ async function salvarAlteracaoExame() {
             filtrosAtuais = {};
             recarregarTipoLista({});
             UIkit.notification({
-                message: resposta.mensagem || "Exame atualizado ✅",
+                message: resposta.mensagem || "Exame atualizado",
                 status: 'success',
                 pos: 'top-center',
                 timeout: 3000
@@ -1161,7 +1155,7 @@ async function salvarAlteracaoExame() {
         }
         else {
             UIkit.notification({
-                message: resposta.erro || "Erro ao atualizar exame ❌",
+                message: resposta.erro || "Erro ao atualizar exame",
                 status: 'danger',
                 pos: 'top-center',
                 timeout: 5000
@@ -1217,7 +1211,7 @@ async function excluirExame() {
                 filtrosAtuais = {}
                 recarregarTipoLista({})
                 UIkit.notification({
-                    message: resposta.mensagem || "Exame excluído ✅",
+                    message: resposta.mensagem || "Exame excluído",
                     status: 'success',
                     pos: 'top-center',
                     timeout: 3000
@@ -1226,7 +1220,7 @@ async function excluirExame() {
             }
             else {
                 UIkit.notification({
-                    message: resposta.erro || "Erro ao excluir exame ❌",
+                    message: resposta.erro || "Erro ao excluir exame",
                     status: 'danger',
                     pos: 'top-center',
                     timeout: 5000
@@ -1297,7 +1291,6 @@ async function salvarAlteracaoUsuario() {
     try {
         mostrarLoading();
         let id_usuario = parseInt(document.getElementById("modal-id-usuario-tr").textContent.split(" - ")[0]);
-        console.log(id_usuario)
         let nome_usuario = document.getElementById("modal-nome-usuario-tr").value;
         let email_usuario = document.getElementById("modal-email-usuario-tr").value;
         let tipo_usuario = document.getElementById("modal-tipo-usuario-tr").value;
@@ -1305,7 +1298,7 @@ async function salvarAlteracaoUsuario() {
 
         if (!nome_usuario || !email_usuario || !tipo_usuario) {
             UIkit.notification({
-                message: "Preencha todos os campos obrigatórios ❌",
+                message: "Preencha todos os campos obrigatórios",
                 status: 'danger',
                 pos: 'top-center',
                 timeout: 5000
@@ -1329,7 +1322,6 @@ async function salvarAlteracaoUsuario() {
             formData.append("foto", foto)
         }
 
-        console.log(formData)
         let requisicao = await fetch("/usuarios/atualizar-usuario", {
             method: "PUT",
             body: formData
@@ -1340,7 +1332,7 @@ async function salvarAlteracaoUsuario() {
             filtrosAtuais = {};
             recarregarTipoLista({});
             UIkit.notification({
-                message: resposta.mensagem || "Usuário atualizado ✅",
+                message: resposta.mensagem || "Usuário atualizado",
                 status: 'success',
                 pos: 'top-center',
                 timeout: 3000
@@ -1350,7 +1342,7 @@ async function salvarAlteracaoUsuario() {
         }
         else {
             UIkit.notification({
-                message: resposta.erro || "Erro ao atualizar usuario ❌",
+                message: resposta.erro || "Erro ao atualizar usuario",
                 status: 'danger',
                 pos: 'top-center',
                 timeout: 5000
@@ -1388,7 +1380,7 @@ async function confirmarExclusaoUsuario(id_usuario) {
             filtrosAtuais = {}
             recarregarTipoLista({})
             UIkit.notification({
-                message: resposta.mensagem || "Usuário excluído ✅",
+                message: resposta.mensagem || "Usuário excluído",
                 status: 'success',
                 pos: 'top-center',
                 timeout: 3000
@@ -1397,7 +1389,7 @@ async function confirmarExclusaoUsuario(id_usuario) {
         }
         else {
             UIkit.notification({
-                message: resposta.erro || "Erro ao excluir usuário ❌",
+                message: resposta.erro || "Erro ao excluir usuário",
                 status: 'danger',
                 pos: 'top-center',
                 timeout: 5000
@@ -1450,7 +1442,7 @@ async function excluirUsuario() {
                 filtrosAtuais = {}
                 recarregarTipoLista({})
                 UIkit.notification({
-                    message: resposta.mensagem || "Usuário excluído ✅",
+                    message: resposta.mensagem || "Usuário excluído",
                     status: 'success',
                     pos: 'top-center',
                     timeout: 3000
@@ -1459,7 +1451,7 @@ async function excluirUsuario() {
             }
             else {
                 UIkit.notification({
-                    message: resposta.erro || "Erro ao excluir usuário ❌",
+                    message: resposta.erro || "Erro ao excluir usuário",
                     status: 'danger',
                     pos: 'top-center',
                     timeout: 5000
@@ -1656,7 +1648,6 @@ async function exportarXlsExame({ filtros = filtrosAtuais }) {
         ...filtros
     };
 
-    console.log(payload)
     try {
         mostrarLoading();
         const resposta = await fetch("/exames/exportar-exames-xls", {

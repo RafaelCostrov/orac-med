@@ -260,7 +260,6 @@ document.getElementById("exportXls").addEventListener("click", async () => {
     const payload = {
         filtrosAtuais
     };
-
     try {
 
         const resposta = await fetch("/atendimentos/exportar-atendimentos-xls", {
