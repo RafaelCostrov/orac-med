@@ -868,6 +868,9 @@ async function carregarExamesSelectCadastro() {
     const examesUlFiltro = document.getElementById("exames-cliente");
     examesUl.innerHTML = "";
 
+    console.log(examesUlFiltro)
+    console.log(examesUl)
+
     exames.forEach(exame => {
         const option = document.createElement("option");
         option.value = exame.id_exame;
@@ -878,6 +881,13 @@ async function carregarExamesSelectCadastro() {
         examesUlFiltro.appendChild(option);
         examesUl.appendChild(optionCadastro);
     });
+
+    if (typeof examesUl.loadOptions === "function") {
+        examesUl.loadOptions();
+    }
+    if (typeof examesUlFiltro.loadOptions === "function") {
+        examesUlFiltro.loadOptions();
+    }
 
 }
 

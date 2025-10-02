@@ -1,18 +1,154 @@
 /* ================== Conteúdo ================== */
-main {
-  background: #fff;
-  width: calc(100% - 224px);
-  margin: 16px 112px;
-  padding: 16px;
-  border-radius: 12px;
-  box-shadow: 0 0 12px rgba(0, 0, 0, 0.1);
-  flex: 1;
+
+:root {
+    --verde-50: #ebf9e3;
+    --verde-100: #d5e7ce;
+    --verde-200: #accf9e;
+    --verde-300: #81b770;
+    --verde-400: #559f41;
+    --verde-500: #178700;
+    --verde-600: #1b6b0b;
+    --verde-700: #1a500f;
+    --verde-800: #17360f;
+    --verde-900: #121e0a;
+
+
+    --laranja-50: #fff1e5;
+    --laranja-100: #ffe9d3;
+    --laranja-200: #ffd3a8;
+    --laranja-300: #ffbd7e;
+    --laranja-400: #fea852;
+    --laranja-500: #f7921e;
+    --laranja-600: #c1731d;
+    --laranja-700: #8e561b;
+    --laranja-800: #5d3a16;
+    --laranja-900: #312010;
+
+    --green-700: #2e7d32;
+    --green-600: #2e7d32;
+    --green-500: #43a047;
+    --green-400: #4caf50;
+    --green-100: #eaf7ef;
+    --orange: #f7931e;
+    --grey-900: #111;
+    --grey-800: #333;
+    --grey-700: #555;
+    --grey-600: #666;
+    --grey-500: #777;
+    --grey-400: #999;
+    --grey-300: #ccc;
+    --grey-200: #f1f1f1;
+    --white: #fff;
 }
 
-main h1 {
+.container {
+  background: #fff;
+  width: calc(100% - 288px);
+  margin: 16px 112px;
+  border-radius: 12px;
+  box-shadow: 0 0 12px rgba(0, 0, 0, 0.1);
+  display: flex; 
+  align-items: stretch; 
+  align-self: center;
+  max-height: calc(100vh - 224px);
+  margin-top: 32px;
+}
+
+.faixa {
+  background-color: var(--verde-100);
+  border-radius: 12px 0 0 12px;
+  padding: 24px 12px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  flex: 20%;
+  gap: 24px;
+}
+
+.titulo-faixa {
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+  margin: 0;
+}
+
+.faixa h2 {
+  color: var(--grey-800);
   text-align: center;
-  margin-bottom: 25px;
-  font-size: clamp(20px, 2.6vw, 24px);
+  font-family: "Poppins", sans-serif;
+  font-weight: 600;
+  font-size: clamp(18px, 2.4vw, 28px);
+  margin: 0;
+}
+
+.titulo-verde {
+  color: var(--verde-500);
+}
+
+.texto-faixa {
+  color: var(--grey-800);
+  padding: 0 12px;
+  font-family: "Poppins", sans-serif;
+  font-size: small;
+  margin: 0;
+}
+
+.mulher-formulario {
+  max-height:40%;
+  max-width: 70%;
+}
+
+.botoes-faixa {
+  display: flex;
+  flex-direction: column;
+  gap: 36px;
+  width: 60%;
+  font-weight: 500;
+}
+
+.botoes-faixa button {
+  padding: 16px;
+  border: none;
+  border-radius: 10px;
+  font-weight: 300;
+  cursor: pointer;
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.15);
+  font-size: 16px;
+  min-width: 100px;
+  font-family: "Poppins", sans-serif;
+  transition: background-color 0.3s; 
+}
+
+.verde {
+  background-color: var(--verde-700);
+  color: white; 
+}
+
+.verde:hover {
+  background-color: var(--verde-800);
+}
+
+.branco {
+  background-color: white;
+  color: var(--verde-700);
+}
+
+.branco:hover {
+  background-color: var(--grey-200);
+}
+
+.formulario {
+  padding: 16px;
+  flex: 70%;
+  align-items: center;
+  display: flex;
+  gap: 20px;
+}
+
+.container h1 {
+  text-align: center;
+  margin-bottom: 12px;
+  font-size: clamp(20px, 2.6vw, 30px);
   color: var(--grey-800);
   font-family: "Poppins", "sans-serif";
   font-weight: 500;
@@ -21,7 +157,7 @@ main h1 {
 /* Formulário */
 .form-grid {
   display: grid;
-  grid-template-columns: 1fr 1fr;
+  grid-template-columns: repeat(2, 1fr);
   gap: clamp(12px, 2vw, 20px);
   margin-bottom: 20px;
 }
@@ -29,6 +165,7 @@ main h1 {
 .form-group {
   display: flex;
   flex-direction: column;
+  width: 100%; 
 }
 
 label {
@@ -44,7 +181,8 @@ select {
   border: 1px solid var(--grey-300);
   border-radius: 8px;
   font-size: 16px;
-  /* evita zoom em mobile iOS */
+  width: 100%;
+  box-sizing: border-box;
   color: var(--grey-900);
   background: #fff;
 }
@@ -66,101 +204,33 @@ select:focus,
 }
 
 
-/* ================== Dropdown Exames ================== */
-.dropdown-checkbox {
-  position: relative;
-  user-select: none;
-}
-
-.dropdown-selected {
-  border: 1px solid var(--grey-300);
-  border-radius: 8px;
-  padding: 10px;
-  background: #fff;
-  cursor: pointer;
-  color: #666;
-}
-
-.dropdown-list {
-  display: none;
-  position: absolute;
-  top: 100%;
-  left: 0;
-  right: 0;
-  background: #fff;
-  border: 1px solid var(--grey-300);
-  border-radius: 8px;
-  max-height: min(240px, 40vh);
-  overflow-y: auto;
-  z-index: 10;
-}
-
-/* Scrollbar customizada só aqui */
-.dropdown-list::-webkit-scrollbar {
-  width: 8px;
-}
-
-.dropdown-list::-webkit-scrollbar-track {
-  background: var(--grey-200);
-}
-
-.dropdown-list::-webkit-scrollbar-thumb {
-  background: var(--grey-300);
-  border-radius: 4px;
-}
-
-.dropdown-list::-webkit-scrollbar-thumb:hover {
-  background: var(--grey-400);
-}
-
-.dropdown-list label {
-  display: flex;
-  align-items: center;
-  gap: 8px;
-  padding: 8px 12px;
-  cursor: pointer;
-  color: var(--grey-700);
-  transition: background 0.2s ease;
-}
-
-.dropdown-list label:hover {
-  background: #f5f5f5;
-}
-
-.dropdown-list label.selected {
-  background: var(--green-100);
-}
-
 /* ================== Exames selecionados + botões ================== */
 .exames-selecionados {
   display: flex;
-  gap: 15px;
+  gap: 12px;
   margin-top: 8px;
-  align-items: end;
-  justify-content: space-between;
 }
 
-.exames-selecionados label {
-  font-weight: bold;
-  font-size: 15px;
-  margin-bottom: 5px;
+.exames-selecionados > div {
+  flex: 1;                
+  display: flex;
+  flex-direction: column; 
 }
 
 .exames-selecionados ul {
-  list-style: disc;
-  padding: 18px;
-  min-width: 400px;
   border: 1px solid var(--grey-300);
   border-radius: 12px;
   background: #fafafa;
   font-size: 15px;
   line-height: 1.8;
-  height: 260px;
-  width: 100%;
+  height: 100px;
+  width: 100%; 
   box-shadow: 0 2px 4px rgba(0, 0, 0, 0.08);
   max-height: min(260px, 45vh);
   overflow-y: auto;
   list-style-type: none;
+  margin: 0; 
+  padding: 12px 18px; 
 }
 
 .exames-selecionados ul::-webkit-scrollbar {
@@ -185,23 +255,26 @@ select:focus,
 
 .botoes {
   display: flex;
-  justify-content: flex-end;
+  justify-content: center;
+  align-items:end;
   height: 50px;
   gap: 12px;
   flex-wrap: wrap;
+  margin-top: 16px;
 }
 
 .remover,
 .enviar {
-  padding: 14px 22px;
+  padding: 8px;
   border: none;
   border-radius: 10px;
   font-weight: 500;
   cursor: pointer;
   box-shadow: 0 2px 4px rgba(0, 0, 0, 0.15);
   font-size: 15px;
-  min-width: 160px;
+  min-width: 100px;
   font-family: "Poppins", sans-serif;
+  transition: background-color 0.3s;
 }
 
 .remover {

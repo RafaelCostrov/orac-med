@@ -8,73 +8,85 @@
 {% block body %}
 
 <!-- Conteúdo principal -->
-<main>
-  <h1>Ficha de Atendimento</h1>
-
-  <form id="form-atendimento" autocomplete="off">
-    <div class="form-grid">
-
-      <!-- Empresa -->
-      <div class="form-group">
-        <label for="empresa">Empresa</label>
-        <select class="dropdown-empresa" id="empresa" required>
-          <option value="" disabled selected hidden>Selecione</option>
-        </select>
-      </div>
-
-      <!-- Colaborador -->
-      <div class="form-group">
-        <label for="colaborador">Colaborador</label>
-        <input type="text" id="colaborador" placeholder="Nome" />
-      </div>
-
-      <!-- Tipo de Exame -->
-      <div class="form-group">
-        <label for="tipo-exame">Tipo de Exame</label>
-        <select id="tipo-exame" required>
-          <option value="" disabled selected hidden>Selecione</option>
-          <option value="admissional">Admissional</option>
-          <option value="demissional">Demissional</option>
-          <option value="periodico">Periódico</option>
-          <option value="mudanca_funcao">Mudança de Função</option>
-          <option value="retorno_trabalho">Retorno ao Trabalho</option>
-          <option value="outros">Outros</option>
-        </select>
-      </div>
-
-      <!-- Select dos Exames -->
-      <div class="form-group">
-        <label for="exames">Selecione os exames</label>
-        <select multiple multiselect-search="true" multiselect-select-all="true"
-          class="modal-exames-multiselect-dropdown" id="exames">
-        </select>
-      </div>
-
-
-      <!-- Valor Total (somente leitura) -->
-      <div class="form-group">
-        <label for="valor-total">Valor Total</label>
-        <input id="valor-total" type="text" class="readonly" readonly placeholder="R$ 0,00" />
-      </div>
+<main class="container">
+  <section class="faixa">
+    <div class="titulo-faixa">
+      <h2>Ficha de <span class="titulo-verde">Atendimento</span></h2>
+      <p class="texto-faixa">Para uma ajuda rápida, use as opções abaixo:</p>
     </div>
+    <div class="botoes-faixa">
+      <button class="verde">Cadastrar cliente</button>
+      <button class="branco">Cadastrar exame</button>
+      <button class="verde">Relatório do dia</button>
+    </div>
+    <img src="{{ url_for('static', filename='img/Forms-pana.png') }}" alt="Mulher preenchendo formulário"
+      class="mulher-formulario" />
+  </section>
+  <section class="formulario">
+    <form id="form-atendimento" autocomplete="off">
+      <div class="form-grid">
 
-    <!-- Lista de exames selecionados -->
-    <div class="exames-selecionados">
-      <div>
-        <label>Exames selecionados</label>
-        <ul id="lista-exames"></ul>
-      </div>
-      <div>
-        <label>Exames inclusos</label>
-        <ul id="exames-cliente"></ul>
+        <!-- Empresa -->
+        <div class="form-group">
+          <label for="empresa">Empresa</label>
+          <select class="dropdown-empresa" id="empresa" required>
+            <option value="" disabled selected hidden>Selecione</option>
+          </select>
+        </div>
+
+        <!-- Colaborador -->
+        <div class="form-group">
+          <label for="colaborador">Colaborador</label>
+          <input type="text" id="colaborador" placeholder="Nome" />
+        </div>
+
+        <!-- Tipo de Exame -->
+        <div class="form-group">
+          <label for="tipo-exame">Tipo de Exame</label>
+          <select id="tipo-exame" required>
+            <option value="" disabled selected hidden>Selecione</option>
+            <option value="admissional">Admissional</option>
+            <option value="demissional">Demissional</option>
+            <option value="periodico">Periódico</option>
+            <option value="mudanca_funcao">Mudança de Função</option>
+            <option value="retorno_trabalho">Retorno ao Trabalho</option>
+            <option value="outros">Outros</option>
+          </select>
+        </div>
+
+        <!-- Select dos Exames -->
+        <div class="form-group">
+          <label for="exames">Selecione os exames</label>
+          <select multiple multiselect-search="true" multiselect-select-all="true"
+            class="modal-exames-multiselect-dropdown" id="exames">
+          </select>
+        </div>
+
+
+        <!-- Valor Total (somente leitura) -->
+        <div class="form-group">
+          <label for="valor-total">Valor Total</label>
+          <input id="valor-total" type="text" class="readonly" readonly placeholder="R$ 0,00" />
+        </div>
       </div>
 
+      <!-- Lista de exames selecionados -->
+      <div class="exames-selecionados">
+        <div>
+          <label>Exames selecionados</label>
+          <ul id="lista-exames"></ul>
+        </div>
+        <div>
+          <label>Exames inclusos</label>
+          <ul id="exames-cliente"></ul>
+        </div>
+      </div>
       <div class="botoes">
         <button class="remover" id="remover">Limpar</button>
         <button class="enviar" id="enviar">Enviar</button>
       </div>
-    </div>
-  </form>
+    </form>
+  </section>
 </main>
 
 {% endblock body %}
