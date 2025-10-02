@@ -260,7 +260,14 @@ footer {
 }
 
 .texto-footer {
-    font-weight:bold
+    font-weight:bold;
+    margin: 0;
+}
+
+.footer-left {
+    display: flex;
+    align-items: center;
+    gap: 6px;
 }
 
 .or {
@@ -287,7 +294,7 @@ footer hr {
 }
 
 .container-footer div {
-    padding: 24px 5%;
+    padding: 16px 5%;
     display: flex;
     gap: 30px;
 }

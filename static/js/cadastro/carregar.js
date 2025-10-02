@@ -647,7 +647,7 @@ async function cadastrarCliente() {
 
         if (!nome || !tipo_cliente || !c) {
             UIkit.notification({
-                message: "Preencha os campos obrigatórios",
+                message: "Preencha os campos obrigatórios!",
                 status: 'danger',
                 pos: 'top-center',
                 timeout: 5000
@@ -676,7 +676,7 @@ async function cadastrarCliente() {
                 filtrosAtuais = {}
                 recarregarTipoLista({})
                 UIkit.notification({
-                    message: "Cliente Cadastrado",
+                    message: "Cliente Cadastrado!",
                     status: 'success',
                     pos: 'top-center',
                     timeout: 3000
@@ -710,7 +710,7 @@ async function cadastrarUsuario() {
 
         if (!nome || !email || !senha || !role) {
             UIkit.notification({
-                message: "Preencha todos os campos",
+                message: "Preencha todos os campos!",
                 status: 'danger',
                 pos: 'top-center',
                 timeout: 5000
@@ -737,7 +737,7 @@ async function cadastrarUsuario() {
             filtrosAtuais = {}
             recarregarTipoLista({})
             UIkit.notification({
-                message: "Usuário Cadastrado",
+                message: "Usuário Cadastrado!",
                 status: 'success',
                 pos: 'top-center',
                 timeout: 3000
@@ -767,9 +767,9 @@ async function cadastrarExame() {
     let is_interno = parseInt(document.getElementById("is_interno").value)
     let valor = document.getElementById("valor_exame").value
 
-    if (!nome || !is_interno || !valor) {
+    if (!nome || !valor) {
         UIkit.notification({
-            message: "Prencha todos os campos",
+            message: "Prencha todos os campos!",
             status: 'danger',
             pos: 'top-center',
             timeout: 5000
@@ -797,7 +797,7 @@ async function cadastrarExame() {
             filtrosAtuais = {}
             recarregarTipoLista({})
             UIkit.notification({
-                message: "Exame Cadastrado",
+                message: "Exame Cadastrado!",
                 status: 'success',
                 pos: 'top-center',
                 timeout: 3000
@@ -904,7 +904,7 @@ async function salvarAlteracaoCliente() {
 
         if (!nome_cliente || !cnpj_cliente || !tipo_cliente) {
             UIkit.notification({
-                message: "Preencha todos os campos obrigatórios",
+                message: "Preencha todos os campos obrigatórios!",
                 status: 'danger',
                 pos: 'top-center',
                 timeout: 5000
@@ -915,7 +915,7 @@ async function salvarAlteracaoCliente() {
 
         if (c == false) {
             UIkit.notification({
-                message: "CNPJ inválido",
+                message: "CNPJ inválido!",
                 status: 'danger',
                 pos: 'top-center',
                 timeout: 5000
@@ -952,7 +952,7 @@ async function salvarAlteracaoCliente() {
             filtrosAtuais = {};
             recarregarTipoLista({});
             UIkit.notification({
-                message: resposta.mensagem || "Cliente atualizado",
+                message: resposta.mensagem || "Cliente atualizado!",
                 status: 'success',
                 pos: 'top-center',
                 timeout: 3000
@@ -962,7 +962,7 @@ async function salvarAlteracaoCliente() {
         }
         else {
             UIkit.notification({
-                message: resposta.erro || "Erro ao atualizar cliente",
+                message: resposta.erro || "Erro ao atualizar cliente!",
                 status: 'danger',
                 pos: 'top-center',
                 timeout: 5000
@@ -1018,7 +1018,7 @@ async function excluirCliente() {
                 filtrosAtuais = {}
                 recarregarTipoLista({})
                 UIkit.notification({
-                    message: resposta.mensagem || "Cliente excluído",
+                    message: resposta.mensagem || "Cliente excluído!",
                     status: 'success',
                     pos: 'top-center',
                     timeout: 3000
@@ -1027,7 +1027,7 @@ async function excluirCliente() {
             }
             else {
                 UIkit.notification({
-                    message: resposta.erro || "Erro ao excluir cliente",
+                    message: resposta.erro || "Erro ao excluir cliente!",
                     status: 'danger',
                     pos: 'top-center',
                     timeout: 5000
@@ -1068,7 +1068,7 @@ function cancelarEdicaoCliente() {
     buttonEditar.addEventListener("click", habilitarInputsCliente);
     buttonEditar.textContent = "Editar";
 
-    buttonCancelar.setAttribute("uk-toggle", "target: #cliente-modal")
+    buttonCancelar.setAttribute("uk-toggle", "target: #confirmacao-modal")
     buttonCancelar.removeEventListener("click", cancelarEdicaoCliente);
     buttonCancelar.addEventListener("click", excluirCliente)
     buttonCancelar.textContent = "Excluir";
@@ -1111,7 +1111,7 @@ async function salvarAlteracaoExame() {
 
         if (!nome_exame || !is_interno_exame || !valor) {
             UIkit.notification({
-                message: "Preencha todos os campos obrigatórios",
+                message: "Preencha todos os campos obrigatórios!",
                 status: 'danger',
                 pos: 'top-center',
                 timeout: 5000
@@ -1145,7 +1145,7 @@ async function salvarAlteracaoExame() {
             filtrosAtuais = {};
             recarregarTipoLista({});
             UIkit.notification({
-                message: resposta.mensagem || "Exame atualizado",
+                message: resposta.mensagem || "Exame atualizado!",
                 status: 'success',
                 pos: 'top-center',
                 timeout: 3000
@@ -1258,7 +1258,7 @@ function cancelarEdicaoExame() {
     buttonEditar.addEventListener("click", habilitarInputsExame);
     buttonEditar.textContent = "Editar";
 
-    buttonCancelar.setAttribute("uk-toggle", "target: #exame-modal")
+    buttonCancelar.setAttribute("uk-toggle", "target: #confirmacao-modal")
     buttonCancelar.removeEventListener("click", cancelarEdicaoExame);
     buttonCancelar.addEventListener("click", excluirExame)
     buttonCancelar.textContent = "Excluir";
@@ -1298,7 +1298,7 @@ async function salvarAlteracaoUsuario() {
 
         if (!nome_usuario || !email_usuario || !tipo_usuario) {
             UIkit.notification({
-                message: "Preencha todos os campos obrigatórios",
+                message: "Preencha todos os campos obrigatórios!",
                 status: 'danger',
                 pos: 'top-center',
                 timeout: 5000
@@ -1332,7 +1332,7 @@ async function salvarAlteracaoUsuario() {
             filtrosAtuais = {};
             recarregarTipoLista({});
             UIkit.notification({
-                message: resposta.mensagem || "Usuário atualizado",
+                message: resposta.mensagem || "Usuário atualizado!",
                 status: 'success',
                 pos: 'top-center',
                 timeout: 3000
@@ -1493,7 +1493,7 @@ function cancelarEdicaoUsuario() {
     buttonEditar.addEventListener("click", habilitarInputsUsuario);
     buttonEditar.textContent = "Editar";
 
-    buttonCancelar.setAttribute("uk-toggle", "target: #usuario-modal")
+    buttonCancelar.setAttribute("uk-toggle", "target: #confirmacao-modal")
     buttonCancelar.removeEventListener("click", cancelarEdicaoUsuario);
     buttonCancelar.addEventListener("click", excluirUsuario)
     buttonCancelar.textContent = "Excluir";

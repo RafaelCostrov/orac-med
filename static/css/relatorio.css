@@ -3,6 +3,15 @@ body, table, th, td, h1, h2, h3, label, span, small, button {
   font-family: "Poppins", sans-serif !important;
 }
 
+h2 {
+  margin: 0;
+}
+
+hr {
+  margin: 0;
+  padding: 0;
+}
+
 /* ================== Cores ================== */
 :root {
 
@@ -88,6 +97,11 @@ main {
   font-size: 13px;
   font-weight: 500;
   margin: 0;
+}
+
+.valor-total {
+  color: var(--orange);
+  font-weight: 500;
 }
 
 .faixa-right {
@@ -207,7 +221,7 @@ thead th {
 }
 
 thead th:nth-child(1) {
-  width: 10%;
+  width: 5%;
   text-align: left;
 }
 
@@ -217,7 +231,7 @@ thead th:nth-child(2) {
 }
 
 thead th:nth-child(3) {
-  width: 10%;
+  width: 15%;
   text-align: left;
 }
 
@@ -227,18 +241,24 @@ thead th:nth-child(4) {
 }
 
 thead th:nth-child(5) {
-  width: 15%;
+  width: 10%;
   text-align: left;
 }
 
 thead th:nth-child(6) {
-  width: 30%;
+  width: 15%;
 }
 
 thead th:nth-child(7) {
+  width: 30%;
+  text-align: center;
+}
+
+thead th:nth-child(8) {
   width: 10%;
   text-align: center;
 }
+
 
 thead th.ordenavel {
   cursor: pointer;
@@ -309,7 +329,9 @@ tbody tr:hover {
   border: 0;
   cursor: pointer;
   transition: all .2s;
-  font-size: 14px
+  font-size: 14px;
+  min-width: 100px;
+  max-height: 40px;
 }
 
 .btn.verde {
@@ -372,9 +394,78 @@ tbody tr:hover {
 /* Modais */
 
 
+.modal-body-atendimento, .modal-body-filtros {
+  max-width: 1000px; 
+  width: 90vw; 
+  border-radius: 20px;     
+}
+
+.grid-detalhamento {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr); 
+  grid-template-rows: repeat(5, 80px); 
+}
+
+.grid-filtros {
+  padding-top: 12px;
+  display: grid;
+  grid-template-columns: repeat(3, 1fr); 
+  grid-template-rows: repeat(4, auto);  
+  gap: 12px;
+}
+
+.grid-filtros .input-label,
+.grid-filtros .fg {
+  display: flex;
+  flex-direction: column;
+}
+
+.grid-filtros .modal-footer {
+  grid-column: 1 / span 3;
+  display: flex;
+  justify-content: flex-end;
+  gap: 10px;
+  margin-top: 10px;
+}
+
+
+.atendimento-input-label {
+  display: flex;
+  flex-direction: column;
+  width: 80%; 
+  padding: 4px;
+}
+
+.atendimento-input-label-checkbox {
+    display: flex;
+  width: 80%; 
+  padding: 4px;
+  align-items: center;
+  gap: 8px;
+}
+
+.atendimento-modal-footer {
+  grid-column: 1 / span 3;
+  grid-row: 5; 
+  display: flex;
+  justify-content: flex-end;
+  gap: 10px;
+  margin-top: 10px;
+}
+
 label {
   font-weight: 600;
   color: var(--grey-800)
+}
+
+.input:disabled, select:disabled {
+    background-color: var(--grey-200);
+    color: var(--grey-500);
+}
+
+.desabilitado {
+    background-color: var(--grey-200);
+    pointer-events: none;
 }
 
 input,
@@ -384,8 +475,6 @@ select {
   border: 1px solid var(--grey-300);
   border-radius: 8px;
   font-size: 16px;
-  color: var(--grey-900);
-  background: #fff
 }
 
 input:focus,
@@ -407,35 +496,8 @@ select:focus {
   gap: 8px;
 }
 
-.modal-body-filtros {
-  max-width: 1000px; 
-  width: 90vw; 
-  border-radius: 20px;     
-}
-
 .modal-container-filtros {
   width: 100%;
-}
-
-.grid-filtros {
-  display: grid;
-  grid-template-columns: repeat(3, 1fr); 
-  grid-template-rows: repeat(4, auto);  
-  gap: 16px;
-}
-
-.grid-filtros .input-label,
-.grid-filtros .fg {
-  display: flex;
-  flex-direction: column;
-}
-
-.grid-filtros .modal-footer {
-  grid-column: 1 / span 3; /* footer ocupa as 3 colunas */
-  display: flex;
-  justify-content: flex-end;
-  gap: 10px;
-  margin-top: 10px;
 }
 
 .modal-footer {

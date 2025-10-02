@@ -53,6 +53,7 @@ class AtendimentoService():
             exames = []
             for exame in atendimento.exames_atendimento or []:
                 json_exame = {
+                    "id_exame": exame.id_exame if exame else None,
                     "nome_exame": exame.nome_exame if exame else "Exame removido",
                     "valor_exame": exame.valor_exame if exame else 0,
                     "is_interno": exame.is_interno if exame else False
@@ -116,6 +117,7 @@ class AtendimentoService():
             exames_atendimento = atendimento.exames_atendimento
             if not exames_atendimento:
                 json_exame = {
+                    "id_exame": None,
                     "nome_exame": "Exame removido",
                     "valor_exame": 0,
                     "is_interno": False
@@ -125,6 +127,7 @@ class AtendimentoService():
                 for exame in exames_atendimento:
                     if exame:
                         json_exame = {
+                            "id_exame": exame.id_exame,
                             "nome_exame": exame.nome_exame,
                             "valor_exame": exame.valor_exame,
                             "is_interno": exame.is_interno
@@ -175,27 +178,36 @@ class AtendimentoService():
                               colaborador_atendimento, is_ativo, id_cliente, ids_exames):
         atendimento = self.repositorio.filtrar_por_id(
             id_atendimento=id_atendimento)
-
-        if ids_exames is not None:
-            json_exames = []
-            for exame_id in ids_exames:
-                exame = self.repositorio_exame.filtrar_por_id(exame_id)
-                json_exames.append(exame)
-        else:
-            json_exames = atendimento.exames_atendimento
+        valor_exames = 0
 
         if id_cliente is not None:
             cliente = self.repositorio_cliente.filtrar_por_id(
                 id_cliente=id_cliente)
         else:
             cliente = atendimento.cliente_atendimento
+        exames_incluidos = cliente.exames_incluidos
+
+        if ids_exames is not None:
+            json_exames = []
+            for exame_id in ids_exames:
+                exame = self.repositorio_exame.filtrar_por_id(exame_id)
+                json_exames.append(exame)
+                if exame_id not in [exame_incluido.id_exame for exame_incluido in exames_incluidos]:
+                    valor_exame = exame.valor_exame
+                    valor_exames += valor_exame
+            if valor is not None:
+                valor_final = valor
+            else:
+                valor_final = valor_exames
+        else:
+            json_exames = atendimento.exames_atendimento
 
         atendimento_atualizado = self.repositorio.atualizar_atendimento(
             id_atendimento=id_atendimento,
             data_atendimento=data_atendimento,
             tipo_atendimento=tipo_atendimento,
             usuario=usuario,
-            valor=valor,
+            valor=valor_final,
             colaborador_atendimento=colaborador_atendimento,
             is_ativo=is_ativo,
             cliente_atendimento=cliente,
@@ -303,7 +315,7 @@ class AtendimentoService():
 
         map_status = {
             True: "Ativo",
-            False: "Cancelada"
+            False: "Cancelado"
         }
 
         df = pd.DataFrame(linhas)
@@ -379,7 +391,7 @@ class AtendimentoService():
 
         map_status = {
             True: "Ativo",
-            False: "Cancelada"
+            False: "Cancelado"
         }
         df = pd.DataFrame(linhas)
 

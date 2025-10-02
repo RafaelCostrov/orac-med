@@ -163,7 +163,7 @@ def remover_usuario():
     try:
         data = request.get_json()
         id_usuario = data.get('id_usuario')
-        if id_usuario != str(session['usuario']['id_usuario']):
+        if int(id_usuario) == int(session['usuario']['id_usuario']):
             return jsonify({
                 "erro": "Você não pode excluir sua própria conta!"
             }), 403

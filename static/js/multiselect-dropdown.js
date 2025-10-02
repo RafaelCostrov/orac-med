@@ -181,7 +181,7 @@ function MultiselectDropdown(options) {
             div.refresh = () => {
                 div.querySelectorAll('span.optext, span.placeholder').forEach(t => div.removeChild(t));
                 var sels = Array.from(el.selectedOptions);
-                if (sels.length > (el.attributes['multiselect-max-items']?.value ?? 5)) {
+                if (sels.length > (el.attributes['multiselect-max-items']?.value ?? 1)) {
                     div.appendChild(newEl('span', { class: ['optext', 'maxselected'], text: sels.length + ' ' + config.txtSelected }));
                 }
                 else {

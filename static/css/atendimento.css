@@ -50,7 +50,7 @@
   display: flex; 
   align-items: stretch; 
   align-self: center;
-  max-height: calc(100vh - 224px);
+  max-height: calc(100vh - 192px);
   margin-top: 32px;
 }
 
@@ -170,7 +170,7 @@
 
 label {
   font-weight: bold;
-  font-size: 14px;
+  font-size: 16px;
   margin-bottom: 6px;
   color: var(--grey-800);
 }
@@ -181,7 +181,7 @@ select {
   padding: 8px;
   border: 1px solid var(--grey-300);
   border-radius: 8px;
-  font-size: 14px;
+  font-size: 16px;
   width: 100%;
   box-sizing: border-box;
   color: var(--grey-900);

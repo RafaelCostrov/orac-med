@@ -21,7 +21,8 @@
 
 <header>
     <header>
-        <img src="{{ url_for('static' ,filename='/img/Logo.png')}}" alt="Logo ORAC" class="logo" />
+        <a href="{{ url_for('atendimento') }}"><img src="{{ url_for('static' ,filename='/img/Logo.png')}}"
+                alt="Logo ORAC" class="logo" /></a>
         <nav>
             <a href="{{ url_for('atendimento') }}">Atendimento</a>
             <a href="{{ url_for('cadastro') }}">Cadastro</a>
@@ -78,7 +79,7 @@
 <footer>
     <hr class="solid">
     <div class="container-footer">
-        <div>
+        <div class="footer-left">
             <p class="texto-footer">© 2025 <span class="or">Or</span><span class="ac">ac</span></p>
             <a href="https://wa.me/5511976825950?text=Ol%C3%A1%2C%20gostaria%20de%20uma%20ajuda%20com%20o%20Orac%20Med"
                 target="_blank">Suporte</a>

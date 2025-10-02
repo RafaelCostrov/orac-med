@@ -83,7 +83,7 @@ async function cadastrarAtendimento(event) {
         });
         if (requisicao.ok) {
             UIkit.notification({
-                message: "Atendimento Cadastrado",
+                message: "Atendimento Cadastrado!",
                 status: 'success',
                 pos: 'top-center',
                 timeout: 3000
@@ -103,14 +103,10 @@ async function cadastrarAtendimento(event) {
     }
 }
 
-function pontuarCNPJ(cnpj) {
-    return cnpj
-        .replace(/\D/g, "")
-        .slice(0, 14)
-        .replace(/^(\d{2})(\d)/, "$1.$2")
-        .replace(/^(\d{2})\.(\d{3})(\d)/, "$1.$2.$3")
-        .replace(/\.(\d{3})(\d)/, ".$1/$2")
-        .replace(/(\d{4})(\d)/, "$1-$2");
+function formatarCNPJ(cnpj) {
+    if (!cnpj) return "";
+    let digitos = String(cnpj).replace(/\D/g, '');
+    return digitos.replace(/^(\d{2})(\d{3})(\d{3})(\d{4})(\d{2})$/, "$1.$2.$3/$4-$5");
 }
 
 function validaCNPJ(cnpj) {
@@ -207,7 +203,7 @@ async function cadastrarCliente() {
 
         if (!nome || !tipo_cliente || !c) {
             UIkit.notification({
-                message: "Preencha os campos obrigatórios ❌",
+                message: "Preencha os campos obrigatórios!",
                 status: 'danger',
                 pos: 'top-center',
                 timeout: 5000
@@ -236,7 +232,7 @@ async function cadastrarCliente() {
                 filtrosAtuais = {}
                 carregarEmpresasExames();
                 UIkit.notification({
-                    message: "Cliente Cadastrado ✅",
+                    message: "Cliente Cadastrado!",
                     status: 'success',
                     pos: 'top-center',
                     timeout: 3000
@@ -266,7 +262,7 @@ async function cadastrarExame() {
 
     if (!nome || !valor) {
         UIkit.notification({
-            message: "Prencha todos os campos",
+            message: "Prencha todos os campos!",
             status: 'danger',
             pos: 'top-center',
             timeout: 5000
@@ -294,7 +290,7 @@ async function cadastrarExame() {
             filtrosAtuais = {}
             carregarEmpresasExames();
             UIkit.notification({
-                message: "Exame Cadastrado",
+                message: "Exame Cadastrado!",
                 status: 'success',
                 pos: 'top-center',
                 timeout: 3000

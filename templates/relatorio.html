@@ -11,7 +11,7 @@
   <div class="faixa">
     <div class="titulo">
       <h1>Relatório</h1>
-      <p>Exibindo <span id="expCount"></span> Atendimentos</p>
+      <p>Exibindo <span id="expCount"></span> Atendimentos <span id="valorTotal" class="valor-total"></span></p>
     </div>
     <div class="faixa-right">
       <div class="itens-por-pagina">
@@ -37,6 +37,7 @@
     <table id="tbl">
       <thead>
         <tr>
+          <th data-sort="id_atendimento" class="ordenavel">Id</th>
           <th data-sort="data_atendimento" class="ordenavel">Data</th>
           <th data-sort="nome_cliente" class="ordenavel">Empresa</th>
           <th data-sort="colaborador_atendimento" class="ordenavel">Colaborador</th>
@@ -59,6 +60,80 @@
     </div>
   </section>
 </main>
+
+<!-- Modal Detalhamento Relatório -->
+<div id="atendimento-modal" uk-modal>
+  <div class="uk-modal-dialog uk-margin-auto-vertical uk-modal-body modal-body-atendimento">
+    <div class="modal-container">
+      <button class="uk-modal-close-default" type="button" uk-close></button>
+      <h2 class="uk-modal-title" id="modal-id-atendimento-tr"></h2>
+      <hr>
+      <div class="grid-detalhamento">
+        <div class="atendimento-input-label">
+          <label for="modal-data-atendimento-tr">Data</label>
+          <input id="modal-data-atendimento-tr" name="modal-data-atendimento-tr" disabled></input>
+        </div>
+        <div class="atendimento-input-label">
+          <label for="modal-empresa-atendimento-tr">Empresa</label>
+          <input id="modal-empresa-atendimento-tr" name="modal-empresa-atendimento-tr" disabled></input>
+        </div>
+        <div class="atendimento-input-label">
+          <label for="modal-usuario-atendimento-tr">Usuário</label>
+          <input id="modal-usuario-atendimento-tr" name="modal-usuario-atendimento-tr" disabled></input>
+        </div>
+        <div class="atendimento-input-label">
+          <label for="modal-colaborador-atendimento-tr">Colaborador</label>
+          <input id="modal-colaborador-atendimento-tr" name="modal-colaborador-atendimento-tr" disabled></input>
+        </div>
+        <div class="atendimento-input-label">
+          <label for="modal-status-tr">Status</label>
+          <select id="modal-status-tr" name="modal-status-tr" disabled>
+            <option value="Ativa">Ativo</option>
+            <option value="Cancelada">Cancelado</option>
+          </select>
+        </div>
+        <div class="atendimento-input-label">
+          <label for="modal-tipo-cliente-tr">Tipo de Cliente</label>
+          <select id="modal-tipo-cliente-tr" name="modal-tipo-cliente-tr" disabled>
+            <option value="Cliente">Cliente</option>
+            <option value="Credenciado">Credenciado</option>
+            <option value="Serviço Prestado">Serviço Prestado</option>
+            <option value="Particular">Particular</option>
+          </select>
+        </div>
+        <div class="atendimento-input-label">
+          <label for="modal-tipo-atendimento-tr">Tipo de atendimento</label>
+          <select id="modal-tipo-atendimento-tr" name="modal-tipo-atendimento-tr" disabled>
+            <option value="Admissional">Admissional</option>
+            <option value="Demissional">Demissional</option>
+            <option value="Periódico">Periódico</option>
+            <option value="Mudança de Função">Mudança de Função</option>
+            <option value="Retorno ao Trabalho">Retorno ao Trabalho</option>
+            <option value="Outros">Outros</option>
+          </select>
+        </div>
+        <div class="atendimento-input-label">
+          <label for="modal-valor-atendimento-tr">Valor</label>
+          <input id="modal-valor-atendimento-tr" type="number" name="modal-valor-atendimento-tr" disabled></input>
+        </div>
+        <div class="atendimento-input-label" id="atendimento-multiselect-exames">
+          <label for="modal-exames-atendimento-tr">Exames</label>
+          <select multiple multiselect-search="true" multiselect-select-all="true"
+            class="modal-exames-multiselect-dropdown" id="modal-exames-atendimento-tr" disabled>
+          </select>
+        </div>
+        <div class="atendimento-input-label-checkbox">
+          <label for="modal-valor-manual-tr">Deseja trocar o valor manualmente?</label>
+          <input class="uk-checkbox" type="checkbox" id="modal-valor-manual-tr" name="modal-valor-manual-tr" disabled>
+        </div>
+        <div class="atendimento-modal-footer">
+          <button class="btn" id="button-excluir-atendimento" disabled>Cancelar</button>
+          <button class="btn verde" id="button-editar-atendimento">Editar</button>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
 
 <!-- Modal Filtro -->
 <div id="filtro-modal-atendimentos" uk-modal>
@@ -118,12 +193,12 @@
             class="modal-exames-filtro-multiselect-dropdown" id="exames">
           </select>
         </div>
-        <div class="fg">
+        <div class="input-label">
           <label for="status">Status</label>
           <select id="status">
+            <option value="1">Ativos</option>
+            <option value="0">Cancelados</option>
             <option value="">Todos</option>
-            <option value="1">Ativas</option>
-            <option value="0">Canceladas</option>
           </select>
         </div>
         <div class="input-label">
@@ -167,7 +242,6 @@
 {% endblock body %}
 
 {% block scripts %}
-<script src="{{url_for('static', filename='/js/relatorio.js')}}" defer></script>
 <script src=" {{url_for('static', filename='/js/relatorio/atendimentos.js')}}" defer></script>
 <script src="{{url_for('static', filename='/js/relatorio/clientes.js')}}" defer></script>
 <script src="{{url_for('static', filename='/js/relatorio/exames.js ')}}" defer></script>

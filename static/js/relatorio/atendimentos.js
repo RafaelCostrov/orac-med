@@ -24,7 +24,7 @@ function esconderLoading() {
 }
 
 let totalPaginas = 1;
-let filtrosAtuais = {};
+
 let orderByAtual = null;
 let orderDirAtual = 'asc';
 
@@ -33,10 +33,11 @@ let primeiroDia = new Date(date.getFullYear(), date.getMonth(), 1);
 let primeiroDiaFormatted = primeiroDia.toISOString().split('T')[0];
 let ultimoDia = new Date(date.getFullYear(), date.getMonth() + 1, 0);
 let ultimoDiaFormatted = ultimoDia.toISOString().split('T')[0];
-let filtroInicial = {
+let filtrosAtuais = {
     min_data: primeiroDiaFormatted,
     max_data: ultimoDiaFormatted,
-}
+    is_ativo: 1,
+};
 document.getElementById("data_min").value = primeiroDiaFormatted;
 document.getElementById("data_max").value = ultimoDiaFormatted;
 
@@ -54,6 +55,41 @@ const tiposCliente = {
     credenciado: "Credenciado",
     servico_prestado: "Serviço Prestado",
     particular: "Particular"
+}
+
+function unformatBRL(valorFormatado) {
+    if (!valorFormatado) return 0;
+
+    return parseFloat(
+        valorFormatado
+            .replace("R$", "")
+            .replace(/\./g, "")
+            .replace(",", ".")
+            .trim()
+    ).toFixed(2) || 0;
+}
+
+async function carregarExamesSelectAtendimento(examesInclusos = []) {
+    const request = await fetch("/exames/listar-exames");
+    const resposta = await request.json();
+    const exames = resposta.exames;
+
+    const examesUl = document.getElementById("modal-exames-atendimento-tr");
+    examesUl.innerHTML = "";
+
+    exames.forEach(exame => {
+        const option = document.createElement("option");
+        option.value = exame.valor_exame;
+        option.textContent = `${exame.id_exame} - ${exame.nome_exame}`;
+        if (examesInclusos.includes(exame.id_exame)) {
+            option.selected = true;
+        }
+        examesUl.appendChild(option);
+    });
+
+    if (typeof examesUl.loadOptions === "function") {
+        examesUl.loadOptions();
+    }
 }
 
 async function carregarAtendimentos({ pagina = 1, filtros = {}, porPagina = 20 } = {}) {
@@ -74,40 +110,237 @@ async function carregarAtendimentos({ pagina = 1, filtros = {}, porPagina = 20 }
         });
 
         const dados = await resposta.json();
-
-        console.log(payload)
+        console.log(dados)
         if (resposta.ok) {
             const tbody = document.querySelector("#tbl tbody");
             tbody.innerHTML = '';
             dados.atendimentos.forEach(atendimento => {
                 const tr = document.createElement("tr");
-                const valorFormatado = new Intl.NumberFormat("pt-BR", {
+                tr.setAttribute("uk-toggle", "target: #atendimento-modal");
+                tr.dataset.id = atendimento.id_atendimento;
+                tr.dataset.data = atendimento.data_atendimento;
+                tr.dataset.cliente = atendimento.cliente_atendimento.id_cliente + " - " + atendimento.cliente_atendimento.nome_cliente;
+                tr.dataset.usuario = atendimento.usuario || '-';
+                tr.dataset.colaborador = atendimento.colaborador_atendimento;
+                tr.dataset.is_ativo = atendimento.is_ativo == true ? "Ativa" : "Cancelada";
+                tr.dataset.tipo_cliente = tiposCliente[atendimento.cliente_atendimento.tipo_cliente] || atendimento.cliente_atendimento.tipo_cliente;
+                tr.dataset.tipo_atendimento = tiposAtendimento[atendimento.tipo_atendimento] || atendimento.tipo_atendimento;
+                tr.dataset.exames = atendimento.exames_atendimento?.map(e => e.nome_exame).join(", ") || "-";
+                tr.dataset.valor = new Intl.NumberFormat("pt-BR", {
                     style: "currency",
                     currency: "BRL"
                 }).format(atendimento.valor ?? 0);
-                const tipoAtendimentoFormatado = tiposAtendimento[atendimento.tipo_atendimento] || atendimento.tipo_atendimento;
-                const tipoClienteFormatado = tiposCliente[atendimento.cliente_atendimento.tipo_cliente] || atendimento.cliente_atendimento.tipo_cliente;
-                const nomesExames = atendimento.exames_atendimento?.map(e => e.nome_exame).join(", ") || "-";
-                tr.innerHTML = `
-                    <td title="${atendimento.data_atendimento}">${atendimento.data_atendimento}</td>
-                    <td title="${atendimento.cliente_atendimento.nome_cliente}">${atendimento.cliente_atendimento.nome_cliente}</td>
-                    <td title="${atendimento.colaborador_atendimento}">${atendimento.colaborador_atendimento}</td>
-                    <td title="${tipoClienteFormatado}">${tipoClienteFormatado}</td>
-                    <td title="${tipoAtendimentoFormatado}">${tipoAtendimentoFormatado}</td>
-                    <td title="${nomesExames}">${nomesExames}</td>
-                    <td title="${valorFormatado}" class="num">${valorFormatado}</td>
-                `;
-                tbody.appendChild(tr)
-            });
+                let exames_lista = [];
+                atendimento.exames_atendimento?.forEach(e => {
+                    exames_lista.push(e.id_exame);
+                })
 
-            paginaAtual = pagina;
-            filtros ? totalPaginas = Math.ceil(dados.total_filtrado / porPagina) : totalPaginas = Math.ceil(dados.total / porPagina)
-            document.getElementById("pinfo").textContent = `Página ${paginaAtual} de ${totalPaginas}`;
-            document.getElementById("expCount").textContent = dados.total_filtrado ?? 0;
+                tr.innerHTML = `
+                    <td title="${tr.dataset.id}">${tr.dataset.id}</td>
+                    <td title="${tr.dataset.data}">${tr.dataset.data}</td>
+                    <td title="${tr.dataset.cliente}">${tr.dataset.cliente}</td>
+                    <td title="${tr.dataset.colaborador}">${tr.dataset.colaborador}</td>
+                    <td title="${tr.dataset.tipo_cliente}">${tr.dataset.tipo_cliente}</td>
+                    <td title="${tr.dataset.tipo_atendimento}">${tr.dataset.tipo_atendimento}</td>
+                    <td title="${tr.dataset.exames}">${tr.dataset.exames}</td>
+                    <td title="${tr.dataset.valor}" class="num">${tr.dataset.valor}</td>
+                `;
+                const modalIdAtendimento = document.getElementById("modal-id-atendimento-tr");
+                const modalDataAtendimento = document.getElementById("modal-data-atendimento-tr");
+                const modalEmpresaAtendimento = document.getElementById("modal-empresa-atendimento-tr");
+                const modalUsuarioAtendimento = document.getElementById("modal-usuario-atendimento-tr");
+                const modalColaboradorAtendimento = document.getElementById("modal-colaborador-atendimento-tr");
+                const modalStatusAtendimento = document.getElementById("modal-status-tr");
+                const modalTipoClienteAtendimento = document.getElementById("modal-tipo-cliente-tr");
+                const modalTipoAtendimento = document.getElementById("modal-tipo-atendimento-tr");
+                const modalValorAtendimento = document.getElementById("modal-valor-atendimento-tr");
+
+                tbody.appendChild(tr)
+                tr.addEventListener("click", () => {
+                    carregarExamesSelectAtendimento(exames_lista);
+                    modalIdAtendimento.textContent = `Atendimento #${tr.dataset.id}`;
+                    modalDataAtendimento.value = tr.dataset.data;
+                    modalEmpresaAtendimento.value = tr.dataset.cliente;
+                    modalUsuarioAtendimento.value = tr.dataset.usuario;
+                    modalColaboradorAtendimento.value = tr.dataset.colaborador;
+                    modalStatusAtendimento.value = tr.dataset.is_ativo;
+                    modalTipoClienteAtendimento.value = tr.dataset.tipo_cliente;
+                    modalTipoAtendimento.value = tr.dataset.tipo_atendimento;
+                    modalValorAtendimento.value = atendimento.valor.toFixed(2);
+                });
+
+                paginaAtual = pagina;
+                filtros ? totalPaginas = Math.ceil(dados.total_filtrado / porPagina) : totalPaginas = Math.ceil(dados.total / porPagina)
+                document.getElementById("pinfo").textContent = `Página ${paginaAtual} de ${totalPaginas}`;
+                document.getElementById("expCount").textContent = dados.total_filtrado ?? 0;
+                document.getElementById("valorTotal").textContent = dados.valor_total ? "(R$ " + dados.valor_total.toLocaleString("pt-BR", { minimumFractionDigits: 2, maximumFractionDigits: 2 }) + ")" : 0;
+            })
         }
     } catch (e) {
         console.log(e)
     } finally {
+        esconderLoading();
+    }
+}
+
+function habilitarInputsAtendimento(event) {
+    event.preventDefault();
+    let buttonEditar = document.getElementById("button-editar-atendimento");
+    let buttonCancelar = document.getElementById("button-excluir-atendimento");
+
+    let colaborador_atendimento = document.getElementById("modal-colaborador-atendimento-tr");
+    let empresa_atendimento = document.getElementById("modal-empresa-atendimento-tr");
+    let tipo_atendimento = document.getElementById("modal-tipo-atendimento-tr");
+    let exames_atendimento = document.querySelector("#atendimento-multiselect-exames > .multiselect-dropdown");
+    let status_atendimento = document.getElementById("modal-status-tr");
+    let valor_manual = document.getElementById("modal-valor-manual-tr");
+
+    valor_manual.disabled = false;
+    colaborador_atendimento.disabled = false;
+    tipo_atendimento.disabled = false;
+    exames_atendimento.classList.remove("desabilitado");
+    status_atendimento.disabled = false;
+    // empresa_atendimento.disabled = false;
+
+    buttonEditar.removeEventListener("click", habilitarInputsAtendimento)
+    buttonEditar.addEventListener("click", salvarAlteracaoAtendimento);
+    buttonEditar.textContent = "Salvar";
+
+    buttonCancelar.removeAttribute("disabled")
+    buttonCancelar.addEventListener("click", cancelarEdicaoAtendimento);
+}
+
+function cancelarEdicaoAtendimento() {
+    let id_exame = parseInt(document.getElementById("modal-id-atendimento-tr").textContent.replace("Atendimento #", ""));
+    let tr = document.querySelector(`tr[data-id='${id_exame}']`);
+
+    let buttonEditar = document.getElementById("button-editar-atendimento");
+    let buttonCancelar = document.getElementById("button-excluir-atendimento");
+
+    let empresa_atendimento = document.getElementById("modal-empresa-atendimento-tr");
+    let data_atendimento = document.getElementById("modal-data-atendimento-tr");
+    let colaborador_atendimento = document.getElementById("modal-colaborador-atendimento-tr");
+    let tipo_atendimento = document.getElementById("modal-tipo-atendimento-tr");
+    let valor_atendimento = document.getElementById("modal-valor-atendimento-tr");
+    let exames_atendimento = document.querySelector("#atendimento-multiselect-exames > .multiselect-dropdown");
+    let status_atendimento = document.getElementById("modal-status-tr");
+    let is_valor_manual = document.getElementById("modal-valor-manual-tr")
+
+
+    data_atendimento.value = tr.dataset.data;
+    colaborador_atendimento.value = tr.dataset.colaborador;
+    tipo_atendimento.value = tr.dataset.tipo_atendimento;
+    valor_atendimento.value = unformatBRL(tr.dataset.valor);
+    status_atendimento.value = tr.dataset.is_ativo;
+    // exames_atendimento.value = tr.dataset.exames; #TODO: Ajustar seleção de exames
+    // empresa_atendimento.value = tr.dataset.cliente; #TODO: Ajustar edição de cliente
+
+    data_atendimento.disabled = true;
+    colaborador_atendimento.disabled = true;
+    // tipo_cliente.disabled = true;
+    tipo_atendimento.disabled = true;
+    valor_atendimento.disabled = true;
+    exames_atendimento.classList.add("desabilitado");
+    status_atendimento.disabled = true;
+    is_valor_manual.disabled = true;
+    is_valor_manual.checked = false;
+
+    buttonEditar.removeEventListener("click", salvarAlteracaoAtendimento)
+    buttonEditar.addEventListener("click", habilitarInputsAtendimento);
+    buttonEditar.textContent = "Editar";
+
+    buttonCancelar.removeEventListener("click", cancelarEdicaoAtendimento);
+    buttonCancelar.setAttribute("disabled", "");
+}
+
+async function salvarAlteracaoAtendimento() {
+    try {
+        mostrarLoading();
+        let id_atendimento = parseInt(document.getElementById("modal-id-atendimento-tr").textContent.replace("Atendimento #", ""));
+        let data_atendimento = document.getElementById("modal-data-atendimento-tr").value;
+        let colaborador_atendimento = document.getElementById("modal-colaborador-atendimento-tr").value;
+        // let id_cliente = parseInt(document.getElementById("modal-empresa-atendimento-tr").value.split(" - ")[0]);
+        let exames_atendimento_select = document.getElementById("modal-exames-atendimento-tr");
+        let tipo_atendimento = document.getElementById("modal-tipo-atendimento-tr").value;
+        let valor_atendimento = document.getElementById("modal-valor-atendimento-tr").value;
+        let status_atendimento = document.getElementById("modal-status-tr").value;
+        let usuario = document.getElementById("modal-usuario-atendimento-tr").value;
+        let is_valor_manual = document.getElementById("modal-valor-manual-tr").checked;
+
+        if (!colaborador_atendimento) {
+            UIkit.notification({
+                message: "Preencha o campo Colaborador!",
+                status: 'danger',
+                pos: 'top-center',
+                timeout: 5000
+            });
+            return;
+        }
+
+        if (valor_atendimento < 0) {
+            UIkit.notification({
+                message: "Valor deve ser maior ou igual a zero!",
+                status: 'danger',
+                pos: 'top-center',
+                timeout: 5000
+            });
+            return;
+        }
+
+        let lista_exames = Array.from(exames_atendimento_select.selectedOptions).map(option => parseInt(option.textContent.split(" - ")[0]));
+
+        const ativoMap = {
+            "Ativa": "1",
+            "Cancelada": "0",
+        };
+        let is_ativo = parseInt(ativoMap[status_atendimento]);
+
+        let payload = {
+            id_atendimento: id_atendimento,
+            data_atendimento: data_atendimento,
+            tipo_atendimento: tipo_atendimento,
+            usuario: usuario,
+            valor: is_valor_manual ? parseFloat(valor_atendimento).toFixed(2) : null,
+            colaborador_atendimento: colaborador_atendimento,
+            is_ativo: is_ativo,
+            ids_exames: lista_exames,
+            // id_cliente: id_cliente #TODO: Ajustar edição de cliente
+        };
+
+        const requisicao = await fetch("/atendimentos/atualizar-atendimento", {
+            method: "PUT",
+            headers: {
+                "Content-Type": "application/json"
+            },
+            body: JSON.stringify(payload)
+        })
+
+        const resposta = await requisicao.json();
+        if (requisicao.ok) {
+            carregarAtendimentos({ filtros: filtrosAtuais, pagina: 1, porPagina: parseInt(porPaginaInput.value) });
+            UIkit.notification({
+                message: resposta.mensagem || "Atendimento atualizado!",
+                status: 'success',
+                pos: 'top-center',
+                timeout: 3000
+            });
+            cancelarEdicaoAtendimento();
+            UIkit.modal("#atendimento-modal").hide();
+        }
+        else {
+            UIkit.notification({
+                message: resposta.erro || "Erro ao atualizar atendimento!",
+                status: 'danger',
+                pos: 'top-center',
+                timeout: 5000
+            });
+            console.log(resposta.erro);
+        }
+    }
+    catch (erro) {
+        console.log(erro);
+    }
+    finally {
         esconderLoading();
     }
 }
@@ -230,8 +463,6 @@ document.getElementById("filtrosAplicar").addEventListener("click", () => {
     UIkit.modal("#filtro-modal-atendimentos").hide();
 })
 
-carregarAtendimentos({ filtros: filtroInicial, pagina: 1, porPagina: parseInt(porPaginaInput.value) });
-
 document.querySelectorAll("th[data-sort]").forEach(th => {
     th.addEventListener("click", () => {
         const campo = th.getAttribute("data-sort");
@@ -339,5 +570,23 @@ document.getElementById("exportTxt").addEventListener("click", async () => {
         console.log(e)
     } finally {
         esconderLoading();
+    }
+})
+
+UIkit.util.on('#atendimento-modal', 'show', () => {
+    document.querySelector("#atendimento-multiselect-exames > .multiselect-dropdown")
+        .classList.add("desabilitado");
+});
+
+
+carregarAtendimentos({ filtros: filtrosAtuais, pagina: 1, porPagina: parseInt(porPaginaInput.value) });
+
+document.getElementById("button-editar-atendimento").addEventListener("click", habilitarInputsAtendimento);
+document.getElementById("modal-valor-manual-tr").addEventListener("change", () => {
+    let valor_atendimento = document.getElementById("modal-valor-atendimento-tr");
+    if (document.getElementById("modal-valor-manual-tr").checked) {
+        valor_atendimento.removeAttribute("disabled");
+    } else {
+        valor_atendimento.setAttribute("disabled", "");
     }
 })

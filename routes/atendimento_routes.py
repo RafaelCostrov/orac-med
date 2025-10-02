@@ -1,4 +1,4 @@
-from flask import Blueprint, request, jsonify, send_file
+from flask import Blueprint, request, jsonify, send_file, session
 from services.atendimento_service import AtendimentoService
 from datetime import datetime
 from auxiliar.auxiliar import role_required, login_required
@@ -14,7 +14,7 @@ def cadastrar_atendimento():
     try:
         data = request.get_json()
         tipo_atendimento = data.get('tipo_atendimento')
-        usuario = data.get('usuario')
+        usuario = str(session['usuario']['nome_usuario'])
         valor = data.get('valor')
         colaborador_atendimento = data.get('colaborador_atendimento')
         id_cliente = data.get('id_cliente')
@@ -115,13 +115,13 @@ def atualizar_atendimento():
         id_atendimento = data.get('id_atendimento')
         data_atendimento = data.get('data_atendimento')
         tipo_atendimento = data.get('tipo_atendimento')
-        usuario = data.get('usuario')
         valor = data.get('valor')
         colaborador_atendimento = data.get('colaborador_atendimento')
-        tipo_cliente = data.get('tipo_cliente')
         is_ativo = data.get('is_ativo')
         id_cliente = data.get('id_cliente')
         ids_exames = data.get('ids_exames')
+
+        usuario = str(session['usuario']['nome_usuario'])
 
         atendimento_atualizado = service.atualizar_atendimento(
             id_atendimento=id_atendimento,
@@ -130,7 +130,6 @@ def atualizar_atendimento():
             usuario=usuario,
             valor=valor,
             colaborador_atendimento=colaborador_atendimento,
-            tipo_cliente=tipo_cliente,
             is_ativo=is_ativo,
             id_cliente=id_cliente,
             ids_exames=ids_exames
