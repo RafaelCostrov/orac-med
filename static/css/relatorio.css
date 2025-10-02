@@ -556,3 +556,17 @@ select:focus {
     width: min(540px, 96vw)
   }
 }
+
+/* ========= RESPONSIVO ========= */
+
+@media (max-width: 1366px){
+  .tabela-wrap{ overflow-x: auto; }
+  table{ min-width: 1100px; }
+}
+
+@media (max-width: 1440px){
+  main{ width: auto; margin: 16px 24px; }
+}
+@media (max-width: 1152px){
+  main{ margin: 12px 16px; }
+}

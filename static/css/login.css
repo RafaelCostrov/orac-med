@@ -130,3 +130,11 @@ input::placeholder {
 }
 
 /*Toast  */
+
+/* ========= RESPONSIVO ========= */
+@media (max-width: 1280px){
+  .login-card, .login-box, .card{
+    width: min(560px, 70vw);
+    margin: 24px auto;
+  }
+}

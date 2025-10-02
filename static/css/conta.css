@@ -953,3 +953,17 @@ footer hr {
   color: var(--green-700) !important;
   /* texto verde já estava no JS */
 }
+
+
+
+/* ========= rESPONSIVO ========= */
+@media (max-width: 1440px){
+  main{ width: auto; margin: 16px 24px; }
+}
+@media (max-width: 1280px){
+  .form-buttons{ flex-wrap: wrap; }
+}
+@media (max-width: 1152px){
+  .grid-senha{ grid-template-columns: 1fr; } 
+  main{ margin: 12px 16px; }
+}
